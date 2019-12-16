@@ -1,0 +1,32 @@
+<Root>
+  <VaultPropertyMappings>
+    <!-- Key=ErpProperty, Value=VaultProperty -->
+    <Entry Key="Description" Value="_Title" />
+    <Entry Key="Number" Value="_PartNumber" />
+  </VaultPropertyMappings>
+  <InventorPropertyMappings>
+    <!-- Key=ErpProperty, Value=InventorProperty -->
+    <Entry Key="Description" Value="Title" />
+    <Entry Key="Number" Value="Part Number" />
+  </InventorPropertyMappings>
+  <MaterialDefaultValues>
+    <Entry Key="UnitOfMeasure" Value="KG" />
+    <Entry Key="Type" Value="M" />
+  </MaterialDefaultValues>
+  <BomHeaderDefaultValues>
+    <Entry Key="Status" Value="Released" />
+  </BomHeaderDefaultValues>
+  <BomRowDefaultValues>
+  </BomRowDefaultValues>
+  <UnitOfMeasures>
+    <Entry Key="PC" Value="PIECE" />
+    <Entry Key="EA" Value="EACH" />
+    <Entry Key="MT" Value="METER" />
+    <Entry Key="LT" Value="LITER" />
+    <Entry Key="KG" Value="KILOGRAM" />
+  </UnitOfMeasures>
+  <MaterialTypes>
+    <Entry Key="P" Value="Purchased" />
+    <Entry Key="M" Value="Manufactured" />
+  </MaterialTypes>
+</Root>

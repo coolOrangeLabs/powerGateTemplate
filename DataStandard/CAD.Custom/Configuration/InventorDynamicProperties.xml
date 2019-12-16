@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DynamicProperties>
+  <DynamicPropertiesCategory Category="Engineering">
+    <DynamicProperty>Designer</DynamicProperty>
+    <DynamicProperty>Engineer</DynamicProperty>
+    <DynamicProperty>Stock Number</DynamicProperty>
+    <DynamicProperty>Part Type name</DynamicProperty>
+    <DynamicProperty>Mfg Approved by</DynamicProperty>
+    <DynamicProperty>Cost</DynamicProperty>
+    <DynamicProperty>Raw_Number</DynamicProperty>
+    <DynamicProperty>Raw_Quantity</DynamicProperty>
+    <DynamicProperty>Product</DynamicProperty>
+    <DynamicProperty>Mass</DynamicProperty>
+    <DynamicProperty>LastUpdatedWith</DynamicProperty>
+    <DynamicProperty>Type</DynamicProperty>
+    <DynamicProperty>Description</DynamicProperty>
+    <DynamicProperty>Keywords</DynamicProperty>
+    <DynamicProperty>Comments</DynamicProperty>
+    <DynamicProperty>Manager</DynamicProperty>
+    <DynamicProperty>Title</DynamicProperty>
+    <DynamicProperty>Subject</DynamicProperty>
+    <DynamicProperty>Author</DynamicProperty>
+    <DynamicProperty>Checked by</DynamicProperty>
+    <DynamicProperty>Engr Approved by</DynamicProperty>
+    <DynamicProperty>Material</DynamicProperty>
+    <DynamicProperty>Company</DynamicProperty>
+    <DynamicProperty>Part Number</DynamicProperty>
+    <DynamicProperty>Project</DynamicProperty>
+  </DynamicPropertiesCategory>
+</DynamicProperties>

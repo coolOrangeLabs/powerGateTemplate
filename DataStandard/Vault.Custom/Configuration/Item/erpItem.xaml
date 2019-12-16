@@ -1,0 +1,201 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behaviours="clr-namespace:Common.Wpf;assembly=Common"
+             behaviours:TabTitleBehavior.TabTitle="ERP Item"
+            x:Name="MainWindow" Background="White">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,5,0,5" />
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Content}" Value="{x:Null}">
+                    <Setter Property="BorderThickness" Value="1"></Setter>
+                    <Setter Property="BorderBrush" Value="#ff0000"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <TabControl>
+        <TabItem Header="View" x:Name="ViewData">
+            <Grid x:Name="ViewMaterialGrid" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <GroupBox Header="Basic data" Foreground="#FFFF9900">
+                    <Grid Grid.Row="1" IsEnabled="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition MinWidth="100" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Number" Grid.Row="0" Grid.Column="0"/>
+                        <TextBox Text="{Binding No}" Grid.Row="0" Grid.Column="1" />
+                        <Label Content="Description" Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding Description}" Grid.Column="1" Grid.Row="1" />
+                        <Label Content="Type" Grid.Column="0" Grid.Row="2" />
+                        <TextBox Text="{Binding Type}" Grid.Column="1" Grid.Row="2" />
+                        <Label Content="Base Unit of Measure" Grid.Column="0" Grid.Row="3" />
+                        <TextBox Text="{Binding BaseUnitOfMeasure}" Grid.Column="1" Grid.Row="3" />
+                        <Label Content="Last Date Modified" Grid.Column="0" Grid.Row="4" />
+                        <TextBox Text="{Binding Last_Date_Modified}" Grid.Column="1" Grid.Row="4" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Technical data" Grid.Column="1" Foreground="#FFFF9900">
+                    <Grid Grid.Row="1" IsEnabled="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition MinWidth="100" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Gross Weight" Grid.Column="0" />
+                        <TextBox Text="{Binding Gross_Weight}" Grid.Column="1" />
+                        <Label Content="Net Weight" Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding Net_Weight}" Grid.Column="1" Grid.Row="1" />
+                        <Label Content="" Grid.Column="0" Grid.Row="2" />
+                        <Label Content="Price" Grid.Column="0" Grid.Row="3" />
+                        <TextBox Text="{Binding Price}" Grid.Column="1" Grid.Row="3" />
+                        <Label Content="Shelf No." Grid.Column="0" Grid.Row="4" />
+                        <TextBox Text="{Binding Shelf_No}" Grid.Column="1" Grid.Row="4" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Vendor data" Grid.Column="0" Grid.Row="1" Foreground="#FFFF9900">
+                    <Grid Grid.Row="1" IsEnabled="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition MinWidth="100" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Vendor" Grid.Column="0" />
+                        <TextBox Text="{Binding Vendor_No}" Grid.Column="1" TextWrapping="Wrap"/>
+                        <Label Content="Vendor Item No." Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding Vendor_Item_No}" Grid.Column="1" Grid.Row="1" />
+
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Inventory data" Grid.Column="1" Grid.Row="1" Foreground="#FFFF9900">
+                    <Grid Grid.Row="1" IsEnabled="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition MinWidth="100" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Item category code" Grid.Column="0" Grid.Row="2" />
+                        <TextBox Text="{Binding Item_Category_Code}" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap"/>
+                        <Label Content="Product group code" Grid.Column="0" Grid.Row="3" />
+                        <TextBox Text="{Binding Product_Group_Code}" Grid.Column="1" Grid.Row="3" />
+                        <Label Content="Service item group" Grid.Column="0" Grid.Row="4" />
+                        <TextBox Text="{Binding Service_Item_Group}" Grid.Column="1" Grid.Row="4" />
+
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </TabItem>
+        <TabItem Header="New" x:Name="NewData">
+
+            <Grid x:Name="NewMaterialGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <GroupBox Header="Basic Data" Grid.Column="0" Foreground="#FF9900">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition MinWidth="100" Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Number" Grid.Row="0" Grid.Column="0"/>
+                        <TextBox Text="{Binding No}" Grid.Row="0" Grid.Column="1" />
+                        <Label Content="Description" Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding Description}" Grid.Column="1" Grid.Row="1" />
+
+
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Vendor data" Grid.Column="1" Grid.Row="0" Foreground="#FFFF9900">
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition MinWidth="100" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Vendor" Grid.Column="0" />
+                        <ComboBox Name="VendorList"  SelectedValue="{Binding Vendor_No}" DisplayMemberPath="Name" SelectedValuePath="No" Grid.Column="1"/>
+                        <Label Content="Vendor Item No." Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding Vendor_Item_No}" Grid.Column="1" Grid.Row="1" />
+
+                    </Grid>
+                </GroupBox>
+                <Button Grid.Row="2" Grid.Column="0" Content="Create" Command="{Binding PsCmd[CreateNewMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" Height="25" HorizontalAlignment="Left" Margin="10"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>
