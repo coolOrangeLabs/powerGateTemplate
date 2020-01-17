@@ -39,10 +39,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="powerGateServer.SDK, Version=15.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(MSBuildExtensionsPath64)\..\coolOrange\powerGateServer\powerGateServer.SDK.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="powerGateServer.SDK">
+      <HintPath>ReferenceAssemblies\powerGateServer.SDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
