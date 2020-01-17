@@ -7,7 +7,7 @@
 			 Language="1033"
 			 Manufacturer="$(var.CompanyDirectory) s.r.l."
 			 UpgradeCode="$(var.UpgradeCode)"
-			 Version='$(var.PVersion)'>
+			 Version="$(var.PVersion)">
 		<Package Id="*"
 				 Keywords="Installer, Setup"
 				 Description="$(var.CompanyDirectory) $(var.PName) Installer"
