@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <?include Includes\ProductVariables.wxi ?>
+	<Product Id="*"
+			 Name="$(var.CompanyDirectory) $(var.PName)"
+			 Language="1033"
+			 Manufacturer="$(var.CompanyDirectory) s.r.l."
+			 UpgradeCode="$(var.UpgradeCode)"
+			 Version='$(var.PVersion)'>
+		<Package Id="*"
+				 Keywords="Installer, Setup"
+				 Description="$(var.CompanyDirectory) $(var.PName) Installer"
+				 Manufacturer="$(var.CompanyDirectory) s.r.l."
+				 InstallerVersion="305"
+				 Compressed="yes"
+				 Languages="1033"
+				 SummaryCodepage="1252" 
+				 InstallScope="perMachine"/>
+
+		<Media Id="1"
+			   Cabinet="media1.cab"
+			   EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" >
+      <ComponentGroupRef Id="SETUP_UI" />
+      <ComponentGroupRef Id="HeatGenerated_DatastandardFiles" />
+		</Feature>
+
+    <Property Id="SAMEVERSIONINSTALLED" />
+		<Upgrade Id="$(var.UpgradeCode)">
+			<UpgradeVersion OnlyDetect="no"
+							Property="SAMEVERSIONINSTALLED"
+							Minimum="$(var.PVersion)"
+							Maximum="$(var.PVersion)"
+							IncludeMaximum="yes"
+							IncludeMinimum="yes"
+						>
+			</UpgradeVersion>
+		</Upgrade>
+	  <?include Includes\ARPProperties.wxi ?>
+    <?include Includes\CheckCoolOrangeProductInstalled.wxi ?>
+
+	  <Property Id="POWERSHELLVERSION_NEW">
+	    <RegistrySearch Id="PowerShellVersionNew"
+	                    Root="HKLM"
+	                    Key="SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine"
+	                    Name="PowerShellVersion"
+	                    Type="raw" />
+	  </Property>
+	  <Condition Message="This application requires Powershell 5. Please install the required Powershell version and then run again this installer.">
+	    <![CDATA[Installed OR POWERSHELLVERSION_NEW << "5."]]>
+	  </Condition>
+
+
+	  <!-- powerVault -->
+	  <Property Id="POWERVAULTINSTALLEDVERSION">
+	    <RegistrySearch Id="PowerVaultInstalledVersion"
+	                    Root="HKLM"
+	                    Key="SOFTWARE\coolOrange s.r.l.\powerVault"
+	                    Name="Version"
+	                    Type="raw" />
+	  </Property>
+
+	  <!-- powerGate -->
+	  <Property Id="POWERGATEINSTALLEDVERSION">
+	    <RegistrySearch Id="PowerGateInstalledVersion"
+	                    Root="HKLM"
+	                    Key="SOFTWARE\coolOrange s.r.l.\powerGate"
+	                    Name="Version"
+	                    Type="raw" />
+	  </Property>
+	  <Condition
+	    Message="This application requires powerVault v19 or later. Please install the latest version of powerVault and then run again this installer.">
+	    <![CDATA[Installed OR POWERVAULTINSTALLEDVERSION > "19"]]>
+	  </Condition>
+
+	  <Condition
+	    Message="This application requires powerGate v19 or later. Please install the latest version of powerGate and then run again this installer.">
+	    <![CDATA[Installed OR POWERGATEINSTALLEDVERSION > "19"]]>
+	  </Condition>
+
+		<MajorUpgrade Schedule="afterInstallInitialize"
+					  DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit."/>
+	</Product>
+</Wix>

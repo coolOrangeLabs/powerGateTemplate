@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!--
+	   FirstInstall: when product is installed for the first time
+	   Upgrading: when we run upgrade for the installed product
+	   RemovingForUpgrade: when upgrade removes previous installation
+	   Uninstalling: when product is being completely unistalled
+	   Maintenance: configuration maintenance
+	  -->
+  <SetProperty Id="FirstInstall"
+			   Value="true"
+			   After="FindRelatedProducts">
+	NOT Installed AND NOT WIX_UPGRADE_DETECTED AND NOT WIX_DOWNGRADE_DETECTED
+  </SetProperty>
+  <SetProperty Id="Upgrading"
+			   Value="true"
+			   After="SetFirstInstall">
+	WIX_UPGRADE_DETECTED AND NOT (REMOVE="ALL")
+  </SetProperty>
+  <SetProperty Id="RemovingForUpgrade"
+			   Value="true"
+			   After="RemoveExistingProducts"
+			   Sequence="execute">
+	(REMOVE="ALL") AND UPGRADINGPRODUCTCODE
+  </SetProperty>
+  <SetProperty Id="Uninstalling"
+			   Value="true"
+			   After="SetUpgrading">
+	Installed AND (REMOVE="ALL") AND NOT (WIX_UPGRADE_DETECTED OR UPGRADINGPRODUCTCODE)
+  </SetProperty>
+  <SetProperty Id="Maintenance"
+			   Value="true"
+			   After="SetUninstalling">
+	Installed AND NOT Upgrading AND NOT Uninstalling AND NOT UPGRADINGPRODUCTCODE
+  </SetProperty>
+</Include>

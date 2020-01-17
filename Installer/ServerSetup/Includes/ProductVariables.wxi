@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+	<?define UpgradeCode="296e0780-75e1-4af3-b447-5c14525d3b3c"?>
+  <?define WikiLink="https://github.com/coolOrangeLabs/powerGateTemplate/wiki"?>
+	<?define IconName="..\Resources\coolOrange.ico"?>
+	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
+	<?define PName="powerGateServerErpService Plugin"?>
+	<?define PShortVersion="$(var.Major).$(var.Minor)"?>
+  <?define CompanyDirectory="coolOrange"?>
+	
+	<?if $(var.Platform) = x64 ?>
+	  <?define Win64 = "yes" ?>
+	  <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+	<?else ?>
+	  <?define Win64 = "no" ?>
+	  <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+	<?endif ?>
+</Include>

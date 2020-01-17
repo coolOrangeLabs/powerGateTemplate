@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="WelcomeDlgTitle">{\CoolOrange_Dialog_Title}Welcome to the setup for [ProductName].</String>
+	<String Id="WelcomeDlg_Title" >[ProductName] [ProductVersion] Setup</String>
+	<String Id="ExitDialogTitle">{\CoolOrange_Dialog_Title}[ProductName] Setup finished.</String>
+	<String Id="ExitDialog_Title" >[ProductName] [ProductVersion] Setup</String>
+	<String Id="MaintenanceWelcomeDlgTitle">{\CoolOrange_Dialog_Title}Welcome to the setup for [ProductName].</String>
+	<String Id="MaintenanceWelcomeDlg_Title" >[ProductName] [ProductVersion] Setup</String>
+	<String Id="UserExitTitle">{\CoolOrange_Dialog_Title}Setup for [ProductName] was interrupted.</String>
+	<String Id="UserExit_Title" >[ProductName] [ProductVersion] Setup</String>
+	<String Id="ResumeDlgTitle">{\CoolOrange_Dialog_Title}Setup for [ProductName] will be resumed.</String>
+	<String Id="ResumeDlg_Title" >[ProductName] [ProductVersion] Setup</String>
+	<String Id="ProgressDlg_Title" >[ProductName] [ProductVersion] Setup</String>
+	<String Id="ProgressDlgTitleInstalling" >{\CoolOrange_Dialog_Title}Installing [ProductName].</String>
+	<String Id="WelcomeEulaDlgTitle" >{\CoolOrange_Dialog_Title}Please read the [ProductName] License Agreement.</String>
+	<String Id="WelcomeEulaDlg_Title" >[ProductName] [ProductVersion] Setup</String>
+</WixLocalization>

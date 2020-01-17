@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="ERP_SERVICES">
+            <Component Id="cmp9A8AC627F749942FD935B3B6DB2E60DB" Guid="{00594616-96DC-444C-8768-B88F6E2F2FAA}">
+                <File Id="fil183B0D16A1EAD14049A682D4786AD0F3" KeyPath="yes" Source="$(var.HarvestPowerGateServer)\ErpServices.dll.config" />
+            </Component>
+            <Component Id="cmpDBCA0D1AFCBB13DB77BBE7D3334BB72D" Guid="{73C34A5E-B1E2-4574-88CB-3C42595208FA}">
+                <File Id="fil2C31105ACF2BFE2D9C111E837D8219D2" KeyPath="yes" Source="$(var.HarvestPowerGateServer)\ErpServices.dll" />
+            </Component>
+            <Component Id="cmp29A3330503FBE0E6EF9D5658AFD3BF4A" Guid="{D913AF94-FD9B-47A9-AE0E-A19A55AEAC7D}">
+                <File Id="filF65F6F98DABED1A861FBDBFA25075DEB" KeyPath="yes" Source="$(var.HarvestPowerGateServer)\ErpServices.addin" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="HeatGenerated_PowerGateServerPlugins">
+            <ComponentRef Id="cmp9A8AC627F749942FD935B3B6DB2E60DB" />
+            <ComponentRef Id="cmpDBCA0D1AFCBB13DB77BBE7D3334BB72D" />
+            <ComponentRef Id="cmp29A3330503FBE0E6EF9D5658AFD3BF4A" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

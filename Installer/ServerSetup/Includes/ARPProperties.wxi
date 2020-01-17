@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Property Id="ARPCOMMENTS" Value="$(var.PName)" />  
+  <Property Id="ARPHELPLINK" Value="$(var.WikiLink)" />  
+  <Property Id="ARPCONTACT" Value="support@coolorange.com" />
+  <Property Id="ARPPRODUCTICON" Value="coolOrange.ico" />
+  <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[DIR_POWERGATESERVER_PLUGINS]" />  
+  <InstallExecuteSequence>
+    <Custom Action="SetARPINSTALLLOCATION" After="InstallValidate"></Custom>
+  </InstallExecuteSequence>
+</Include>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<?include Includes\ProductVariables.wxi ?>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="CommonAppDataFolder" Name="ProgramData">
+				<Directory Id='coolOrange' Name='coolOrange'>
+					<Directory Id='powerGateServer' Name='powerGateServer'>
+						<Directory Id='DIR_POWERGATESERVER_PLUGINS' Name='Plugins'>
+              <Directory Id='ERP_SERVICES' Name='ErpServices'>
+              </Directory>
+						</Directory>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+</Wix>

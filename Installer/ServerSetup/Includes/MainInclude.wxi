@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+<!--	Include other include files and include this in your Product element. -->
+  <?include ARPProperties.wxi ?>
+  <?include CheckCoolOrangeProductInstalled.wxi ?>
+</Include>

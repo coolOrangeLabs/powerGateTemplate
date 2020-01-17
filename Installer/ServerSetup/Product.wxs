@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:ps="http://schemas.microsoft.com/wix/PSExtension"
+	 xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <?include Includes\ProductVariables.wxi ?>
+	<Product Id="*"
+			 Name="$(var.CompanyDirectory) $(var.PName)"
+			 Language="1033"
+			 Manufacturer="$(var.CompanyDirectory) s.r.l."
+			 UpgradeCode="$(var.UpgradeCode)"
+			 Version='$(var.PVersion)'>
+		<Package Id="*"
+				 Keywords="Installer, Setup"
+				 Description="$(var.CompanyDirectory) $(var.PName) Installer"
+				 Manufacturer="$(var.CompanyDirectory) s.r.l."
+				 InstallerVersion="305"
+				 Compressed="yes"
+				 Languages="1033"
+				 SummaryCodepage="1252" />
+
+	  <?include Includes\ARPProperties.wxi ?>
+		<Media Id="1"
+			   Cabinet="media1.cab"
+			   EmbedCab="yes" />
+
+		<Feature Id="ProductFeature">
+			<ComponentGroupRef Id="HeatGenerated_PowerGateServerPlugins" />
+			<ComponentGroupRef Id="SETUP_UI" />
+		</Feature>
+
+     <Property Id="SAMEVERSIONINSTALLED" />
+		<Upgrade Id="$(var.UpgradeCode)">
+			<UpgradeVersion OnlyDetect="no"
+							Property="SAMEVERSIONINSTALLED"
+							Minimum="$(var.PVersion)"
+							Maximum="$(var.PVersion)"
+							IncludeMaximum="yes"
+							IncludeMinimum="yes"
+						>
+			</UpgradeVersion>
+		</Upgrade>
+
+		<Condition Message="This application does not support upgrading it with the same version: $(var.PVersion)">
+			NOT SAMEVERSIONINSTALLED
+		</Condition>
+
+
+	  <Property Id="POWERGATESERVERINSTALLEDVERSION">
+	    <RegistrySearch Id="PowerGateServerInstalledVersion"
+	                    Root="HKLM"
+	                    Key="SOFTWARE\coolOrange s.r.l.\powerGateServer"
+	                    Name="Version"
+	                    Type="raw" />
+	  </Property>
+	  <Condition
+	    Message="This application requires powerGateServer v19 or later. Please install the latest version of powerGateServer and then run again this installer.">
+	    <![CDATA[Installed OR POWERGATESERVERINSTALLEDVERSION]]>
+	  </Condition>
+
+		<MajorUpgrade Schedule="afterInstallInitialize"
+					  DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit."/>
+	</Product>
+</Wix>

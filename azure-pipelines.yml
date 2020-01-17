@@ -1,0 +1,46 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/vsts/pipelines/apps/windows/dot-net
+ 
+name: $(BuildID)
+ 
+pool:
+  vmImage: 'VS2017-Win2016'
+ 
+ 
+variables:   
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  buildMajor: '$(Major)'
+  buildMinor: '$(Minor)'
+  buildRevision: '$(Revision)'
+ 
+steps:
+- task: NuGetToolInstaller@0
+ 
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+ 
+- task: VSBuild@1  
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/property:Major=$(buildMajor);Minor=$(buildMinor);Build=$(Build.BuildNumber);Revision=$(buildRevision);RunWixToolsOutofProc=true'
+ 
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'Installer\bin\$(buildConfiguration)\en-us\*.msi'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    cleanTargetFolder: true
+    overWrite: true
+    flattenFolders: true
+ 
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'Setups'

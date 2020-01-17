@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <EnableProjectHarvesting>True</EnableProjectHarvesting>
+    <Major>1</Major>
+    <Minor>0</Minor>
+    <Build>0</Build>
+    <Revision>0</Revision>
+    <Name>Client_Setupx64</Name>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>3.5</ProductVersion>
+    <ProjectGuid>{9ABCFB01-0E53-4323-8CC9-D1E3D52F1865}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>PowerGateErpServices_Client_$(Major).$(Minor).$(Build)_$(Platform)</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug;HarvestDatastandard=..\..\Files\DataStandard;</DefineConstants>
+    <CompilerAdditionalOptions>
+			-dMajor=$(Major)
+			-dMinor=$(Minor)
+			-dBuild=$(Build)
+			-dRevision=$(Revision)
+		</CompilerAdditionalOptions>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\bin\Release\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+    <CompilerAdditionalOptions>-dMajor=$(Major)
+			-dMinor=$(Minor)
+			-dBuild=$(Build)
+			-dRevision=$(Revision)</CompilerAdditionalOptions>
+    <DefineConstants>Debug;HarvestDatastandard=..\..\Files\DataStandard;</DefineConstants>
+    <WixVariables>
+    </WixVariables>
+    <SuppressIces>ICE30</SuppressIces>
+    <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Directories.wxs" />
+    <Compile Include="HeatGenerated\HeatGeneratedFileList_Datastandard.wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="UserInterface.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
+      <Name>WixNetFxExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HeatGenerated\" />
+    <Folder Include="Includes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Includes\ARPProperties.wxi" />
+    <Content Include="Includes\CheckCoolOrangeProductInstalled.wxi" />
+    <Content Include="Includes\ProductVariables.wxi" />
+    <Content Include="Includes\Runtime.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="en-us.wxl" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <PropertyGroup>
+    <PreBuildEvent>cd  "$(ProjectDir)"
+
+::  Heat for Datastandard files
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\DataStandard -cg HeatGenerated_DatastandardFiles -dr DATASTANDARD_INSTALL -sreg -srd -var var.HarvestDatastandard -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_Datastandard.wxs</PreBuildEvent>
+  </PropertyGroup>
+</Project>
