@@ -37,7 +37,7 @@
 			-dMinor=$(Minor)
 			-dBuild=$(Build)
 			-dRevision=$(Revision)</CompilerAdditionalOptions>
-    <DefineConstants>HarvestPowerGateServer=..\..\Files\powerGatePlugin;</DefineConstants>
+    <DefineConstants>HarvestPowerGateServer=..\..\Files\powerGatePlugin\bin\Release;</DefineConstants>
     <WixVariables>
     </WixVariables>
     <SuppressIces>ICE30</SuppressIces>
