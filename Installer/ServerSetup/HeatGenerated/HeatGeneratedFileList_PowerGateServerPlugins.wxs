@@ -2,16 +2,16 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
         <DirectoryRef Id="ERP_SERVICES">
-            <Component Id="cmp6EC7124899FD52EBFB2A5BFC2401A396" Guid="{59656F46-2B92-4149-976B-BAF1AA2D9D99}">
+            <Component Id="cmp6EC7124899FD52EBFB2A5BFC2401A396" Guid="{2AEFEF0F-35F5-4730-A879-8507450810C1}">
                 <File Id="filFB4CBD363DD9088D080818A7FB977BF7" KeyPath="yes" Source="$(var.HarvestPowerGateServer)\powerGateServer.SDK.dll" />
             </Component>
-            <Component Id="cmp9A8AC627F749942FD935B3B6DB2E60DB" Guid="{4DFEAFAE-404B-46A4-BAF7-46D207DAFC55}">
+            <Component Id="cmp9A8AC627F749942FD935B3B6DB2E60DB" Guid="{8C2E2AC5-8F3C-43CB-9A76-D52DC0C8EEEF}">
                 <File Id="fil183B0D16A1EAD14049A682D4786AD0F3" KeyPath="yes" Source="$(var.HarvestPowerGateServer)\ErpServices.dll.config" />
             </Component>
-            <Component Id="cmpDBCA0D1AFCBB13DB77BBE7D3334BB72D" Guid="{A2DA643C-8CB0-4248-8210-F96CCEAA1F7F}">
+            <Component Id="cmpDBCA0D1AFCBB13DB77BBE7D3334BB72D" Guid="{918D6E20-C23D-4627-A9CD-77E3DE532B87}">
                 <File Id="fil2C31105ACF2BFE2D9C111E837D8219D2" KeyPath="yes" Source="$(var.HarvestPowerGateServer)\ErpServices.dll" />
             </Component>
-            <Component Id="cmp29A3330503FBE0E6EF9D5658AFD3BF4A" Guid="{66A2FDC8-A0C0-4EB0-B7D0-3BA96BB899BD}">
+            <Component Id="cmp29A3330503FBE0E6EF9D5658AFD3BF4A" Guid="{4D92B921-2CCF-4652-AE0A-BA154C4F49E2}">
                 <File Id="filF65F6F98DABED1A861FBDBFA25075DEB" KeyPath="yes" Source="$(var.HarvestPowerGateServer)\ErpServices.addin" />
             </Component>
         </DirectoryRef>

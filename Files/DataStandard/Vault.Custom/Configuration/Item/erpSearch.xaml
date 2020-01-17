@@ -17,39 +17,89 @@
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.ColumnSpan="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="24" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-            <Label Content="Description" VerticalAlignment="Center"/>
-            <TextBox x:Name="searchText" Grid.Column="1">
-                <TextBox.InputBindings>
-                    <KeyBinding Command="{Binding PsCmd[SearchItem]}" Key="Return" />
-                    <KeyBinding Command="{Binding PsCmd[SearchItem]}" Key="Enter" />
-                </TextBox.InputBindings>
-            </TextBox>
-            <Button x:Name="b_search" Width="100" Height="20" Content="Search..." Grid.Column="3" Command="{Binding PsCmd[SearchItem]}"/>
-            <Button x:Name="b_setItem" Width="100" Height="20" Content="Link" Grid.Row="0" Grid.Column="5" Command="{Binding PsCmd[SetItem]}"/>
+
+        <Grid Name="SearchCriteria">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Number" />
+                <TextBox Text="{Binding Number, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
+                <Label Content="Description" Grid.Column="3"/>
+                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4"/>
+
+            </Grid>
+            <Expander Grid.Row="1" Header="Advanced criteria">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Unit of measure" />
+                    <ComboBox Name="UomListSearch" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding UnitOfMeasure, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
+                    <Label Content="Type" Grid.Column="3"/>
+                    <ComboBox Name="MaterialTypeListSearch" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4"/>
+                    <Label Content="Width" Grid.Row="1"/>
+                    <TextBox Text="{Binding Width, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"/>
+                    <Label Content="Height" Grid.Column="3" Grid.Row="1"/>
+                    <TextBox Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Grid.Row="1"/>
+                </Grid>
+            </Expander>
         </Grid>
 
-        <DataGrid Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="1" x:Name="searchResults" Background="White" SelectionMode="Single">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding No}" Header="Number" Width="100" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Description}" Header="Description" Width="150" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding BaseUnitOfMeasure}" Header="UOM" Width="60" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Gross_Weight}" Header="G.Weight" Width="60" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Net_Weight}" Header="N.Weight" Width="60" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Vendor_Item_No}" Header="Vendor Item No" Width="100" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Vendor_No}" Header="Vendor" Width="100" IsReadOnly="True"/>
+        <Grid Grid.Row="1" Margin="0,10,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <Label Name="RecordsFound" Content=""/>
+            <Label Content="Max records" Grid.Column="1"/>
+            <ComboBox Name="NumberOfRecords" Grid.Column="2"/>
+            <CheckBox Name="CaseSensitive" IsChecked="False" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,0">Case sensitive</CheckBox>
+            <Button Height="20" Content="Search..." Grid.Column="4" Margin="10,0,0,0" Command="{Binding PsCmd[SearchMaterials]}" DataContext="{Binding DataContext, ElementName=MainWindow}"/>
+            <Button Height="20" Content="Link" Grid.Column="5" Margin="10,0,0,0" Command="{Binding PsCmd[LinkMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}"/>
+        </Grid>
 
+        <DataGrid Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="2" x:Name="SearchResults" Background="White" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
+                <DataGridTextColumn Binding="{Binding Description}" Header="Description"/>
+                <DataGridTextColumn Binding="{Binding UnitOfMeasure}" Header="UOM"/>
+                <DataGridTextColumn Binding="{Binding Type}" Header="Type"/>
+                <DataGridTextColumn Binding="{Binding Weight}" Header="Weight"/>
+                <DataGridTextColumn Binding="{Binding Width}" Header="Width"/>
+                <DataGridTextColumn Binding="{Binding Height}" Header="Height"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -41,7 +41,7 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Label Content="Number" Grid.Row="0"/>
-                <TextBox Text="{Binding No}" Grid.Row="0" Grid.Column="1"/>
+                <TextBox Text="{Binding Number}" Grid.Row="0" Grid.Column="1"/>
                 <Label Content="Description" Grid.Row="1"/>
                 <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1"/>
             </Grid>
@@ -59,19 +59,16 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Label Content="Unit of measure" />
-                <TextBox Text="{Binding Unit_of_Measure_Code}" Grid.Column="1" />
-                <Label Content="State" Grid.Row="1" />
-                <TextBox Text="{Binding Status}" Grid.Row="1" Grid.Column="1"/>
+                <Label Content="State" Grid.Row="0" />
+                <TextBox Text="{Binding Status}" Grid.Row="0" Grid.Column="1"/>
             </Grid>
         </GroupBox>
 
-        <DataGrid Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding ProdBOMLine}" AutoGenerateColumns="False" HeadersVisibility="Column" ScrollViewer.CanContentScroll="False" HorizontalGridLinesBrush="WhiteSmoke" VerticalGridLinesBrush="WhiteSmoke" Background="White">
+        <DataGrid Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding BomRows}" AutoGenerateColumns="False" HeadersVisibility="Column" ScrollViewer.CanContentScroll="False" HorizontalGridLinesBrush="WhiteSmoke" VerticalGridLinesBrush="WhiteSmoke" Background="White">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Position}" Header="Position" Width="60" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding No}" Header="Number" Width="100" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Quantity_per}" Header="Quantity" Width="60" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Description}" Header="Description" Width="140" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding ChildNumber}" Header="Number" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Quantity}" Header="Quantity" Width="60" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

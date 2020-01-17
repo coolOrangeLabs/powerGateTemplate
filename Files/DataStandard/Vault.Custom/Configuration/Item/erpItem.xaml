@@ -15,10 +15,17 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <TabControl>
-        <TabItem Header="View" x:Name="ViewData">
-            <Grid x:Name="ViewMaterialGrid" Margin="10">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="View/Update material" x:Name="ViewMaterial" Margin="10">
+            <Grid >
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
@@ -27,7 +34,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <GroupBox Header="Basic data" Foreground="#FFFF9900">
-                    <Grid Grid.Row="1" IsEnabled="False">
+                    <Grid >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -43,19 +50,15 @@
                             <ColumnDefinition MinWidth="100" Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Number" Grid.Row="0" Grid.Column="0"/>
-                        <TextBox Text="{Binding No}" Grid.Row="0" Grid.Column="1" />
+                        <TextBox Text="{Binding Number}" Grid.Row="0" Grid.Column="1" IsEnabled="False"/>
                         <Label Content="Description" Grid.Column="0" Grid.Row="1" />
                         <TextBox Text="{Binding Description}" Grid.Column="1" Grid.Row="1" />
-                        <Label Content="Type" Grid.Column="0" Grid.Row="2" />
-                        <TextBox Text="{Binding Type}" Grid.Column="1" Grid.Row="2" />
-                        <Label Content="Base Unit of Measure" Grid.Column="0" Grid.Row="3" />
-                        <TextBox Text="{Binding BaseUnitOfMeasure}" Grid.Column="1" Grid.Row="3" />
-                        <Label Content="Last Date Modified" Grid.Column="0" Grid.Row="4" />
-                        <TextBox Text="{Binding Last_Date_Modified}" Grid.Column="1" Grid.Row="4" />
+                        <Label Content="Create date" Grid.Column="0" Grid.Row="2" />
+                        <TextBox Text="{Binding CreateDate}" Grid.Column="1" Grid.Row="2" IsEnabled="False"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Technical data" Grid.Column="1" Foreground="#FFFF9900">
-                    <Grid Grid.Row="1" IsEnabled="False">
+                <GroupBox Header="Technical data" Grid.Column="0" Grid.Row="1" Foreground="#FFFF9900">
+                    <Grid IsEnabled="False">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -70,19 +73,16 @@
                             <ColumnDefinition Width="140" />
                             <ColumnDefinition MinWidth="100" Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="Gross Weight" Grid.Column="0" />
-                        <TextBox Text="{Binding Gross_Weight}" Grid.Column="1" />
-                        <Label Content="Net Weight" Grid.Column="0" Grid.Row="1" />
-                        <TextBox Text="{Binding Net_Weight}" Grid.Column="1" Grid.Row="1" />
-                        <Label Content="" Grid.Column="0" Grid.Row="2" />
-                        <Label Content="Price" Grid.Column="0" Grid.Row="3" />
-                        <TextBox Text="{Binding Price}" Grid.Column="1" Grid.Row="3" />
-                        <Label Content="Shelf No." Grid.Column="0" Grid.Row="4" />
-                        <TextBox Text="{Binding Shelf_No}" Grid.Column="1" Grid.Row="4" />
+                        <Label Content="Weight" Grid.Column="0" />
+                        <TextBox Text="{Binding Weight}" Grid.Column="1" />
+                        <Label Content="Height" Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding Height}" Grid.Column="1" Grid.Row="1" />
+                        <Label Content="Width" Grid.Column="0" Grid.Row="3" />
+                        <TextBox Text="{Binding Width}" Grid.Column="1" Grid.Row="3" />
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Vendor data" Grid.Column="0" Grid.Row="1" Foreground="#FFFF9900">
-                    <Grid Grid.Row="1" IsEnabled="False">
+                <GroupBox Header="Additiona data" Grid.Column="1" Grid.Row="0" Foreground="#FFFF9900">
+                    <Grid IsEnabled="False">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -97,43 +97,17 @@
                             <ColumnDefinition Width="140" />
                             <ColumnDefinition MinWidth="100" Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="Vendor" Grid.Column="0" />
-                        <TextBox Text="{Binding Vendor_No}" Grid.Column="1" TextWrapping="Wrap"/>
-                        <Label Content="Vendor Item No." Grid.Column="0" Grid.Row="1" />
-                        <TextBox Text="{Binding Vendor_Item_No}" Grid.Column="1" Grid.Row="1" />
-
+                        <Label Content="Unit of measure" Grid.Column="0" />
+                        <TextBox Text="{Binding UnitOfMeasure}" Grid.Column="1"/>
+                        <Label Content="Material Type" Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding Type}" Grid.Column="1" Grid.Row="1" />
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Inventory data" Grid.Column="1" Grid.Row="1" Foreground="#FFFF9900">
-                    <Grid Grid.Row="1" IsEnabled="False">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="140" />
-                            <ColumnDefinition MinWidth="100" Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Item category code" Grid.Column="0" Grid.Row="2" />
-                        <TextBox Text="{Binding Item_Category_Code}" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap"/>
-                        <Label Content="Product group code" Grid.Column="0" Grid.Row="3" />
-                        <TextBox Text="{Binding Product_Group_Code}" Grid.Column="1" Grid.Row="3" />
-                        <Label Content="Service item group" Grid.Column="0" Grid.Row="4" />
-                        <TextBox Text="{Binding Service_Item_Group}" Grid.Column="1" Grid.Row="4" />
-
-                    </Grid>
-                </GroupBox>
+                <Button Grid.Row="2" Grid.Column="1" Content="Update" Command="{Binding PsCmd[UpdateMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" Height="25" HorizontalAlignment="Right" Margin="10"/>
             </Grid>
-        </TabItem>
-        <TabItem Header="New" x:Name="NewData">
-
-            <Grid x:Name="NewMaterialGrid">
+        </GroupBox>
+        <GroupBox Header="Create material" x:Name="NewMaterial" Grid.Row="1" Margin="10">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -161,15 +135,11 @@
                             <ColumnDefinition Width="140" />
                             <ColumnDefinition MinWidth="100" Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Label Content="Number" Grid.Row="0" Grid.Column="0"/>
-                        <TextBox Text="{Binding No}" Grid.Row="0" Grid.Column="1" />
-                        <Label Content="Description" Grid.Column="0" Grid.Row="1" />
-                        <TextBox Text="{Binding Description}" Grid.Column="1" Grid.Row="1" />
-
-
+                        <Label Content="Description" Grid.Column="0" Grid.Row="0" />
+                        <TextBox Name="txtDescription" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0" />
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Vendor data" Grid.Column="1" Grid.Row="0" Foreground="#FFFF9900">
+                <GroupBox Header="Additional Data" Grid.Column="1" Grid.Row="0" Foreground="#FFFF9900">
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
@@ -185,15 +155,38 @@
                             <ColumnDefinition Width="140" />
                             <ColumnDefinition MinWidth="100" Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="Vendor" Grid.Column="0" />
-                        <ComboBox Name="VendorList" SelectedValue="{Binding Vendor_No}" DisplayMemberPath="Name" SelectedValuePath="No" Grid.Column="1"/>
-                        <Label Content="Vendor Item No." Grid.Column="0" Grid.Row="1" />
-                        <TextBox Text="{Binding Vendor_Item_No}" Grid.Column="1" Grid.Row="1" />
-
+                        <Label Content="Unit of measure" Grid.Column="0" />
+                        <ComboBox Name="UomList" SelectedValue="{Binding UnitOfMeasure}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1"/>
+                        <Label Content="Material Type" Grid.Column="0" Grid.Row="1"/>
+                        <ComboBox Name="MaterialTypeList" SelectedValue="{Binding Type}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1" Grid.Row="1"/>
                     </Grid>
                 </GroupBox>
-                <Button Grid.Row="2" Grid.Column="0" Content="Create" Command="{Binding PsCmd[CreateNewMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" Height="25" HorizontalAlignment="Left" Margin="10"/>
+                <GroupBox Header="Technical data" Grid.Column="0" Grid.Row="1" Foreground="#FFFF9900">
+                    <Grid IsEnabled="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition MinWidth="100" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Weight" Grid.Column="0" />
+                        <TextBox Text="{Binding Weight}" Grid.Column="1" />
+                        <Label Content="Height" Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding Height}" Grid.Column="1" Grid.Row="1" />
+                        <Label Content="Width" Grid.Column="0" Grid.Row="3" />
+                        <TextBox Text="{Binding Width}" Grid.Column="1" Grid.Row="3" />
+                    </Grid>
+                </GroupBox>
+                <Button Name="CreateMaterialButton" Grid.Row="2" Grid.Column="1" Content="Create" Command="{Binding PsCmd[CreateMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" Height="25" HorizontalAlignment="Right" Margin="10" IsEnabled="False"/>
             </Grid>
-        </TabItem>
-    </TabControl>
+        </GroupBox>
+    </Grid>
 </UserControl>
