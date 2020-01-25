@@ -72,6 +72,9 @@ namespace ErpServices
         {
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
+                db.GetCollection<BomRow>()
+                    .Insert(entity.BomRows);
+
                 db.GetCollection<BomHeader>()
                     .Include(x => x.BomRows)
                     .Insert(entity);
