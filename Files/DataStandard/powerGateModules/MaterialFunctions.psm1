@@ -37,7 +37,7 @@ function UpdateMaterialBase($material) {
 
 function TransformMaterial($material) {
 	#define here all transformations required before material creation
-	$material.Number = $material.Number.ToUpper()
+	#$material.Number = $material.Number.ToUpper()
 	$material.Description = $material.Description.ToUpper()
 	#$material.DrawingNo = $material.Number
 	$material.CreateDate = [DateTime]::Now
