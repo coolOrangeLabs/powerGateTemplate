@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Services.Common;
 using System.Linq;
+using LiteDB;
 using powerGateServer.SDK;
 
 namespace ErpServices
@@ -22,30 +23,59 @@ namespace ErpServices
 
     public class Materials : ServiceMethod<Material>
     {
-        static readonly Dictionary<string, Material> MaterialStorage = new Dictionary<string, Material>();
-
         public override string Name => "Materials";
+
+        public Materials()
+        {
+            BsonMapper.Global.Entity<Material>().Id(x => x.Number);
+        }
 
         public string GetNextNumber()
         {
-            string nextNumber = "500000";
-            var highestNumber = MaterialStorage.Values.OrderByDescending(m => m.Number).FirstOrDefault();
-            if (highestNumber != null)
-                nextNumber = highestNumber.Number;
-            int nn = int.Parse(nextNumber);
-            nn++;
-            return nn.ToString();
+            var nextNumber = "500000";
+
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                var material = db.GetCollection<Material>()
+                    .FindOne(LiteDB.Query.All(LiteDB.Query.Descending));
+
+                if (material != null)
+                    nextNumber = material.Number;
+
+                return (int.Parse(nextNumber) +1).ToString();
+            }
         }
 
         public override IEnumerable<Material> Query(IExpression<Material> expression)
         {
-            return MaterialStorage.Values.ToArray();
+            if (expression.Where.Any(b => b.PropertyName.Equals("Number")))
+            {
+                var number = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
+                if (number != null && number.Value != number && number.Value.ToString() != "")
+                {
+                    using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+                    {
+                        return db.GetCollection<Material>()
+                            .Find(x => x.Number.Equals(number.Value));
+                    }
+                }
+                return null;
+            }
+
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                return db.GetCollection<Material>()
+                    .FindAll();
+            }
         }
 
         public override void Update(Material entity)
         {
-            MaterialStorage.Remove(entity.Number);
-            MaterialStorage.Add(entity.Number, entity);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<Material>()
+                    .Update(entity);
+            }
         }
 
         public override void Create(Material entity)
@@ -53,12 +83,20 @@ namespace ErpServices
             if (entity.Number.Equals("*"))
                 entity.Number = GetNextNumber();
 
-            MaterialStorage.Add(entity.Number, entity);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<Material>()
+                    .Insert(entity);
+            }
         }
 
         public override void Delete(Material entity)
         {
-            MaterialStorage.Remove(entity.Number);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<Material>()
+                    .Delete(x => x.Number.Equals(entity.Number));
+            }
         }
     }
 }

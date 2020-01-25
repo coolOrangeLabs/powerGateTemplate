@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Services.Common;
 using System.Linq;
+using LiteDB;
 using powerGateServer.SDK;
 
 namespace ErpServices
@@ -14,7 +15,7 @@ namespace ErpServices
         public int Position { get; set; }
         public double Quantity { get; set; }
 
-        public string Key
+        public string Id
         {
             get => $"{ParentNumber}+{ChildNumber}+{Position.ToString()}";
             set => _ = value;
@@ -23,13 +24,11 @@ namespace ErpServices
 
     public class BomRows : ServiceMethod<BomRow>
     {
-        static readonly Dictionary<string, BomRow> BomRowStorage = new Dictionary<string, BomRow>();
-
         public override string Name => "BomRows";
 
-        public List<BomRow> GetRowsByParentNumber(string parentNumber)
+        public BomRows()
         {
-            return BomRowStorage.Values.Where(b => b.ParentNumber.Equals(parentNumber)).ToList();
+            BsonMapper.Global.Entity<BomRow>().Id(x => x.Id);
         }
 
         public override IEnumerable<BomRow> Query(IExpression<BomRow> expression)
@@ -38,25 +37,48 @@ namespace ErpServices
             {
                 var parentNumber = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("ParentNumber"));
                 if (parentNumber != null && parentNumber.Value != null && parentNumber.Value.ToString() != "")
-                    return GetRowsByParentNumber(parentNumber.Value.ToString());
+                {
+                    using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+                    {
+                        return db.GetCollection<BomRow>()
+                            .Find(x => x.ParentNumber.Equals(parentNumber.Value));
+                    }
+                }
+                return null;
             }
-            return BomRowStorage.Values;
+            
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                return db.GetCollection<BomRow>()
+                    .FindAll();
+            }
         }
 
         public override void Update(BomRow entity)
         {
-            BomRowStorage.Remove(entity.Key);
-            BomRowStorage.Add(entity.Key, entity);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<BomRow>()
+                    .Update(entity);
+            }
         }
 
         public override void Create(BomRow entity)
         {
-            BomRowStorage.Add(entity.Key, entity);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<BomRow>()
+                    .Insert(entity);
+            }
         }
 
         public override void Delete(BomRow entity)
         {
-            BomRowStorage.Remove(entity.Key);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<BomRow>()
+                    .Delete(x => x.Id.Equals(entity.Id));
+            }
         }
     }
 }

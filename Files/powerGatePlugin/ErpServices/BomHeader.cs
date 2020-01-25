@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Services.Common;
 using System.Linq;
+using LiteDB;
 using powerGateServer.SDK;
 
 namespace ErpServices
@@ -14,17 +15,6 @@ namespace ErpServices
         public string Status { get; set; }
 
         public List<BomRow> BomRows { get; set;  }
-        /* {
-            get {
-                var bomRows = new BomRows();
-                return bomRows.GetRowsByParentNumber(Number);
-            }
-            set {
-                var bomRows = new BomRows();
-                foreach (var bomRow in value)
-                    bomRows.Create(bomRow);
-            }
-        }*/
 
         public BomHeader()
         {
@@ -35,49 +25,67 @@ namespace ErpServices
 
     public class BomHeaders : ServiceMethod<BomHeader>
     {
-        static readonly Dictionary<string, BomHeader> BomHeaderStorage = new Dictionary<string, BomHeader>();
+        public override string Name => "BomHeaders";
 
-        public override string Name
+        public BomHeaders()
         {
-            get { return "BomHeaders"; }
+            BsonMapper.Global.Entity<BomHeader>().Id(x => x.Number);
+            BsonMapper.Global.Entity<BomHeader>().DbRef(x => x.BomRows);
         }
 
         public override IEnumerable<BomHeader> Query(IExpression<BomHeader> expression)
         {
-            List<BomHeader> boms = new List<BomHeader>();
-            if(expression.Where.Any(b => b.PropertyName.Equals("Number")))
+            if (expression.Where.Any(b => b.PropertyName.Equals("Number")))
             {
                 var number = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
                 if (number != null && number.Value != number && number.Value.ToString() != "")
                 {
-                    if (BomHeaderStorage.TryGetValue(number.Value.ToString(), out var bom))
+                    using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
                     {
-                        var bomRows = new BomRows();
-                        bom.BomRows = bomRows.GetRowsByParentNumber(number.Value.ToString());
-                        boms.Add(bom);
+                        return db.GetCollection<BomHeader>()
+                            .Include(x => x.BomRows)
+                            .Find(x => x.Number.Equals(number.Value));
                     }
                 }
+                return null;
             }
-            return boms;
+
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                return db.GetCollection<BomHeader>()
+                    .Include(x => x.BomRows)
+                    .FindAll();
+            }
         }
 
         public override void Update(BomHeader entity)
         {
-            BomHeaderStorage.Remove(entity.Number);
-            BomHeaderStorage.Add(entity.Number, entity);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<BomHeader>()
+                    .Include(x => x.BomRows)
+                    .Update(entity);
+            }
         }
 
         public override void Create(BomHeader entity)
         {
-            BomHeaderStorage.Add(entity.Number, entity);
-            var bomRows = new BomRows();
-            foreach (var bomRow in entity.BomRows)
-                bomRows.Create(bomRow);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<BomHeader>()
+                    .Include(x => x.BomRows)
+                    .Insert(entity);
+            }
         }
 
         public override void Delete(BomHeader entity)
         {
-            BomHeaderStorage.Remove(entity.Number);
+            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            {
+                db.GetCollection<BomHeader>()
+                    .Include(x => x.BomRows)
+                    .Delete(x => x.Number.Equals(entity.Number));
+            }
         }
     }
 }
