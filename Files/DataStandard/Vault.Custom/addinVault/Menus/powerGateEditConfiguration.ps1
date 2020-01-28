@@ -8,4 +8,4 @@ else {
     $cfg.Save($cfgPath)
 }
 
-explorer /select, $cfgPath
+Start-Process -FilePath C:\Windows\explorer.exe -ArgumentList "/select, ""$cfgPath"""
