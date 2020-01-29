@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="POWERJOBS_INSTALL">
+            <Directory Id="dir9863F927219F662EF95C56A136170A7A" Name="Jobs">
+                <Component Id="cmpACC9896E109D98982759AF46E2E25F6A" Guid="*">
+                    <File Id="fil21608DB89CCA554B4DA1BC45F856E539" KeyPath="yes" Source="$(var.HarvestPowerJobs)\Jobs\ErpService.Create.PDF.ps1" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="HeatGenerated_PowerJobsFiles">
+            <ComponentRef Id="cmpACC9896E109D98982759AF46E2E25F6A" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

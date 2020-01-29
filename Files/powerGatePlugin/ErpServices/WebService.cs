@@ -8,12 +8,14 @@ namespace ErpServices
     public class WebService : powerGateServer.SDK.WebService
     {
         public static readonly string DatabaseFileLocation;
+        public static readonly string FileStorageLocation;
 
         public WebService()
         {
             AddMethod(new Materials());
             AddMethod(new BomHeaders());
             AddMethod(new BomRows());
+            AddMethod(new Documents());
         }
 
         static WebService()
@@ -24,6 +26,7 @@ namespace ErpServices
             var section = configuration.GetSection("LiteDB") as AppSettingsSection;
             if (section == null) return;
             DatabaseFileLocation = section.Settings["DatabaseFileLocation"].Value;
+            FileStorageLocation = section.Settings["FileStorageLocation"].Value;
         }
     }
 }

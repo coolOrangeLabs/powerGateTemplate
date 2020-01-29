@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-
     <?include Includes\ProductVariables.wxi ?>
-    <Directory Id="TARGETDIR"
-               Name="SourceDir">
-
+    <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="CommonAppDataFolder" Name="ProgramData">
         <Directory Id='AutoDesk' Name='Autodesk'>
           <Directory Id='Vault' Name='$(var.VaultYear)'>
-            <Directory Id='EXTENSIONS' Name='Extensions'>
-              <Directory Id='DATASTANDARD_INSTALL' Name='Datastandard' >
+            <Directory Id='Extensions' Name='Extensions'>
+              <Directory Id='DATASTANDARD_INSTALL' Name='DataStandard'>
               </Directory>
-             </Directory>
+            </Directory>
           </Directory>
         </Directory>
+        <Directory Id='coolOrange' Name='coolOrange'>
+          <Directory Id='POWEREVENTS_INSTALL' Name='powerEvents' />
+          <Directory Id='POWERJOBS_INSTALL' Name='powerJobs' />
+        </Directory>
       </Directory>
-
     </Directory>
   </Fragment>
 </Wix>

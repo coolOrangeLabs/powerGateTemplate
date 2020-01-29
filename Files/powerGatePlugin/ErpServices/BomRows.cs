@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Services;
 using System.Data.Services.Common;
 using System.Linq;
 using LiteDB;
@@ -8,6 +9,7 @@ namespace ErpServices
 {
     [DataServiceKey("ParentNumber","ChildNumber","Position")]
     [DataServiceEntity]
+    [IgnoreProperties("Id")]
     public class BomRow
     {
         public string ParentNumber { get; set; }
@@ -15,11 +17,7 @@ namespace ErpServices
         public int Position { get; set; }
         public double Quantity { get; set; }
 
-        public string Id
-        {
-            get => $"{ParentNumber}+{ChildNumber}+{Position.ToString()}";
-            set => _ = value;
-        }
+        public string Id => $"{ParentNumber}+{ChildNumber}+{Position.ToString()}";
     }
 
     public class BomRows : ServiceMethod<BomRow>

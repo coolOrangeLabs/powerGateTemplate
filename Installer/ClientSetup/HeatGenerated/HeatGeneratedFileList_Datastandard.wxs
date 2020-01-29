@@ -5,99 +5,99 @@
             <Directory Id="dir8CAA24C85FE57E2D2B02EEB2F8BD26F5" Name="CAD.Custom">
                 <Directory Id="dir5D5D72CA46B938E4E8A650708BB658ED" Name="Configuration">
                     <Component Id="cmpE5DE6B938E28DE5914E254C4454B028B" Guid="*">
-                        <File Id="fil632F9D387C6B926177EE45C6D5CD58E4" KeyPath="yes" Source="$(var.HarvestDatastandard)\CAD.Custom\Configuration\InventorDynamicProperties.xml" />
+                        <File Id="fil632F9D387C6B926177EE45C6D5CD58E4" KeyPath="yes" Source="$(var.HarvestDataStandard)\CAD.Custom\Configuration\InventorDynamicProperties.xml" />
                     </Component>
                     <Component Id="cmpA5EF6B3E3CBC76F44DF94292DE20E68D" Guid="*">
-                        <File Id="fil47D1730957778EADB891D94E50083744" KeyPath="yes" Source="$(var.HarvestDatastandard)\CAD.Custom\Configuration\Inventor.xaml" />
+                        <File Id="fil47D1730957778EADB891D94E50083744" KeyPath="yes" Source="$(var.HarvestDataStandard)\CAD.Custom\Configuration\Inventor.xaml" />
                     </Component>
                 </Directory>
                 <Directory Id="dir8B6D3700C4AAFE569966094F2DFDFF01" Name="addins">
                     <Component Id="cmpDE21EA2A8355B989087658B08E1A79B8" Guid="*">
-                        <File Id="filCA954E4FA9856585A8ED4E1B38F239B3" KeyPath="yes" Source="$(var.HarvestDatastandard)\CAD.Custom\addins\Default.ps1" />
+                        <File Id="filCA954E4FA9856585A8ED4E1B38F239B3" KeyPath="yes" Source="$(var.HarvestDataStandard)\CAD.Custom\addins\Default.ps1" />
                     </Component>
                     <Component Id="cmp4E0C7DFF6C63E74DFA7EAB1A778551BA" Guid="*">
-                        <File Id="fil7BACB58467F358AEB56D79274A309EF4" KeyPath="yes" Source="$(var.HarvestDatastandard)\CAD.Custom\addins\powerGateMain.ps1" />
+                        <File Id="fil7BACB58467F358AEB56D79274A309EF4" KeyPath="yes" Source="$(var.HarvestDataStandard)\CAD.Custom\addins\powerGateMain.ps1" />
                     </Component>
                 </Directory>
             </Directory>
             <Directory Id="dir4483E77AE631BB9F7AF7A8C0A24AAEA1" Name="Vault.Custom">
                 <Component Id="cmp7A9653A5F9BCFDE54E2558A11049D102" Guid="*">
-                    <File Id="filBEEA9AFF9C2F7E964F5A79F2E380512A" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\co.ico" />
+                    <File Id="filBEEA9AFF9C2F7E964F5A79F2E380512A" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\co.ico" />
                 </Component>
                 <Component Id="cmp00E72A8E85BFB8425A6E653D5CD7B5F0" Guid="*">
-                    <File Id="filCFB3347E2479E872B98811AA1D893E93" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\MenuDefinitions.xml" />
+                    <File Id="filCFB3347E2479E872B98811AA1D893E93" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\MenuDefinitions.xml" />
                 </Component>
                 <Directory Id="dir0D1BE6C2FEEB88FD58D29B00F7F8AEC3" Name="Configuration">
                     <Component Id="cmp9FEF822A8A1C8C44D713A293B85AC658" Guid="*">
-                        <File Id="fil50CC2D15B364A2DE920B666E9274595E" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\Configuration\VaultDynamicProperties.xml" />
+                        <File Id="fil50CC2D15B364A2DE920B666E9274595E" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\VaultDynamicProperties.xml" />
                     </Component>
                     <Directory Id="dir48436D8545CD35C06EFEFD9CE5A37FC4" Name="File">
                         <Component Id="cmpC8EBA5A392A091315F9A6655F61C6457" Guid="*">
-                            <File Id="fil8D6A4D1361A1C23FFA3BA80D919CEC4A" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\Configuration\File\erpSearch.xaml" />
+                            <File Id="fil8D6A4D1361A1C23FFA3BA80D919CEC4A" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\File\erpSearch.xaml" />
                         </Component>
                         <Component Id="cmp48FE5AA3E65CF962B4EF84E5897BDA3C" Guid="*">
-                            <File Id="filA94172340EDC7F86E1CAAF7901413608" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\Configuration\File\erpItem.xaml" />
+                            <File Id="filA94172340EDC7F86E1CAAF7901413608" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\File\erpItem.xaml" />
                         </Component>
                         <Component Id="cmp6A9296390506EEA65EF4ED7EBA92B1C5" Guid="*">
-                            <File Id="filC07AD6C1C1CF996C362E1E214DB2EB10" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\Configuration\File\erpBom.xaml" />
+                            <File Id="filC07AD6C1C1CF996C362E1E214DB2EB10" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\File\erpBom.xaml" />
                         </Component>
                     </Directory>
                     <Directory Id="dir2841A692A3CAB82061FA3B9E0DC1CF32" Name="Item">
                         <Component Id="cmp9D6132F44B3BCB8D24A4507D53EAFE6A" Guid="*">
-                            <File Id="fil5BDD44835E608821B1E55B44305F1246" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\Configuration\Item\erpSearch.xaml" />
+                            <File Id="fil5BDD44835E608821B1E55B44305F1246" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\Item\erpSearch.xaml" />
                         </Component>
                         <Component Id="cmpA6CE0C29D76BF9941170BD350E3E218E" Guid="*">
-                            <File Id="fil8736A3404DFE408C24F33E22F7FCE522" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\Configuration\Item\erpItem.xaml" />
+                            <File Id="fil8736A3404DFE408C24F33E22F7FCE522" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\Item\erpItem.xaml" />
                         </Component>
                         <Component Id="cmpB325111917981A5629DD9747064EAC57" Guid="*">
-                            <File Id="filBB5A6C58E27E09F76D205E8E83215251" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\Configuration\Item\erpBom.xaml" />
+                            <File Id="filBB5A6C58E27E09F76D205E8E83215251" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\Item\erpBom.xaml" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dir6E6A52E4864EF15EEC2A5150B6664F70" Name="addinVault">
                     <Component Id="cmpC637EF68E503A14F486073BB5D579E1D" Guid="*">
-                        <File Id="fil2FB75BCB4DF1BA6CC4466551E9244D8E" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\addinVault\Default.ps1" />
+                        <File Id="fil2FB75BCB4DF1BA6CC4466551E9244D8E" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\addinVault\Default.ps1" />
                     </Component>
                     <Component Id="cmp4B905A86DF18CA343047592642700041" Guid="*">
-                        <File Id="fil87A45702E4804D7ECB2FBB7D02E11ABC" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\addinVault\powerGateMain.ps1" />
+                        <File Id="fil87A45702E4804D7ECB2FBB7D02E11ABC" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\addinVault\powerGateMain.ps1" />
                     </Component>
                     <Directory Id="dir38889D6B81464716DE78F9FF2457C182" Name="Menus">
                         <Component Id="cmpF052CF051BA40E5E38E977641C6E51B8" Guid="*">
-                            <File Id="fil79D768CD5C21F072797CFDF998C8E3E0" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\addinVault\Menus\powerGateConfigurationTemplate.xml" />
+                            <File Id="fil79D768CD5C21F072797CFDF998C8E3E0" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\addinVault\Menus\powerGateConfigurationTemplate.xml" />
                         </Component>
                         <Component Id="cmp1C194A5479147F6C74603973048C9864" Guid="*">
-                            <File Id="fil907FF4F00857888E647D61197BF77425" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\addinVault\Menus\powerGateSaveConfiguration.ps1" />
+                            <File Id="fil907FF4F00857888E647D61197BF77425" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\addinVault\Menus\powerGateSaveConfiguration.ps1" />
                         </Component>
                         <Component Id="cmp1562B9075E8C0396FA345B2B84C522D3" Guid="*">
-                            <File Id="fil403574F636131817DB06AE199A921B04" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\addinVault\Menus\powerGateBomTransfer.ps1" />
+                            <File Id="fil403574F636131817DB06AE199A921B04" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\addinVault\Menus\powerGateBomTransfer.ps1" />
                         </Component>
                         <Component Id="cmp3082FFC56F0B1722FD94E085CB720812" Guid="*">
-                            <File Id="fil3B213006D60015D8A4B564850A429DE5" KeyPath="yes" Source="$(var.HarvestDatastandard)\Vault.Custom\addinVault\Menus\powerGateEditConfiguration.ps1" />
+                            <File Id="fil3B213006D60015D8A4B564850A429DE5" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\addinVault\Menus\powerGateEditConfiguration.ps1" />
                         </Component>
                     </Directory>
                 </Directory>
             </Directory>
             <Directory Id="dir890394BC05E7EB9CFC9267EF003AC027" Name="powerGateModules">
                 <Component Id="cmpA90B6C06A9F4E52FCA268E7A267EAEF8" Guid="*">
-                    <File Id="fil2EC34D5831B2ED8627FC222A8AE79483" KeyPath="yes" Source="$(var.HarvestDatastandard)\powerGateModules\Communication.psm1" />
+                    <File Id="fil2EC34D5831B2ED8627FC222A8AE79483" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\Communication.psm1" />
                 </Component>
                 <Component Id="cmpD2C1E3E137D98290198243C12A446130" Guid="*">
-                    <File Id="fil03B01BA64D728D6CD0EF59A55021A9D6" KeyPath="yes" Source="$(var.HarvestDatastandard)\powerGateModules\MaterialFunctions.psm1" />
+                    <File Id="fil03B01BA64D728D6CD0EF59A55021A9D6" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\MaterialFunctions.psm1" />
                 </Component>
                 <Component Id="cmp454CF93AE6879F3BD2E86DF042DC3988" Guid="*">
-                    <File Id="filA18AFDB5FBA09B7CCBBD801383E2F1E2" KeyPath="yes" Source="$(var.HarvestDatastandard)\powerGateModules\SearchFunctions.psm1" />
+                    <File Id="filA18AFDB5FBA09B7CCBBD801383E2F1E2" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\SearchFunctions.psm1" />
                 </Component>
                 <Component Id="cmpC738F6D98ECD7685A4D5E3DAC322878B" Guid="*">
-                    <File Id="fil813C5454E3C749F2368B71145956BE01" KeyPath="yes" Source="$(var.HarvestDatastandard)\powerGateModules\BomFunctions.psm1" />
+                    <File Id="fil813C5454E3C749F2368B71145956BE01" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\BomFunctions.psm1" />
                 </Component>
                 <Component Id="cmp34157D7536D033A6FC138C13C58CC252" Guid="*">
-                    <File Id="filB8C40F8B63CAEA0508E7B7CFAEBE76B8" KeyPath="yes" Source="$(var.HarvestDatastandard)\powerGateModules\SelectionLists.psm1" />
+                    <File Id="filB8C40F8B63CAEA0508E7B7CFAEBE76B8" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\SelectionLists.psm1" />
                 </Component>
             </Directory>
         </DirectoryRef>
     </Fragment>
     <Fragment>
-        <ComponentGroup Id="HeatGenerated_DatastandardFiles">
+        <ComponentGroup Id="HeatGenerated_DataStandardFiles">
             <ComponentRef Id="cmpE5DE6B938E28DE5914E254C4454B028B" />
             <ComponentRef Id="cmpA5EF6B3E3CBC76F44DF94292DE20E68D" />
             <ComponentRef Id="cmpDE21EA2A8355B989087658B08E1A79B8" />

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="POWEREVENTS_INSTALL">
+            <Directory Id="dirEFF4C1BEDA4833C0721A0CD69E996124" Name="Events">
+                <Component Id="cmpC8B82653DF1612D3B9937FDF71DCA79F" Guid="*">
+                    <File Id="fil8902439E82A66F1F973BA2F7A20F5DEC" KeyPath="yes" Source="$(var.HarvestPowerEvents)\Events\ErpService.Lifecycle.ps1" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="HeatGenerated_PowerEventsFiles">
+            <ComponentRef Id="cmpC8B82653DF1612D3B9937FDF71DCA79F" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

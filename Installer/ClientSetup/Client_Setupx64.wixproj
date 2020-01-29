@@ -37,7 +37,7 @@
 			-dMinor=$(Minor)
 			-dBuild=$(Build)
 			-dRevision=$(Revision)</CompilerAdditionalOptions>
-    <DefineConstants>Debug;HarvestDatastandard=..\..\Files\DataStandard;</DefineConstants>
+    <DefineConstants>Debug;HarvestDataStandard=..\..\Files\DataStandard;HarvestPowerEvents=..\..\Files\powerEvents;HarvestPowerJobs=..\..\Files\powerJobs;</DefineConstants>
     <WixVariables>
     </WixVariables>
     <SuppressIces>ICE30</SuppressIces>
@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Directories.wxs" />
     <Compile Include="HeatGenerated\HeatGeneratedFileList_Datastandard.wxs" />
+    <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerEvents.wxs" />
+    <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerJobs.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UserInterface.wxs" />
   </ItemGroup>
@@ -80,7 +82,13 @@
   <PropertyGroup>
     <PreBuildEvent>cd  "$(ProjectDir)"
 
-::  Heat for Datastandard files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\DataStandard -cg HeatGenerated_DatastandardFiles -dr DATASTANDARD_INSTALL -sreg -srd -var var.HarvestDatastandard -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_Datastandard.wxs</PreBuildEvent>
+::  Heat for DataStandard files
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\DataStandard -cg HeatGenerated_DataStandardFiles -dr DATASTANDARD_INSTALL -sreg -srd -var var.HarvestDataStandard -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_DataStandard.wxs
+
+::  Heat for powerEvents files
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerEvents -cg HeatGenerated_PowerEventsFiles -dr POWEREVENTS_INSTALL -sreg -srd -var var.HarvestPowerEvents -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerEvents.wxs
+
+::  Heat for powerJobs files
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerJobs -cg HeatGenerated_PowerJobsFiles -dr POWERJOBS_INSTALL -sreg -srd -var var.HarvestPowerJobs -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerJobs.wxs</PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -22,10 +22,18 @@
 			   Cabinet="media1.cab"
 			   EmbedCab="yes" />
 
-		<Feature Id="ProductFeature" >
+		<Feature Id="DataStandardCustomization" Title="Vault DataStandard UI Customization">
       <ComponentGroupRef Id="SETUP_UI" />
-      <ComponentGroupRef Id="HeatGenerated_DatastandardFiles" />
-		</Feature>
+      <ComponentGroupRef Id="HeatGenerated_DataStandardFiles" />
+    </Feature>
+
+    <Feature Id="PowerEventsFiles" Title="powerEvents Workflow Enhancements">
+      <ComponentGroupRef Id="HeatGenerated_PowerEventsFiles" />
+    </Feature>
+
+    <Feature Id="PowerJobsFiles" Title="powerJobs Custom Jobs">
+      <ComponentGroupRef Id="HeatGenerated_PowerJobsFiles" />
+    </Feature>
 
     <Property Id="SAMEVERSIONINSTALLED" />
 		<Upgrade Id="$(var.UpgradeCode)">
