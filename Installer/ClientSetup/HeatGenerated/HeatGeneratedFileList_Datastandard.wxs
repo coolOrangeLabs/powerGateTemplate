@@ -4,9 +4,6 @@
         <DirectoryRef Id="DATASTANDARD_INSTALL">
             <Directory Id="dir8CAA24C85FE57E2D2B02EEB2F8BD26F5" Name="CAD.Custom">
                 <Directory Id="dir5D5D72CA46B938E4E8A650708BB658ED" Name="Configuration">
-                    <Component Id="cmpE5DE6B938E28DE5914E254C4454B028B" Guid="*">
-                        <File Id="fil632F9D387C6B926177EE45C6D5CD58E4" KeyPath="yes" Source="$(var.HarvestDataStandard)\CAD.Custom\Configuration\InventorDynamicProperties.xml" />
-                    </Component>
                     <Component Id="cmpA5EF6B3E3CBC76F44DF94292DE20E68D" Guid="*">
                         <File Id="fil47D1730957778EADB891D94E50083744" KeyPath="yes" Source="$(var.HarvestDataStandard)\CAD.Custom\Configuration\Inventor.xaml" />
                     </Component>
@@ -28,9 +25,6 @@
                     <File Id="filCFB3347E2479E872B98811AA1D893E93" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\MenuDefinitions.xml" />
                 </Component>
                 <Directory Id="dir0D1BE6C2FEEB88FD58D29B00F7F8AEC3" Name="Configuration">
-                    <Component Id="cmp9FEF822A8A1C8C44D713A293B85AC658" Guid="*">
-                        <File Id="fil50CC2D15B364A2DE920B666E9274595E" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\VaultDynamicProperties.xml" />
-                    </Component>
                     <Directory Id="dir48436D8545CD35C06EFEFD9CE5A37FC4" Name="File">
                         <Component Id="cmpC8EBA5A392A091315F9A6655F61C6457" Guid="*">
                             <File Id="fil8D6A4D1361A1C23FFA3BA80D919CEC4A" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\File\erpSearch.xaml" />
@@ -98,13 +92,11 @@
     </Fragment>
     <Fragment>
         <ComponentGroup Id="HeatGenerated_DataStandardFiles">
-            <ComponentRef Id="cmpE5DE6B938E28DE5914E254C4454B028B" />
             <ComponentRef Id="cmpA5EF6B3E3CBC76F44DF94292DE20E68D" />
             <ComponentRef Id="cmpDE21EA2A8355B989087658B08E1A79B8" />
             <ComponentRef Id="cmp4E0C7DFF6C63E74DFA7EAB1A778551BA" />
             <ComponentRef Id="cmp7A9653A5F9BCFDE54E2558A11049D102" />
             <ComponentRef Id="cmp00E72A8E85BFB8425A6E653D5CD7B5F0" />
-            <ComponentRef Id="cmp9FEF822A8A1C8C44D713A293B85AC658" />
             <ComponentRef Id="cmpC8EBA5A392A091315F9A6655F61C6457" />
             <ComponentRef Id="cmp48FE5AA3E65CF962B4EF84E5897BDA3C" />
             <ComponentRef Id="cmp6A9296390506EEA65EF4ED7EBA92B1C5" />
