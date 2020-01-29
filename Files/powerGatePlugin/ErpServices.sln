@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErpServices", "ErpServices\ErpServices.csproj", "{14410A5B-F007-43D0-AE37-D2A0B187B462}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErpServices.VDS", "ErpServices.VDS\ErpServices.VDS.csproj", "{8C4B884E-F95E-42C8-8431-55B85FBE5184}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{14410A5B-F007-43D0-AE37-D2A0B187B462}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14410A5B-F007-43D0-AE37-D2A0B187B462}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14410A5B-F007-43D0-AE37-D2A0B187B462}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C4B884E-F95E-42C8-8431-55B85FBE5184}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{8C4B884E-F95E-42C8-8431-55B85FBE5184}.Debug|Any CPU.Build.0 = Debug|x64
+		{8C4B884E-F95E-42C8-8431-55B85FBE5184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C4B884E-F95E-42C8-8431-55B85FBE5184}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

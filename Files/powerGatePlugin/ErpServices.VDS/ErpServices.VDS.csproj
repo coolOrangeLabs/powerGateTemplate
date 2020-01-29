@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8C4B884E-F95E-42C8-8431-55B85FBE5184}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>powerGateNavision.VDS</RootNamespace>
+    <AssemblyName>powerGateNavision.VDS</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autodesk.Connectivity.Extensibility.Framework, Version=24.0.0.0, Culture=neutral, PublicKeyToken=aa20f34aedd220e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ReferenceAssemblies\Autodesk.Connectivity.Extensibility.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Autodesk.Connectivity.WebServices, Version=24.0.0.0, Culture=neutral, PublicKeyToken=aa20f34aedd220e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ReferenceAssemblies\Autodesk.Connectivity.WebServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Common, Version=24.0.49.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ReferenceAssemblies\Common.dll</HintPath>
+    </Reference>
+    <Reference Include="CreateObject, Version=24.0.49.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ReferenceAssemblies\CreateObject.dll</HintPath>
+    </Reference>
+    <Reference Include="dataStandard.UI, Version=24.0.49.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ReferenceAssemblies\dataStandard.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="..\..\DataStandard\CAD.Custom\addins\Default.ps1">
+      <Link>CAD.Custom\addins\Default.ps1</Link>
+    </None>
+    <None Include="..\..\DataStandard\CAD.Custom\addins\powerGateMain.ps1">
+      <Link>CAD.Custom\addins\powerGateMain.ps1</Link>
+    </None>
+    <None Include="..\..\DataStandard\powerGateModules\BomFunctions.psm1">
+      <Link>powerGateModules\BomFunctions.psm1</Link>
+    </None>
+    <None Include="..\..\DataStandard\powerGateModules\Communication.psm1">
+      <Link>powerGateModules\Communication.psm1</Link>
+    </None>
+    <None Include="..\..\DataStandard\powerGateModules\MaterialFunctions.psm1">
+      <Link>powerGateModules\MaterialFunctions.psm1</Link>
+    </None>
+    <None Include="..\..\DataStandard\powerGateModules\SearchFunctions.psm1">
+      <Link>powerGateModules\SearchFunctions.psm1</Link>
+    </None>
+    <None Include="..\..\DataStandard\powerGateModules\SelectionLists.psm1">
+      <Link>powerGateModules\SelectionLists.psm1</Link>
+    </None>
+    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Default.ps1">
+      <Link>Vault.Custom\addinVault\Default.ps1</Link>
+    </None>
+    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateBomTransfer.ps1">
+      <Link>Vault.Custom\addinVault\Menu\powerGateBomTransfer.ps1</Link>
+    </None>
+    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateEditConfiguration.ps1">
+      <Link>Vault.Custom\addinVault\Menu\powerGateEditConfiguration.ps1</Link>
+    </None>
+    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateSaveConfiguration.ps1">
+      <Link>Vault.Custom\addinVault\Menu\powerGateSaveConfiguration.ps1</Link>
+    </None>
+    <None Include="..\..\DataStandard\Vault.Custom\addinVault\powerGateMain.ps1">
+      <Link>Vault.Custom\addinVault\powerGateMain.ps1</Link>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="..\..\DataStandard\CAD.Custom\Configuration\Inventor.xaml">
+      <Link>CAD.Custom\Configuration\Inventor.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\File\erpBom.xaml">
+      <Link>Vault.Custom\Configuration\File\erpBom.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\File\erpItem.xaml">
+      <Link>Vault.Custom\Configuration\File\erpItem.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\File\erpSearch.xaml">
+      <Link>Vault.Custom\Configuration\File\erpSearch.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\Item\erpBom.xaml">
+      <Link>Vault.Custom\Configuration\Item\erpBom.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\Item\erpItem.xaml">
+      <Link>Vault.Custom\Configuration\Item\erpItem.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\Item\erpSearch.xaml">
+      <Link>Vault.Custom\Configuration\Item\erpSearch.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\..\DataStandard\Vault.Custom\co.ico">
+      <Link>Vault.Custom\co.ico</Link>
+    </Resource>
+    <Resource Include="..\..\DataStandard\Vault.Custom\MenuDefinitions.xml">
+      <Link>Vault.Custom\MenuDefinitions.xml</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateConfigurationTemplate.xml">
+      <Link>Vault.Custom\addinVault\Menu\powerGateConfigurationTemplate.xml</Link>
+    </Resource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y /E /I "$(SolutionDir)..\..\Files\DataStandard\CAD.Custom" "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\CAD.Custom"
+xcopy /Y /E /I "$(SolutionDir)..\..\Files\DataStandard\Vault.Custom" "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\Vault.Custom"
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>
