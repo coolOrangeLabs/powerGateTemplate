@@ -17,7 +17,7 @@ $fastOpen = $file._Extension -eq "idw" -or $file._Extension -eq "dwg" -and $file
 
 Write-Host "Starting job 'Create PDF as attachment' for file '$($file._Name)' ..."
 
-if( @("idw","dwg") -notcontains $file._Extension ) {
+if( @("iam", "idw", "dwg", "ipn", "ipt") -notcontains $file._Extension ) {
     Write-Host "Files with extension: '$($file._Extension)' are not supported"
     return
 }
@@ -37,8 +37,16 @@ if($openResult) {
         $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
         $file = Update-VaultFile -File $file._FullPath -AddAttachments @($PDFfile._FullPath)
 
+        $commonModulePath = "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\powerGateModules"
+        $modules = Get-ChildItem -path $commonModulePath -Filter *.psm1
+        $modules | ForEach-Object { Import-Module -Name $_.FullName -Global }	
+        
+        Write-Host "Connecting to powerGate..."
+        ConnectToErpServer
+
+        Write-Host "Uploading PDF file $($PDFfile._Name) to ERP system..."
         $d = New-ERPObject -EntityType "Document"
-        $d.FileName = $file._Name
+        $d.FileName = $PDFfile._Name
         $d.Number = $file._PartNumber
         $d.Description = $file._Description
         Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf" -File $localPDFfileLocation
