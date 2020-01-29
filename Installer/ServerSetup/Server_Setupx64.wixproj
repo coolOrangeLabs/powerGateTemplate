@@ -77,6 +77,6 @@
     <PreBuildEvent>cd  "$(ProjectDir)"
 
 ::  Heat for poweGateServer plugin files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGatePlugin\bin\Release -cg HeatGenerated_PowerGateServerPlugins -dr ERP_SERVICES s-sreg -srd -var var.HarvestPowerGateServer -gg -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerGateServerPlugins.wxs</PreBuildEvent>
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGatePlugin\bin\Release -cg HeatGenerated_PowerGateServerPlugins -dr ERP_SERVICES -sreg -scom -srd -var var.HarvestPowerGateServer -gg -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerGateServerPlugins.wxs</PreBuildEvent>
   </PropertyGroup>
 </Project>
