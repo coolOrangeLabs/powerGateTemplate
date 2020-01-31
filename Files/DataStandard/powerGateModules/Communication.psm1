@@ -39,6 +39,8 @@ function GetPowerGateError {
 function CheckResponse($entity) {
 	if ($null -eq $entity) {
 		$entity = $false
+		Add-Member -InputObject $entity -Name "_ErrorMessage" -Value $null -MemberType NoteProperty -Force
+		
 		$pGError = GetPowerGateError
 		if ($pGError) {
 			$message = "The communication with ERP failed!`n '$pGError'"
