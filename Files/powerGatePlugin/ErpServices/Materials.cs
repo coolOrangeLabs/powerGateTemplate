@@ -42,7 +42,7 @@ namespace ErpServices
                 if (material != null)
                     nextNumber = material.Number;
 
-                return (int.Parse(nextNumber) +1).ToString();
+                return (int.Parse(nextNumber) + 1).ToString();
             }
         }
 
@@ -50,13 +50,25 @@ namespace ErpServices
         {
             if (expression.Where.Any(b => b.PropertyName.Equals("Number")))
             {
-                var number = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
-                if (number != null && number.Value != number && number.Value.ToString() != "")
+                var searchObj = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
+                if (searchObj != null && searchObj.Value != searchObj && searchObj.Value.ToString() != "")
                 {
                     using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
                     {
-                        return db.GetCollection<Material>()
-                            .Find(x => x.Number.Equals(number.Value));
+                        switch (searchObj.Operator)
+                        {
+                            case OperatorType.StartsWith:
+                                return db.GetCollection<Material>().Find(x => x.Number.StartsWith(searchObj.Value.ToString()));
+
+                            case OperatorType.EndsWith:
+                                return db.GetCollection<Material>().Find(x => x.Number.EndsWith(searchObj.Value.ToString()));
+
+                            case OperatorType.Contains:
+                                return db.GetCollection<Material>().Find(x => x.Number.Contains(searchObj.Value.ToString()));
+
+                            default:
+                                return db.GetCollection<Material>().Find(x => x.Number.Equals(searchObj.Value));
+                        }
                     }
                 }
                 return null;
