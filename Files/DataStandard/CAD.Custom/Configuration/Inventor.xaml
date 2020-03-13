@@ -345,7 +345,7 @@
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Content="www.coolorange.com" FontSize="11" Foreground="#FFCCCCCC" HorizontalAlignment="Left" Margin="16,0,0,0" Padding="0" BorderThickness="0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                     <Label Grid.Column="1" Content="powerGate" FontSize="13" Foreground="#FFFF9900" HorizontalAlignment="Right" Margin="0" Opacity="0.5" BorderThickness="0" />
-                    <Image Grid.Column="2" Source="C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\Vault.Custom\powerGate.ico" Width="16" Height="16" Margin="0,0,16,0" Opacity="0.5" />
+                    <Image Grid.Column="2" Source="C:\ProgramData\coolOrange\powerGate\UI\powerGate.ico" Width="16" Height="16" Margin="0,0,16,0" Opacity="0.5" />
                 </Grid>
             </Grid>
         </Border>

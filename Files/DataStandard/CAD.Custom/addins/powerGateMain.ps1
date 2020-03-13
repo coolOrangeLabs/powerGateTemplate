@@ -1,5 +1,5 @@
 ﻿$global:ErrorActionPreference = "Stop"
-$commonModulePath = $PSScriptRoot.Replace('\CAD.Custom\addins', '\powerGateModules')
+$commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
 $modules = Get-ChildItem -path $commonModulePath -Filter *.psm1
 $modules | ForEach-Object { Import-Module -Name $_.FullName -Global }	
 
@@ -29,11 +29,11 @@ function OpenErpInsertWindow {
 }
 
 function OpenErpMaterialWindow {
-	[xml]$windowXaml = Get-Content "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\CAD.Custom\Configuration\erpItemWindow.xaml"
+	[xml]$windowXaml = Get-Content "C:\ProgramData\coolOrange\powerGate\UI\ContainerWindow.xaml"
 	$reader=(New-Object System.Xml.XmlNodeReader $windowXaml)
 	$global:window=[Windows.Markup.XamlReader]::Load($reader)	
-	
-	[xml]$userControlXaml = Get-Content "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\Vault.Custom\Configuration\File\erpItem.xaml"
+
+	[xml]$userControlXaml = Get-Content $PSScriptRoot.Replace('\CAD.Custom\addins', '\Vault.Custom\Configuration\File\erpItem.xaml')
 	$reader=(New-Object System.Xml.XmlNodeReader $userControlXaml)
 	$global:userControl=[Windows.Markup.XamlReader]::Load($reader)
 

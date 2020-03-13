@@ -8,7 +8,7 @@ function SearchErpMaterials ($filter, $top = 100) {
 }
 
 function OpenErpSearchWindow {
-    [xml]$searchWindowXaml = Get-Content "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\powerGateModules\SearchWindow.xaml"
+    [xml]$searchWindowXaml = Get-Content "C:\ProgramData\coolOrange\powerGate\UI\SearchWindow.xaml"
     $reader = (New-Object System.Xml.XmlNodeReader $searchWindowXaml)
     $searchWindow = [Windows.Markup.XamlReader]::Load($reader) 
     $searchWindow.DataContext = $dsWindow.DataContext
