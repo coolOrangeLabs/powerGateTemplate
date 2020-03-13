@@ -9,9 +9,6 @@
                     </Component>
                 </Directory>
                 <Directory Id="dir8B6D3700C4AAFE569966094F2DFDFF01" Name="addins">
-                    <Component Id="cmpDE21EA2A8355B989087658B08E1A79B8" Guid="*">
-                        <File Id="filCA954E4FA9856585A8ED4E1B38F239B3" KeyPath="yes" Source="$(var.HarvestDataStandard)\CAD.Custom\addins\Default.ps1" />
-                    </Component>
                     <Component Id="cmp4E0C7DFF6C63E74DFA7EAB1A778551BA" Guid="*">
                         <File Id="fil7BACB58467F358AEB56D79274A309EF4" KeyPath="yes" Source="$(var.HarvestDataStandard)\CAD.Custom\addins\powerGateMain.ps1" />
                     </Component>
@@ -26,9 +23,6 @@
                 </Component>
                 <Directory Id="dir0D1BE6C2FEEB88FD58D29B00F7F8AEC3" Name="Configuration">
                     <Directory Id="dir48436D8545CD35C06EFEFD9CE5A37FC4" Name="File">
-                        <Component Id="cmpC8EBA5A392A091315F9A6655F61C6457" Guid="*">
-                            <File Id="fil8D6A4D1361A1C23FFA3BA80D919CEC4A" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\File\erpSearch.xaml" />
-                        </Component>
                         <Component Id="cmp48FE5AA3E65CF962B4EF84E5897BDA3C" Guid="*">
                             <File Id="filA94172340EDC7F86E1CAAF7901413608" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\File\erpItem.xaml" />
                         </Component>
@@ -37,9 +31,6 @@
                         </Component>
                     </Directory>
                     <Directory Id="dir2841A692A3CAB82061FA3B9E0DC1CF32" Name="Item">
-                        <Component Id="cmp9D6132F44B3BCB8D24A4507D53EAFE6A" Guid="*">
-                            <File Id="fil5BDD44835E608821B1E55B44305F1246" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\Item\erpSearch.xaml" />
-                        </Component>
                         <Component Id="cmpA6CE0C29D76BF9941170BD350E3E218E" Guid="*">
                             <File Id="fil8736A3404DFE408C24F33E22F7FCE522" KeyPath="yes" Source="$(var.HarvestDataStandard)\Vault.Custom\Configuration\Item\erpItem.xaml" />
                         </Component>
@@ -71,36 +62,16 @@
                     </Directory>
                 </Directory>
             </Directory>
-            <Directory Id="dir890394BC05E7EB9CFC9267EF003AC027" Name="powerGateModules">
-                <Component Id="cmpA90B6C06A9F4E52FCA268E7A267EAEF8" Guid="*">
-                    <File Id="fil2EC34D5831B2ED8627FC222A8AE79483" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\Communication.psm1" />
-                </Component>
-                <Component Id="cmpD2C1E3E137D98290198243C12A446130" Guid="*">
-                    <File Id="fil03B01BA64D728D6CD0EF59A55021A9D6" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\MaterialFunctions.psm1" />
-                </Component>
-                <Component Id="cmp454CF93AE6879F3BD2E86DF042DC3988" Guid="*">
-                    <File Id="filA18AFDB5FBA09B7CCBBD801383E2F1E2" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\SearchFunctions.psm1" />
-                </Component>
-                <Component Id="cmpC738F6D98ECD7685A4D5E3DAC322878B" Guid="*">
-                    <File Id="fil813C5454E3C749F2368B71145956BE01" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\BomFunctions.psm1" />
-                </Component>
-                <Component Id="cmp34157D7536D033A6FC138C13C58CC252" Guid="*">
-                    <File Id="filB8C40F8B63CAEA0508E7B7CFAEBE76B8" KeyPath="yes" Source="$(var.HarvestDataStandard)\powerGateModules\SelectionLists.psm1" />
-                </Component>
-            </Directory>
         </DirectoryRef>
     </Fragment>
     <Fragment>
         <ComponentGroup Id="HeatGenerated_DataStandardFiles">
             <ComponentRef Id="cmpA5EF6B3E3CBC76F44DF94292DE20E68D" />
-            <ComponentRef Id="cmpDE21EA2A8355B989087658B08E1A79B8" />
             <ComponentRef Id="cmp4E0C7DFF6C63E74DFA7EAB1A778551BA" />
             <ComponentRef Id="cmp7A9653A5F9BCFDE54E2558A11049D102" />
             <ComponentRef Id="cmp00E72A8E85BFB8425A6E653D5CD7B5F0" />
-            <ComponentRef Id="cmpC8EBA5A392A091315F9A6655F61C6457" />
             <ComponentRef Id="cmp48FE5AA3E65CF962B4EF84E5897BDA3C" />
             <ComponentRef Id="cmp6A9296390506EEA65EF4ED7EBA92B1C5" />
-            <ComponentRef Id="cmp9D6132F44B3BCB8D24A4507D53EAFE6A" />
             <ComponentRef Id="cmpA6CE0C29D76BF9941170BD350E3E218E" />
             <ComponentRef Id="cmpB325111917981A5629DD9747064EAC57" />
             <ComponentRef Id="cmpC637EF68E503A14F486073BB5D579E1D" />
@@ -109,11 +80,6 @@
             <ComponentRef Id="cmp1C194A5479147F6C74603973048C9864" />
             <ComponentRef Id="cmp1562B9075E8C0396FA345B2B84C522D3" />
             <ComponentRef Id="cmp3082FFC56F0B1722FD94E085CB720812" />
-            <ComponentRef Id="cmpA90B6C06A9F4E52FCA268E7A267EAEF8" />
-            <ComponentRef Id="cmpD2C1E3E137D98290198243C12A446130" />
-            <ComponentRef Id="cmp454CF93AE6879F3BD2E86DF042DC3988" />
-            <ComponentRef Id="cmpC738F6D98ECD7685A4D5E3DAC322878B" />
-            <ComponentRef Id="cmp34157D7536D033A6FC138C13C58CC252" />
         </ComponentGroup>
     </Fragment>
 </Wix>

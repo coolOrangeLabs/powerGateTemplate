@@ -37,7 +37,7 @@
 			-dMinor=$(Minor)
 			-dBuild=$(Build)
 			-dRevision=$(Revision)</CompilerAdditionalOptions>
-    <DefineConstants>Debug;HarvestDataStandard=..\..\Files\DataStandard;HarvestPowerEvents=..\..\Files\powerEvents;</DefineConstants>
+    <DefineConstants>Debug;HarvestDataStandard=..\..\Files\DataStandard;HarvestPowerEvents=..\..\Files\powerEvents;HarvestPowerGate=..\..\Files\powerGate;</DefineConstants>
     <WixVariables>
     </WixVariables>
     <SuppressIces>ICE30</SuppressIces>
@@ -47,6 +47,7 @@
     <Compile Include="Directories.wxs" />
     <Compile Include="HeatGenerated\HeatGeneratedFileList_Datastandard.wxs" />
     <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerEvents.wxs" />
+    <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerGate.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UserInterface.wxs" />
   </ItemGroup>
@@ -85,6 +86,9 @@
 "%25WIX%25\bin\Heat.exe" dir ..\..\Files\DataStandard -cg HeatGenerated_DataStandardFiles -dr DATASTANDARD_INSTALL -sreg -srd -var var.HarvestDataStandard -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_DataStandard.wxs
 
 ::  Heat for powerEvents files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerEvents -cg HeatGenerated_PowerEventsFiles -dr POWEREVENTS_INSTALL -sreg -srd -var var.HarvestPowerEvents -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerEvents.wxs</PreBuildEvent>
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerEvents -cg HeatGenerated_PowerEventsFiles -dr POWEREVENTS_INSTALL -sreg -srd -var var.HarvestPowerEvents -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerEvents.wxs
+
+::  Heat for powerGate files
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGate -cg HeatGenerated_PowerGateFiles -dr POWERGATE_INSTALL -sreg -srd -var var.HarvestPowerGate -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerGate.wxs</PreBuildEvent>
   </PropertyGroup>
 </Project>

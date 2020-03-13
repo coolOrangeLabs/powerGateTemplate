@@ -15,6 +15,7 @@
         </Directory>
         <Directory Id='coolOrange' Name='coolOrange'>
           <Directory Id='POWEREVENTS_INSTALL' Name='powerEvents' />
+          <Directory Id='POWERGATE_INSTALL' Name='powerGate' />
         </Directory>
       </Directory>
     </Directory>

@@ -31,6 +31,10 @@
       <ComponentGroupRef Id="HeatGenerated_PowerEventsFiles" />
     </Feature>
 
+    <Feature Id="PowerGateFiles" Title="powerGate Shared Files">
+      <ComponentGroupRef Id="HeatGenerated_PowerGateFiles" />
+    </Feature>
+
     <Property Id="SAMEVERSIONINSTALLED" />
 		<Upgrade Id="$(var.UpgradeCode)">
 			<UpgradeVersion OnlyDetect="no"

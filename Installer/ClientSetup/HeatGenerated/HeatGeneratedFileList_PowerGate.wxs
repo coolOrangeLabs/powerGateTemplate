@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="POWERGATE_INSTALL">
+            <Directory Id="dir11CEAEE0F0C7E635210FD8E684369E28" Name="UI">
+                <Component Id="cmp1DBE459423984B3DBBA0192E0141C9D4" Guid="*">
+                    <File Id="filE7DFDB2D7040B7053A41F936A30293DB" KeyPath="yes" Source="$(var.HarvestPowerGate)\UI\SearchWindow.xaml" />
+                </Component>
+                <Component Id="cmp078433BD12F0ADD2C7B7C57A606E4B5E" Guid="*">
+                    <File Id="filC1B8FEB644A71B6787CE1E5859D914D9" KeyPath="yes" Source="$(var.HarvestPowerGate)\UI\powerGate.ico" />
+                </Component>
+                <Component Id="cmpC1A32DF901B3DE0955634830C3AD1F84" Guid="*">
+                    <File Id="filF93738046C74814930BD6ABB5EC35C75" KeyPath="yes" Source="$(var.HarvestPowerGate)\UI\ContainerWindow.xaml" />
+                </Component>
+            </Directory>
+            <Directory Id="dir27B2809CAC6604C674CAFE2A30FA277A" Name="Modules">
+                <Component Id="cmp07D87A8282EFF4B7575F5146DCBB6CF5" Guid="*">
+                    <File Id="fil4B567FC78FC9C139C133BDEA7DB0F6A0" KeyPath="yes" Source="$(var.HarvestPowerGate)\Modules\Communication.psm1" />
+                </Component>
+                <Component Id="cmpE837196143282AB7D48699064FF250CB" Guid="*">
+                    <File Id="filFC1FCEF24AB316B61D62EB940FD7AB19" KeyPath="yes" Source="$(var.HarvestPowerGate)\Modules\MaterialFunctions.psm1" />
+                </Component>
+                <Component Id="cmp374416B24CFE9803EF5A5A634E15DE35" Guid="*">
+                    <File Id="fil7A4D485FCD00EA541FC1D902BE8BF44B" KeyPath="yes" Source="$(var.HarvestPowerGate)\Modules\SearchFunctions.psm1" />
+                </Component>
+                <Component Id="cmp9FDEDD26B1D58DD81CD670EE44AA9910" Guid="*">
+                    <File Id="filB58F9A2F0490BEC73D42436EEE9F0736" KeyPath="yes" Source="$(var.HarvestPowerGate)\Modules\BomFunctions.psm1" />
+                </Component>
+                <Component Id="cmp710002CC7751573BD1FB636ECFF68A9B" Guid="*">
+                    <File Id="fil2C4D46FC927F9B4FD84F33CB209941AB" KeyPath="yes" Source="$(var.HarvestPowerGate)\Modules\SelectionLists.psm1" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="HeatGenerated_PowerGateFiles">
+            <ComponentRef Id="cmp1DBE459423984B3DBBA0192E0141C9D4" />
+            <ComponentRef Id="cmp078433BD12F0ADD2C7B7C57A606E4B5E" />
+            <ComponentRef Id="cmpC1A32DF901B3DE0955634830C3AD1F84" />
+            <ComponentRef Id="cmp07D87A8282EFF4B7575F5146DCBB6CF5" />
+            <ComponentRef Id="cmpE837196143282AB7D48699064FF250CB" />
+            <ComponentRef Id="cmp374416B24CFE9803EF5A5A634E15DE35" />
+            <ComponentRef Id="cmp9FDEDD26B1D58DD81CD670EE44AA9910" />
+            <ComponentRef Id="cmp710002CC7751573BD1FB636ECFF68A9B" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>
