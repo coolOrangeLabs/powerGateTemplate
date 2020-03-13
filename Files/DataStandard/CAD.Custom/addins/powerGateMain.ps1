@@ -1,4 +1,5 @@
-﻿$commonModulePath = $PSScriptRoot.Replace('\CAD.Custom\addins', '\powerGateModules')
+﻿$global:ErrorActionPreference = "Stop"
+$commonModulePath = $PSScriptRoot.Replace('\CAD.Custom\addins', '\powerGateModules')
 $modules = Get-ChildItem -path $commonModulePath -Filter *.psm1
 $modules | ForEach-Object { Import-Module -Name $_.FullName -Global }	
 

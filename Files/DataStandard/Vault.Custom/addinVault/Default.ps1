@@ -1,4 +1,5 @@
 ﻿function OnTabContextChanged {
+	$global:ErrorActionPreference = "Stop"
 	$xamlFile = [System.IO.Path]::GetFileName($VaultContext.UserControl.XamlFile)
 	OnTabContextChanged_powerGate -xamlFile $xamlFile	
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "CAD BOM.xaml") {

@@ -78,9 +78,9 @@ function Check-Items($entities) {
 function Transfer-Items($entities) {
     foreach ($entity in $entities) {
         if ($entity._Status -eq "New") {
-            $newMaterial = NewMaterial
-            $newMaterial = PrepareMaterial -material $newMaterial -vaultEntity $entity
-            $material = CreateMaterialBase -material $newMaterial
+            $newMaterial = NewErpMaterial
+            $newMaterial = PrepareErpMaterial -erpMaterial $newMaterial -vaultEntity $entity
+            $material = CreateErpMaterial -erpMaterial $newMaterial
             if ($material) {
                 Update-BomWindowEntity $entity -Status "Identical" -Properties $entity
             }
@@ -226,6 +226,7 @@ function Transfer-Boms($entityBoms) {
 }
 #endregion
 
+$Global:ErrorActionPreference = "Stop"
 $vaultContext.ForceRefresh = $true
 $id = $vaultContext.CurrentSelectionSet[0].Id
 if ($vaultContext.CurrentSelectionSet[0].TypeId.EntityClassId -eq "FILE") {
