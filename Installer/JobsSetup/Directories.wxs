@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <?include Includes\ProductVariables.wxi ?>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="CommonAppDataFolder" Name="ProgramData">
+        <Directory Id='coolOrange' Name='coolOrange'>
+          <Directory Id='POWERJOBS_INSTALL' Name='powerJobs' />
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+</Wix>
