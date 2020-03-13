@@ -12,9 +12,9 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProductVersion>3.5</ProductVersion>
-    <ProjectGuid>{9ABCFB01-0E53-4323-8CC9-D1E3D52F1865}</ProjectGuid>
+    <ProjectGuid>{bd603e60-81e9-4b5f-954b-45442595f724}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>PowerGateErpServices_Client_$(Major).$(Minor).$(Build)_$(Platform)</OutputName>
+    <OutputName>Custom_Jobs_powerGate_Standard_$(Major).$(Minor).$(Build)_x64</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -37,7 +37,7 @@
 			-dMinor=$(Minor)
 			-dBuild=$(Build)
 			-dRevision=$(Revision)</CompilerAdditionalOptions>
-    <DefineConstants>Debug;HarvestDataStandard=..\..\Files\DataStandard;HarvestPowerEvents=..\..\Files\powerEvents;</DefineConstants>
+    <DefineConstants>Debug;HarvestPowerJobs=..\..\Files\powerJobs;</DefineConstants>
     <WixVariables>
     </WixVariables>
     <SuppressIces>ICE30</SuppressIces>
@@ -45,8 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Directories.wxs" />
-    <Compile Include="HeatGenerated\HeatGeneratedFileList_Datastandard.wxs" />
-    <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerEvents.wxs" />
+    <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerJobs.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UserInterface.wxs" />
   </ItemGroup>
@@ -81,10 +80,7 @@
   <PropertyGroup>
     <PreBuildEvent>cd  "$(ProjectDir)"
 
-::  Heat for DataStandard files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\DataStandard -cg HeatGenerated_DataStandardFiles -dr DATASTANDARD_INSTALL -sreg -srd -var var.HarvestDataStandard -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_DataStandard.wxs
-
-::  Heat for powerEvents files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerEvents -cg HeatGenerated_PowerEventsFiles -dr POWEREVENTS_INSTALL -sreg -srd -var var.HarvestPowerEvents -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerEvents.wxs</PreBuildEvent>
+::  Heat for powerJobs files
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerJobs -cg HeatGenerated_PowerJobsFiles -dr POWERJOBS_INSTALL -sreg -srd -var var.HarvestPowerJobs -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerJobs.wxs</PreBuildEvent>
   </PropertyGroup>
 </Project>

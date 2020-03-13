@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+
+  <Property Id="POWERGATEINSTALLED">
+    <RegistrySearch Id="PowerGateInstalled"
+                    Root="HKLM"
+                    Key="SOFTWARE\coolOrange s.r.l.\powerGate"
+                    Name="Installed"
+                    Type="raw" />
+  </Property>
+
+  <Property Id="POWERVAULTINSTALLED">
+    <RegistrySearch Id="PowerVaultInstalled"
+                    Root="HKLM"
+                    Key="SOFTWARE\coolOrange s.r.l.\powerVault"
+                    Name="Installed"
+                    Type="raw" />
+  </Property>
+
+</Include>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<?include Includes\ProductVariables.wxi ?>
+	  <ComponentGroup Id="SETUP_UI" />
+		<WixVariable Id="WixUILicenseRtf"
+					 Value="..\Resources\EULA.rtf" />
+		<WixVariable Id="WixUIBannerBmp"
+					 Value="..\Resources\bg_banner.bmp" />
+		<WixVariable Id="WixUIDialogBmp"
+					 Value="..\Resources\bg_dialog.bmp" />
+
+		<Icon Id="coolOrange.ico"
+			  SourceFile="$(var.IconName)" />
+
+		<UIRef Id="WixUI_ErrorProgressText" />
+		<UI>
+			<UIRef Id="WixUI_Minimal" />
+			<TextStyle Id="WixUI_Font_Bigger_White"
+					   Size="12"
+					   Red="255"
+					   Green="255"
+					   Blue="255"
+					   FaceName="Tahoma" />
+			<TextStyle Id="CoolOrange_Dialog_Title"
+					   Size="10"
+					   Red="92"
+					   Green="93"
+					   Blue="94"
+					   FaceName="Verdana" />
+		</UI>
+	</Fragment>
+</Wix>
