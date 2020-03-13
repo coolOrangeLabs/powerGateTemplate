@@ -49,14 +49,19 @@ function Get-BomRows($entity) {
 
 function Check-Items($entities) {
     foreach ($entity in $entities) {
-        $number = GetEntityNumber -entity $entity
+        if ($entity._EntityTypeID -eq "File") {
+            $number = $entity._PartNumber
+        }
+        else {
+            $number = $entity._Number
+        }
         if ($null -eq $number -or $number -eq "") {
             Update-BomWindowEntity $entity -Status "Error" -Tooltip "Part Number is empty!"
             continue
         }
-        $erpMaterial = GetErpMaterial -number $number
-        if ($erpMaterial) {
-            $differences = CompareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
+        $material = GetErpMaterial -number $number
+        if ($material) {
+            $differences = CompareProperties -material $material -vaultEntity $entity
             if ($differences) {
                 Update-BomWindowEntity $entity -Status "Different" -Tooltip $differences
             }
@@ -73,10 +78,10 @@ function Check-Items($entities) {
 function Transfer-Items($entities) {
     foreach ($entity in $entities) {
         if ($entity._Status -eq "New") {
-            $erpMaterial = NewErpMaterial
-            $erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
-            $erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
-            if ($erpMaterial) {
+            $newMaterial = NewMaterial
+            $newMaterial = PrepareMaterial -material $newMaterial -vaultEntity $entity
+            $material = CreateMaterialBase -material $newMaterial
+            if ($material) {
                 Update-BomWindowEntity $entity -Status "Identical" -Properties $entity
             }
             else {
