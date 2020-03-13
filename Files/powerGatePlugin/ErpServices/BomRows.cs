@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Services;
 using System.Data.Services.Common;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace ErpServices
         public string ChildNumber { get; set; }
         public int Position { get; set; }
         public double Quantity { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime ModifyDate { get; set; }
 
         public string Id => $"{ParentNumber}+{ChildNumber}+{Position.ToString()}";
     }
@@ -39,7 +42,7 @@ namespace ErpServices
                     using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
                     {
                         return db.GetCollection<BomRow>()
-                            .Find(x => x.ParentNumber.Equals(parentNumber.Value));
+                            .Find(x => x.ParentNumber.Equals(parentNumber.Value)).OrderBy(x => x.Position);
                     }
                 }
                 return null;

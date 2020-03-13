@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Services.Common;
 using System.Linq;
 using LiteDB;
@@ -13,6 +14,8 @@ namespace ErpServices
         public string Number { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime ModifyDate { get; set; }
 
         public List<BomRow> BomRows { get; set;  }
 

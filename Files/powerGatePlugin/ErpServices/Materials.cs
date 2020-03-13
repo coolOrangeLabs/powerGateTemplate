@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+//using System.Configuration;
 using System.Data.Services.Common;
 using System.Linq;
 using LiteDB;
@@ -13,12 +14,14 @@ namespace ErpServices
     {
         public string Number { get; set; }
         public string Description { get; set; }
+        public string Title { get; set; }
         public string UnitOfMeasure { get; set; }
         public double Height { get; set; }
         public double Width { get; set; }
         public double Weight { get; set; }
         public string Type { get; set; }
         public DateTime CreateDate { get; set; }
+        public DateTime ModifyDate { get; set; }
     }
 
     public class Materials : ServiceMethod<Material>
@@ -36,43 +39,33 @@ namespace ErpServices
 
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
-                var material = db.GetCollection<Material>()
-                    .FindOne(LiteDB.Query.All(LiteDB.Query.Descending));
+                //var material = db.GetCollection<Material>().FindOne(LiteDB.Query.All(LiteDB.Query.Descending));
+                var collection = db.GetCollection<Material>();
 
+                int y;
+                var material = collection.Find(x => int.TryParse(x.Number, out y)).OrderByDescending(x => x.Number).FirstOrDefault();
                 if (material != null)
                     nextNumber = material.Number;
 
-                return (int.Parse(nextNumber) + 1).ToString();
+                return (int.Parse(nextNumber) +1).ToString();
             }
         }
 
         public override IEnumerable<Material> Query(IExpression<Material> expression)
         {
-            if (expression.Where.Any(b => b.PropertyName.Equals("Number")))
-            {
-                var searchObj = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
-                if (searchObj != null && searchObj.Value != searchObj && searchObj.Value.ToString() != "")
-                {
-                    using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
-                    {
-                        switch (searchObj.Operator)
-                        {
-                            case OperatorType.StartsWith:
-                                return db.GetCollection<Material>().Find(x => x.Number.StartsWith(searchObj.Value.ToString()));
-
-                            case OperatorType.EndsWith:
-                                return db.GetCollection<Material>().Find(x => x.Number.EndsWith(searchObj.Value.ToString()));
-
-                            case OperatorType.Contains:
-                                return db.GetCollection<Material>().Find(x => x.Number.Contains(searchObj.Value.ToString()));
-
-                            default:
-                                return db.GetCollection<Material>().Find(x => x.Number.Equals(searchObj.Value));
-                        }
-                    }
-                }
-                return null;
-            }
+            //if (expression.Where.Any(b => b.PropertyName.Equals("Number")))
+            //{
+            //    var number = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
+            //    if (number != null && number.Value != number && number.Value.ToString() != "")
+            //    {
+            //        using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            //        {
+            //            return db.GetCollection<Material>()
+            //                .Find(x => x.Number.Equals(number.Value));
+            //        }
+            //    }
+            //    return null;
+            //}
 
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {

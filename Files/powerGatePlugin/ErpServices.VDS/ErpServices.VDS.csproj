@@ -56,28 +56,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autodesk.Connectivity.Extensibility.Framework, Version=24.0.0.0, Culture=neutral, PublicKeyToken=aa20f34aedd220e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ReferenceAssemblies\Autodesk.Connectivity.Extensibility.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Autodesk.Connectivity.WebServices, Version=24.0.0.0, Culture=neutral, PublicKeyToken=aa20f34aedd220e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ReferenceAssemblies\Autodesk.Connectivity.WebServices.dll</HintPath>
-    </Reference>
-    <Reference Include="Common, Version=24.0.49.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ReferenceAssemblies\Common.dll</HintPath>
-    </Reference>
-    <Reference Include="CreateObject, Version=24.0.49.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ReferenceAssemblies\CreateObject.dll</HintPath>
-    </Reference>
-    <Reference Include="dataStandard.UI, Version=24.0.49.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ReferenceAssemblies\dataStandard.UI.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml">
@@ -91,93 +75,69 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="..\..\DataStandard\CAD.Custom\addins\Default.ps1">
-      <Link>CAD.Custom\addins\Default.ps1</Link>
-    </None>
-    <None Include="..\..\DataStandard\CAD.Custom\addins\powerGateMain.ps1">
-      <Link>CAD.Custom\addins\powerGateMain.ps1</Link>
-    </None>
-    <None Include="..\..\DataStandard\powerGateModules\BomFunctions.psm1">
-      <Link>powerGateModules\BomFunctions.psm1</Link>
-    </None>
-    <None Include="..\..\DataStandard\powerGateModules\Communication.psm1">
-      <Link>powerGateModules\Communication.psm1</Link>
-    </None>
-    <None Include="..\..\DataStandard\powerGateModules\MaterialFunctions.psm1">
-      <Link>powerGateModules\MaterialFunctions.psm1</Link>
-    </None>
-    <None Include="..\..\DataStandard\powerGateModules\SearchFunctions.psm1">
-      <Link>powerGateModules\SearchFunctions.psm1</Link>
-    </None>
-    <None Include="..\..\DataStandard\powerGateModules\SelectionLists.psm1">
-      <Link>powerGateModules\SelectionLists.psm1</Link>
-    </None>
-    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Default.ps1">
-      <Link>Vault.Custom\addinVault\Default.ps1</Link>
-    </None>
-    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateBomTransfer.ps1">
-      <Link>Vault.Custom\addinVault\Menu\powerGateBomTransfer.ps1</Link>
-    </None>
-    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateEditConfiguration.ps1">
-      <Link>Vault.Custom\addinVault\Menu\powerGateEditConfiguration.ps1</Link>
-    </None>
-    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateSaveConfiguration.ps1">
-      <Link>Vault.Custom\addinVault\Menu\powerGateSaveConfiguration.ps1</Link>
-    </None>
-    <None Include="..\..\DataStandard\Vault.Custom\addinVault\powerGateMain.ps1">
-      <Link>Vault.Custom\addinVault\powerGateMain.ps1</Link>
-    </None>
+    <None Include="CAD.Custom\addins\powerGateMain.ps1" />
+    <None Include="powerGateModules\BomFunctions.psm1" />
+    <None Include="powerGateModules\Communication.psm1" />
+    <None Include="powerGateModules\MaterialFunctions.psm1" />
+    <None Include="powerGateModules\SearchFunctions.psm1" />
+    <None Include="powerGateModules\SelectionLists.psm1" />
+    <None Include="Vault.Custom\addinVault\Default.ps1" />
+    <None Include="Vault.Custom\addinVault\Menus\powerGateBomTransfer.ps1" />
+    <None Include="Vault.Custom\addinVault\Menus\powerGateEditConfiguration.ps1" />
+    <None Include="Vault.Custom\addinVault\Menus\powerGateSaveConfiguration.ps1" />
+    <None Include="Vault.Custom\addinVault\powerGateMain.ps1" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Page Include="..\..\DataStandard\CAD.Custom\Configuration\Inventor.xaml">
-      <Link>CAD.Custom\Configuration\Inventor.xaml</Link>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{e23dd630-c3b2-4fb1-811f-27f4356b8a25}</Project>
+      <Name>Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\dataStandard.UI\dataStandard.UI.csproj">
+      <Project>{457a8bb7-9e85-4857-9b0c-420da9abc427}</Project>
+      <Name>dataStandard.UI</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CAD.Custom\Configuration\erpItemWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CAD.Custom\Configuration\Inventor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\File\erpBom.xaml">
-      <Link>Vault.Custom\Configuration\File\erpBom.xaml</Link>
+    <Page Include="powerGateModules\SearchWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vault.Custom\Configuration\File\erpBom.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\File\erpItem.xaml">
-      <Link>Vault.Custom\Configuration\File\erpItem.xaml</Link>
+    <Page Include="Vault.Custom\Configuration\File\erpItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\File\erpSearch.xaml">
-      <Link>Vault.Custom\Configuration\File\erpSearch.xaml</Link>
+    <Page Include="Vault.Custom\Configuration\Item\erpBom.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\Item\erpBom.xaml">
-      <Link>Vault.Custom\Configuration\Item\erpBom.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\Item\erpItem.xaml">
-      <Link>Vault.Custom\Configuration\Item\erpItem.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\Item\erpSearch.xaml">
-      <Link>Vault.Custom\Configuration\Item\erpSearch.xaml</Link>
+    <Page Include="Vault.Custom\Configuration\Item\erpItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\..\DataStandard\Vault.Custom\co.ico">
-      <Link>Vault.Custom\co.ico</Link>
-    </Resource>
-    <Resource Include="..\..\DataStandard\Vault.Custom\MenuDefinitions.xml">
-      <Link>Vault.Custom\MenuDefinitions.xml</Link>
-    </Resource>
+    <Resource Include="Vault.Custom\powerGate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateConfigurationTemplate.xml">
-      <Link>Vault.Custom\addinVault\Menu\powerGateConfigurationTemplate.xml</Link>
-    </Resource>
+    <Resource Include="Vault.Custom\co.ico" />
+    <Resource Include="Vault.Custom\MenuDefinitions.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Vault.Custom\addinVault\Menus\powerGateConfigurationTemplate.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -185,8 +145,8 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /E /I "$(SolutionDir)..\..\Files\DataStandard\CAD.Custom" "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\CAD.Custom"
-xcopy /Y /E /I "$(SolutionDir)..\..\Files\DataStandard\Vault.Custom" "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\Vault.Custom"
-</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y /E /I "$(ProjectDir)CAD.Custom" "$(SolutionDir)..\DataStandard\CAD.Custom"
+xcopy /Y /E /I "$(ProjectDir)powerGateModules" "$(SolutionDir)..\DataStandard\powerGateModules"
+xcopy /Y /E /I "$(ProjectDir)Vault.Custom" "$(SolutionDir)..\DataStandard\Vault.Custom"</PostBuildEvent>
   </PropertyGroup>
 </Project>

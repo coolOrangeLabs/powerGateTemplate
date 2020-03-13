@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErpServices", "ErpServices\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErpServices.VDS", "ErpServices.VDS\ErpServices.VDS.csproj", "{8C4B884E-F95E-42C8-8431-55B85FBE5184}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{E23DD630-C3B2-4FB1-811F-27F4356B8A25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dataStandard.UI", "dataStandard.UI\dataStandard.UI.csproj", "{457A8BB7-9E85-4857-9B0C-420DA9ABC427}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{14410A5B-F007-43D0-AE37-D2A0B187B462}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8C4B884E-F95E-42C8-8431-55B85FBE5184}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{8C4B884E-F95E-42C8-8431-55B85FBE5184}.Release|Any CPU.ActiveCfg = Release|x64
+		{E23DD630-C3B2-4FB1-811F-27F4356B8A25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E23DD630-C3B2-4FB1-811F-27F4356B8A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E23DD630-C3B2-4FB1-811F-27F4356B8A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E23DD630-C3B2-4FB1-811F-27F4356B8A25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{457A8BB7-9E85-4857-9B0C-420DA9ABC427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{457A8BB7-9E85-4857-9B0C-420DA9ABC427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{457A8BB7-9E85-4857-9B0C-420DA9ABC427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{457A8BB7-9E85-4857-9B0C-420DA9ABC427}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
