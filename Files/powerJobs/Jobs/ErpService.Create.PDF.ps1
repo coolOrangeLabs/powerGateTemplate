@@ -37,7 +37,7 @@ if($openResult) {
         $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
         $file = Update-VaultFile -File $file._FullPath -AddAttachments @($PDFfile._FullPath)
 
-        $commonModulePath = "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\powerGateModules"
+        $commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
         $modules = Get-ChildItem -path $commonModulePath -Filter *.psm1
         $modules | ForEach-Object { Import-Module -Name $_.FullName -Global }	
         
