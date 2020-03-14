@@ -1,4 +1,5 @@
 ﻿$global:ErrorActionPreference = "Stop"
+$global:addinPath = $PSScriptRoot
 $commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
 $modules = Get-ChildItem -path $commonModulePath -Filter *.psm1
 $modules | ForEach-Object { Import-Module -Name $_.FullName -Global }

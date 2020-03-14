@@ -1,16 +1,27 @@
 ﻿function GetSelectionList($section, $withBlank = $false) {
-    [xml]$cfg = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
-    $entries = Select-Xml -Xml $cfg -XPath "//$section" 
     $list = @()
-    foreach ($entry in $entries.Node.ChildNodes) { 
-        if ($entry.NodeType -eq "Comment") { continue }
-        $list += New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @($entry.Key, $entry.Value)
+    if (-not $vault) { return $list }
+    
+    [xml]$cfg = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
+	if ($null -eq $cfg) {
+		$xml = Get-Content "C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml"
+        $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $xml)
+        [xml]$cfg = $xml
     }
-    $list = $list | Sort-Object -Property "Value" 
-    if ($withBlank) { 
-        $empty = New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @("", "")
-        $list = , $empty + $list 
+    
+    $entries = Select-Xml -Xml $cfg -XPath "//$section"   
+    if ($entries) {
+        foreach ($entry in $entries.Node.ChildNodes) { 
+            if ($entry.NodeType -eq "Comment") { continue }
+            $list += New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @($entry.Key, $entry.Value)
+        }
+        $list = $list | Sort-Object -Property "Value" 
+        if ($withBlank) { 
+            $empty = New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @("", "")
+            $list = , $empty + $list 
+        }        
     }
+
     return $list
 }
 
