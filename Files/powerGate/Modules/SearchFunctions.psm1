@@ -57,7 +57,10 @@ function OpenErpSearchWindow {
     })
 
     $searchWindow.FindName("Clear").add_click( {
-        $searchWindow.FindName("Description").Text = ""
+        $searchCriteria = New-ERPObject -EntityType $materialEntityType
+        $searchWindow.FindName("SearchCriteria").DataContext = $searchCriteria
+        $searchWindow.FindName("SearchResults").ItemsSource = $null
+        $searchWindow.FindName("RecordsFound").Content = ""
     })
     
     if ($searchWindow.ShowDialog() -eq "OK") {
@@ -83,11 +86,11 @@ function ExecuteErpSearch {
     $results = SearchErpMaterials -filter $filter -top $topa
     if ($results) {
         $searchWindow.FindName("SearchResults").ItemsSource = @($results) #this is because PowerShell transforms one result into a single object instead of keeping it as a list of one element
-        $searchWindow.FindName("RecordsFound").Content = "Results found: $($results.Count)"
+        $searchWindow.FindName("RecordsFound").Content = "Results found: $(@($results).Count)"
     }
     else {
         $searchWindow.FindName("SearchResults").ItemsSource = $null
-        $searchWindow.FindName("RecordsFound").Content = ""
+        $searchWindow.FindName("RecordsFound").Content = "Results found: 0"
         if ($results._ErrorMessage) {
             #Show-MessageBox -message $results._ErrorMessage -icon "Error"
         }
