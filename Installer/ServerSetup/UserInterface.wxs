@@ -13,10 +13,9 @@
 		<Icon Id="coolOrange.ico"
 			  SourceFile="$(var.IconName)" />
 
-	  <Property Id="WIXUI_INSTALLDIR" Value="DIR_POWERGATESERVER_PLUGINS" />
 		<UIRef Id="WixUI_ErrorProgressText" />
 		<UI>
-			<UIRef Id="WixUI_InstallDir" />
+			<UIRef Id="WixUI_Minimal" />
 			<TextStyle Id="WixUI_Font_Bigger_White"
 					   Size="12"
 					   Red="255"
