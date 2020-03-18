@@ -23,6 +23,18 @@ function RestrictFileRelease($files) {
 	}
 }
 
+Register-VaultEvent -EventName UpdateItemStates_Restrictions -Action 'RestrictItemRelease'
+function RestrictItemRelease($items) {
+	foreach ($item in $items) {
+		if ($item._NewState -like "*release*") {
+			$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $item._Number }
+			if ($null -eq $material) {
+				Add-VaultRestriction -EntityName ($item._Name) -Message "An item with the number '$($item._Number)' does not exist in the ERP system."
+			}
+		}
+	}
+}
+
 Register-VaultEvent -EventName UpdateFileStates_Post -Action 'AddPdfJob'
 function AddPdfJob($files, $successful) {
     if(-not $successful) {
