@@ -2,11 +2,10 @@
     $list = @()
     if (-not $vault) { return $list }
     
-    [xml]$cfg = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
+    [xml]$cfg = Get-PowerGateConfigFromVault
 	if ($null -eq $cfg) {
-		$xml = Get-Content "C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml"
-        $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $xml)
-        [xml]$cfg = $xml
+		[xml]$cfg = Get-Content "C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml"
+        Set-PowerGateConfigFromVault -Content $cfg.InnerXml
     }
     
     $entries = Select-Xml -Xml $cfg -XPath "//$section"   
@@ -33,4 +32,25 @@ function GetUnitOfMeasuresList($withBlank = $false) {
 function GetMaterialTypeList($withBlank = $false) {
     $list = GetSelectionList -section "MaterialTypes" -withBlank $withBlank
     return $list | Sort-Object -Property value
+}
+
+function Set-PowerGateConfigFromVault {
+    param(
+        [string]$Content
+    )
+    # In order to support special characters like ö, Ü
+    $encodedContentBytes = [System.Text.Encoding]::UTF8.GetBytes($Content)
+    $encodedContentBase64 =[Convert]::ToBase64String($encodedContentBytes)
+    $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $encodedContentBase64)
+}
+
+function Get-PowerGateConfigFromVault {
+    # In order to support special characters like ö, Ü
+    $encodedContentBase64 = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
+    if($encodedContentBase64) {
+        try {
+            $encodedContentBytes =[Convert]::FromBase64String($encodedContentBase64)
+            [System.Text.Encoding]::UTF8.GetString($encodedContentBytes)
+        } catch { }        
+    }
 }
