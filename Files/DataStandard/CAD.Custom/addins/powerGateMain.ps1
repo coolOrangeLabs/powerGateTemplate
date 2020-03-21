@@ -66,7 +66,7 @@ function InitErpMaterialTab($number) {
 function PrepareErpMaterial($erpMaterial) {
 	#TODO: Property mapping for material creation
 	$erpMaterial.Number = $prop["Part Number"].Value
-	$erpMaterial.Description = $prop["Title"].Value
+	$erpMaterial.Description = $prop["Description"].Value
 
 	return $erpMaterial
 }

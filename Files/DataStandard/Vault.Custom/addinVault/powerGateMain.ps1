@@ -102,12 +102,12 @@ function CreateOrUpdateErpMaterial {
 function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
 	
-	if ($vaultEntity._EntityTypeID -eq "FILE") { $titleProp = '_Title' }
-	else { $titleProp = '_Title(Item,CO)' }
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
 
 	#TODO: Property mapping for material creation
 	$erpMaterial.Number = $number
-	$erpMaterial.Description = $vaultEntity.$titleProp
+	$erpMaterial.Description = $vaultEntity.$descriptionProp
 
 	return $erpMaterial
 }
@@ -115,8 +115,8 @@ function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 function CompareErpMaterial($erpMaterial, $vaultEntity) {	
 	$number = GetEntityNumber -entity $vaultEntity
 
-	if ($vaultEntity._EntityTypeID -eq "FILE") { $titleProp = '_Title' }
-	else { $titleProp = '_Title(Item,CO)' }
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
 	
 	$differences = @()
 	
@@ -124,8 +124,8 @@ function CompareErpMaterial($erpMaterial, $vaultEntity) {
 	if ($erpMaterial.Number -ne $number) {
 		$differences += "ERP: $($erpMaterial.Number) <> Vault: $number"
 	}
-	if ($erpMaterial.Description -ne $vaultEntity.$titleProp) {
-		$differences += "ERP: $($erpMaterial.Description) <> Vault: $($vaultEntity.$titleProp)"
+	if ($erpMaterial.Description -ne $vaultEntity.$descriptionProp) {
+		$differences += "ERP: $($erpMaterial.Description) <> Vault: $($vaultEntity.$descriptionProp)"
 	}
 
 	return $differences -join '\n'
@@ -133,10 +133,13 @@ function CompareErpMaterial($erpMaterial, $vaultEntity) {
 
 function PrepareErpBomHeader($erpBomHeader, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
+
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
 	
 	#TODO: Property mapping for bom header creation
 	$erpBomHeader.Number = $number
-	$erpBomHeader.Description = $vaultEntity._Description   
+	$erpBomHeader.Description = $vaultEntity.$descriptionProp   
 	
 	#TODO: Property default values for bom header creation
 	$erpBomHeader.Status = "Released"
