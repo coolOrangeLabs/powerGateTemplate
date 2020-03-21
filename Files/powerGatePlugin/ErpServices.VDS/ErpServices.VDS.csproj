@@ -81,14 +81,14 @@
     <None Include="..\..\DataStandard\Vault.Custom\addinVault\Default.ps1">
       <Link>Vault.Custom\addinVault\Default.ps1</Link>
     </None>
-    <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateBomTransfer.ps1">
-      <Link>Vault.Custom\addinVault\Menus\powerGateBomTransfer.ps1</Link>
-    </None>
     <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateEditConfiguration.ps1">
       <Link>Vault.Custom\addinVault\Menus\powerGateEditConfiguration.ps1</Link>
     </None>
     <None Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateSaveConfiguration.ps1">
       <Link>Vault.Custom\addinVault\Menus\powerGateSaveConfiguration.ps1</Link>
+    </None>
+    <None Include="..\..\DataStandard\Vault.Custom\addinVault\powerGateBomTransfer.ps1">
+      <Link>Vault.Custom\addinVault\powerGateBomTransfer.ps1</Link>
     </None>
     <None Include="..\..\DataStandard\Vault.Custom\addinVault\powerGateMain.ps1">
       <Link>Vault.Custom\addinVault\powerGateMain.ps1</Link>
@@ -159,21 +159,21 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\..\DataStandard\Vault.Custom\co.ico">
-      <Link>Vault.Custom\Configuration\co.ico</Link>
-    </Resource>
-    <Resource Include="..\..\DataStandard\Vault.Custom\MenuDefinitions.xml">
-      <Link>Vault.Custom\Configuration\MenuDefinitions.xml</Link>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\..\DataStandard\Vault.Custom\addinVault\Menus\powerGateConfigurationTemplate.xml">
-      <Link>Vault.Custom\addinVault\Menus\powerGateConfigurationTemplate.xml</Link>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="..\..\powerGate\UI\powerGate.ico">
       <Link>powerGate\UI\powerGate.ico</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\..\powerGate\powerGateConfigurationTemplate.xml">
+      <Link>powerGate\powerGateConfigurationTemplate.xml</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\..\DataStandard\Vault.Custom\co.ico">
+      <Link>Vault.Custom\co.ico</Link>
+    </Resource>
+    <Resource Include="..\..\DataStandard\Vault.Custom\MenuDefinitions.xml">
+      <Link>Vault.Custom\MenuDefinitions.xml</Link>
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
