@@ -1,0 +1,5 @@
+Name,Description
+XXXX - powerGate Initialisierung, Projekt für alle Aufgaben im Zusammenhang mit der Vorbereitung der Testumgebung / Vorbereitung von Beispieldaten / Bereistellung der ERP API/Webservices
+XXXX - powerGate Artikel, Projekt für alle Aufgaben im Zusammenhang mit der Verarbeitung von ERP Artikeln (Abfrage/Suche von ERP Artikel im Vault / Aktualisierung/Übertragung von ERP Artikeln)
+XXXX - powerGate Stücklisten, Projekt für alle Aufgaben im Zusammenhang mit der Verarbeitung von ERP Stücklisten (Abfrage der ERP Stückliste / Vergleich von Vault und ERP Stücklisten / Aktualisierung/Übertragung von CAD Stücklisten an das ERP)
+XXXX - powerGate Dokumente, Projekt für alle Aufgaben im Zusammenhang mit der Erzeugung/Übertragung von Zeichnungen als PDF an das ERP System (Ablage der Zeichnungs PDF auf einen Netzwerkspeicher / Verknüpfung der PDF mit einem ERP Artikel)

@@ -23,6 +23,7 @@
 			   EmbedCab="yes" />
 
     <Feature Id="PowerJobsFiles" Title="powerJobs Custom Jobs">
+	<ComponentGroupRef Id="SETUP_UI" />
       <ComponentGroupRef Id="HeatGenerated_PowerJobsFiles" />
     </Feature>
 

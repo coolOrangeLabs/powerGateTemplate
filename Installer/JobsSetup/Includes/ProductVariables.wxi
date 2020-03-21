@@ -5,7 +5,7 @@
 	<?define IconName="..\Resources\coolOrange.ico"?>
 	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
   <?define VaultYear="Vault 2020"?>
-  <?define PName="Client-powerJobs"?>
+  <?define PName="ErpService powerJobs Jobs"?>
   <?define PShortVersion="$(var.Major).$(var.Minor)"?>
   <?define CompanyDirectory="coolOrange"?>
 	

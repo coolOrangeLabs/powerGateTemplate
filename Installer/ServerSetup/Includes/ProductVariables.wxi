@@ -4,7 +4,7 @@
   <?define WikiLink="https://github.com/coolOrangeLabs/powerGateTemplate/wiki"?>
 	<?define IconName="..\Resources\coolOrange.ico"?>
 	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
-	<?define PName="powerGateServerErpService Plugin"?>
+	<?define PName="ErpService powerGate Plugin"?>
 	<?define PShortVersion="$(var.Major).$(var.Minor)"?>
   <?define CompanyDirectory="coolOrange"?>
 	
