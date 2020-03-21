@@ -1,5 +1,4 @@
-﻿<!-- -->
-<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
     xmlns:behaviours="clr-namespace:Common.Wpf;assembly=Common" behaviours:TabTitleBehavior.TabTitle="ERP Item"  x:Name="MainWindow">
@@ -83,7 +82,8 @@
                 </Label.Style>
             </Label>
 
-            <Button Grid.Row="0" Grid.Column="1" Content="Link..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" HorizontalAlignment="Right" Margin="0,0,14,0" Visibility="{Binding DataContext.IsCreate, ElementName=DataGrid, Converter={StaticResource BooleanToVisibility}}" />
+            <Button Grid.Row="0" Grid.Column="1" Content="Link..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" HorizontalAlignment="Right" Margin="0,0,14,0" />
+            <!-- Visibility="{Binding DataContext.IsCreate, ElementName=DataGrid, Converter={StaticResource BooleanToVisibility}}" -->
             <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" HorizontalAlignment="Right" Margin="0,0,14,0" >
                 <Button.Style>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
