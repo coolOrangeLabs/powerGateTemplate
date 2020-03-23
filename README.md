@@ -42,7 +42,7 @@ coolOrange powerGate, coolOrange powerGate Server, coolOrange powerJobs and cool
 coolOrange software can be obtained from the [coolOrange Download Portal](https://download.coolorange.com)
 
 ## Installation
-Install the latest version from the repository [Releases](/releases) page. The following installers are available: 
+Install the latest version from the repository [Releases](https://github.com/coolOrangeLabs/powerGateTemplate/releases/latest) page. The following installers are available: 
 
 ### powerGate Server plugin
 This setup contains a powerGate Server plugin. It needs to be installed on the machine that hosts coolOrange powerGate Server.
