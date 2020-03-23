@@ -36,6 +36,42 @@ function GetEntityNumber($entity) {
 	return $number
 }
 
+function RefreshView {
+	$entity = GetSelectedObject
+	if ($null -eq $entity) {
+		return
+	}
+
+	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
+
+	if ($entity._EntityTypeID -eq "FILE") {
+		$file = $vault.DocumentService.GetLatestFileByMasterId($entity.MasterId)
+		$folder = $vault.DocumentService.GetFolderById($file.FolderId)
+		$cFolder = New-Object Connectivity.Services.Document.Folder($folder)
+		$cDocFolder = New-Object Connectivity.Explorer.Document.DocFolder($cFolder)
+		$cFile = New-Object Connectivity.Services.Document.File($file)
+		$cFileExplorerObject = New-Object Connectivity.Explorer.Document.FileExplorerObject($cFile)
+
+		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cFileExplorerObject, $cDocFolder)
+		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cDocFolder)
+	} elseif ($entity._EntityTypeID -eq "ITEM") {
+		$item = $vault.ItemService.GetLatestItemByItemMasterId($entity.MasterId)
+		$cItemRev = New-Object Connectivity.Services.Item.ItemRevision($vaultConnection, $item)
+		$cItemRevExpObj = New-Object Connectivity.Explorer.Item.ItemRevisionExplorerObject($cItemRev)
+		$cItemMaster = New-Object Connectivity.Explorer.Item.ItemMaster
+
+		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemRevExpObj)
+		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemMaster)
+	} else {
+		return
+	}
+
+	$sc = New-Object Connectivity.Explorer.Framework.ShortcutMgr+Shortcut
+	$sc.NavigationContext = $navCtx
+	$sc.ViewContext = $vwCtx
+	$sc.Select($null)    
+}
+
 function SetEntityNumber($number) {
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster") {
 		$file = Get-VaultFile -FileId $vaultContext.SelectedObject.Id
@@ -92,8 +128,8 @@ function CreateOrUpdateErpMaterial {
 		InitMaterialTab
 	} else {
 		$material = CreateErpMaterial -erpMaterial $material
-		SetEntityNumber -number $material.Number
-		[System.Windows.Forms.SendKeys]::SendWait("{F5}")
+		SetEntityNumber -number $material.Number		
+		RefreshView
 	}
 	$dsDiag.Trace("<<CreateOrUpdateMaterial")
 }
@@ -121,11 +157,16 @@ function CompareErpMaterial($erpMaterial, $vaultEntity) {
 	$differences = @()
 	
 	#TODO: Property mapping for material comparison
-	if ($erpMaterial.Number -ne $number) {
-		$differences += "ERP: $($erpMaterial.Number) <> Vault: $number"
+	if ($erpMaterial.Number -or $number) {
+		if ($erpMaterial.Number -ne $number) {
+			$differences += "Number - ERP: $($erpMaterial.Number) <> Vault: $number"
+		}
 	}
-	if ($erpMaterial.Description -ne $vaultEntity.$descriptionProp) {
-		$differences += "ERP: $($erpMaterial.Description) <> Vault: $($vaultEntity.$descriptionProp)"
+
+	if ($erpMaterial.Description -or $vaultEntity.$descriptionProp) {
+		if ($erpMaterial.Description -ne $vaultEntity.$descriptionProp) {
+			$differences += "Description - ERP: $($erpMaterial.Description) <> Vault: $($vaultEntity.$descriptionProp)"
+		}
 	}
 
 	return $differences -join '\n'
@@ -149,12 +190,12 @@ function PrepareErpBomHeader($erpBomHeader, $vaultEntity) {
 
 function PrepareErpBomRow($erpBomRow, $parentNumber, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
-	
+
 	#TODO: Property mapping for bom row creation
 	$erpBomRow.ParentNumber = $parentNumber
 	$erpBomRow.ChildNumber = $number
-	$erpBomRow.Position = $vaultEntity.Bom_PositionNumber
-	$erpBomRow.Quantity = $vaultEntity.Bom_Quantity
+	$erpBomRow.Position = [int]$vaultEntity.'Bom_PositionNumber'
+	$erpBomRow.Quantity = [double]$vaultEntity.'Bom_Quantity'
 
 	return $erpBomRow
 }
@@ -165,8 +206,8 @@ function LinkErpMaterial {
         $number = $erpMaterial.Number
         $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$number'?", "Link ERP Item", "YesNo", "Question")	
         if ($answer -eq "Yes") {
-            SetEntityNumber -number $number
-            [System.Windows.Forms.SendKeys]::SendWait("{F5}")
+            SetEntityNumber -number $number			
+			RefreshView
             #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
         }       
     }
