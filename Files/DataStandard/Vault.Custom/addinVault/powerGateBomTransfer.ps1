@@ -1,6 +1,7 @@
 ﻿function ShowBomWindow {
     $entity = GetSelectedObject
     Show-BomWindow -Entity $entity
+    RefreshView
 }
 
 #region BOm Window functions: 
@@ -201,7 +202,8 @@ function Transfer-Boms($entityBoms) {
                 elseif ($entityBomRow._Status -eq "Remove") {
                     $erpBomRow = RemoveErpBomRow -parentNumber $parentNumber -childNumber $entityBomRow.Bom_Number -position $entityBomRow.Bom_PositionNumber
                     if ($erpBomRow) {
-                        Update-BomWindowEntity $entityBomRow -Status "Identical" -Tooltip ""
+                        #Update-BomWindowEntity $entityBomRow -Status "Identical" -Tooltip ""
+                        $entityBomRow | Remove-BomWindowEntity
                     }
                     else {
                         Update-BomWindowEntity $entityBomRow -Status "Error" -Tooltip $erpBomRow._ErrorMessage

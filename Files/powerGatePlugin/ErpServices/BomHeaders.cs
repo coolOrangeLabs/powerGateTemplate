@@ -33,7 +33,7 @@ namespace ErpServices
         public BomHeaders()
         {
             BsonMapper.Global.Entity<BomHeader>().Id(x => x.Number);
-            BsonMapper.Global.Entity<BomHeader>().DbRef(x => x.BomRows);
+            //BsonMapper.Global.Entity<BomHeader>().DbRef(x => x.BomRows);
         }
 
         public override IEnumerable<BomHeader> Query(IExpression<BomHeader> expression)
@@ -45,9 +45,18 @@ namespace ErpServices
                 {
                     using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
                     {
-                        return db.GetCollection<BomHeader>()
-                            .Include(x => x.BomRows)
-                            .Find(x => x.Number.Equals(number.Value));
+                        var bomHeaders = db.GetCollection<BomHeader>().Find(x => x.Number.Equals(number.Value)).ToList();
+                        if (expression.Expand.Any(e => e.PropertyNames.Contains("BomRows")))
+                        {
+                            foreach (var bomHeader in bomHeaders)
+                            {
+                                bomHeader.BomRows = db.GetCollection<BomRow>()
+                                    .Find(x => x.ParentNumber.Equals(bomHeader.Number))
+                                    .OrderBy(x => x.Position)
+                                    .ToList();
+                            }
+                        }
+                        return bomHeaders;
                     }
                 }
                 return null;
@@ -55,9 +64,18 @@ namespace ErpServices
 
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
-                return db.GetCollection<BomHeader>()
-                    .Include(x => x.BomRows)
-                    .FindAll();
+                var bomHeaders = db.GetCollection<BomHeader>().FindAll().ToList();
+                if (expression.Expand.Any(e => e.PropertyNames.Contains("BomRows")))
+                {
+                    foreach (var bomHeader in bomHeaders)
+                    {
+                        bomHeader.BomRows = db.GetCollection<BomRow>()
+                            .Find(x => x.ParentNumber.Equals(bomHeader.Number))
+                            .OrderBy(x => x.Position)
+                            .ToList();
+                    }
+                }
+                return bomHeaders;
             }
         }
 
@@ -66,7 +84,6 @@ namespace ErpServices
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
                 db.GetCollection<BomHeader>()
-                    .Include(x => x.BomRows)
                     .Update(entity);
             }
         }
@@ -77,9 +94,7 @@ namespace ErpServices
             {
                 db.GetCollection<BomRow>()
                     .Insert(entity.BomRows);
-
                 db.GetCollection<BomHeader>()
-                    .Include(x => x.BomRows)
                     .Insert(entity);
             }
         }
@@ -88,8 +103,9 @@ namespace ErpServices
         {
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
+                db.GetCollection<BomRow>()
+                    .Delete(x => x.ParentNumber.Equals(entity.Number));
                 db.GetCollection<BomHeader>()
-                    .Include(x => x.BomRows)
                     .Delete(x => x.Number.Equals(entity.Number));
             }
         }

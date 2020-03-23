@@ -42,16 +42,19 @@ namespace ErpServices
                     using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
                     {
                         return db.GetCollection<BomRow>()
-                            .Find(x => x.ParentNumber.Equals(parentNumber.Value)).OrderBy(x => x.Position);
+                            .Find(x => x.ParentNumber.Equals(parentNumber.Value))
+                            .OrderBy(x => x.Position)
+                            .ToList();
                     }
                 }
                 return null;
             }
-            
+
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
                 return db.GetCollection<BomRow>()
-                    .FindAll();
+                    .FindAll()
+                    .ToList();
             }
         }
 
