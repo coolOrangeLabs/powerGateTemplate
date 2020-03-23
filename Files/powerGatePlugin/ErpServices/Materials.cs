@@ -51,20 +51,20 @@ namespace ErpServices
 
         public override IEnumerable<Material> Query(IExpression<Material> expression)
         {
-            if (expression.Where.Any(b => b.PropertyName.Equals("Number")))
-            {
-                var number = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
-                if (number != null && number.Value != number && number.Value.ToString() != "")
-                {
-                    using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
-                    {
-                        return db.GetCollection<Material>()
-                            .Find(x => x.Number.Equals(number.Value))
-                            .ToList();
-                    }
-                }
-                return null;
-            }
+            //if (expression.Where.Any(b => b.PropertyName.Equals("Number")))
+            //{
+            //    var number = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
+            //    if (number != null && number.Value != number && number.Value.ToString() != "")
+            //    {
+            //        using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
+            //        {
+            //            return db.GetCollection<Material>()
+            //                .Find(x => x.Number.Equals(number.Value))
+            //                .ToList();
+            //        }
+            //    }
+            //    return null;
+            //}
 
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
