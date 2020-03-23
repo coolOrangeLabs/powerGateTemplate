@@ -54,6 +54,7 @@ namespace ErpServices
             {
                 return db.GetCollection<BomRow>()
                     .FindAll()
+                    .OrderBy(x => x.Position)
                     .ToList();
             }
         }
