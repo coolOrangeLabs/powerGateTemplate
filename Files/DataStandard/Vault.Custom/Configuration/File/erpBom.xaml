@@ -161,7 +161,8 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Position}" Header="Position" Width="60" IsReadOnly="True" SortDirection="Ascending" />
                     <DataGridTextColumn Binding="{Binding Quantity}" Header="Quantity" Width="60" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding ChildNumber}" Header="Number" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding ChildNumber}" Header="Number" Width="120" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Description}" Header="Description" Width="*" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

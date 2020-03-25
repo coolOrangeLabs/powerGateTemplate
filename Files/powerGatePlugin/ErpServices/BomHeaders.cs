@@ -49,12 +49,7 @@ namespace ErpServices
                         if (expression.Expand.Any(e => e.PropertyNames.Contains("BomRows")))
                         {
                             foreach (var bomHeader in bomHeaders)
-                            {
-                                bomHeader.BomRows = db.GetCollection<BomRow>()
-                                    .Find(x => x.ParentNumber.Equals(bomHeader.Number))
-                                    .OrderBy(x => x.Position)
-                                    .ToList();
-                            }
+                                bomHeader.BomRows = BomRows.GetBomRows(bomHeader.Number);
                         }
                         return bomHeaders;
                     }
@@ -68,12 +63,7 @@ namespace ErpServices
                 if (expression.Expand.Any(e => e.PropertyNames.Contains("BomRows")))
                 {
                     foreach (var bomHeader in bomHeaders)
-                    {
-                        bomHeader.BomRows = db.GetCollection<BomRow>()
-                            .Find(x => x.ParentNumber.Equals(bomHeader.Number))
-                            .OrderBy(x => x.Position)
-                            .ToList();
-                    }
+                        bomHeader.BomRows = BomRows.GetBomRows(bomHeader.Number);
                 }
                 return bomHeaders;
             }

@@ -17,8 +17,9 @@ namespace ErpServices
         public string ChildNumber { get; set; }
         public int Position { get; set; }
         public double Quantity { get; set; }
-        public DateTime CreateDate { get; set; }
-        public DateTime ModifyDate { get; set; }
+
+        [BsonIgnore]
+        public string Description { get; set; }
 
         public string Id => $"{ParentNumber}+{ChildNumber}+{Position.ToString()}";
     }
@@ -39,24 +40,41 @@ namespace ErpServices
                 var parentNumber = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("ParentNumber"));
                 if (parentNumber != null && parentNumber.Value != null && parentNumber.Value.ToString() != "")
                 {
-                    using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
-                    {
-                        return db.GetCollection<BomRow>()
-                            .Find(x => x.ParentNumber.Equals(parentNumber.Value))
-                            .OrderBy(x => x.Position)
-                            .ToList();
-                    }
+                    return GetBomRows(parentNumber.Value.ToString());
                 }
-                return null;
             }
 
+            return GetBomRows();
+        }
+
+        public static List<BomRow> GetBomRows(string parentNumber = null)
+        {
+            List<BomRow> bomRows;
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
-                return db.GetCollection<BomRow>()
-                    .FindAll()
-                    .OrderBy(x => x.Position)
-                    .ToList();
+                if (parentNumber == null)
+                {
+                    bomRows = db.GetCollection<BomRow>()
+                        .FindAll()
+                        .OrderBy(x => x.Position)
+                        .ToList();
+                }
+                else
+                {
+                    bomRows = db.GetCollection<BomRow>()
+                        .Find(x => x.ParentNumber.Equals(parentNumber))
+                        .OrderBy(x => x.Position)
+                        .ToList();                    
+                }
+
+                foreach (var bomRow in bomRows)
+                {
+                    var material = db.GetCollection<Material>()
+                        .FindOne(x => x.Number.Equals(bomRow.ChildNumber));
+                    bomRow.Description = material.Description;
+                }
             }
+            return bomRows;
         }
 
         public override void Update(BomRow entity)
