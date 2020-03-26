@@ -16,10 +16,13 @@ namespace ErpServices
         public string ParentNumber { get; set; }
         public string ChildNumber { get; set; }
         public int Position { get; set; }
+        public string Type { get; set; }
         public double Quantity { get; set; }
-
+        [BsonIgnore]
+        public string UnitOfMeasure { get; set; }
         [BsonIgnore]
         public string Description { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         public string Id => $"{ParentNumber}+{ChildNumber}+{Position.ToString()}";
     }
@@ -39,9 +42,7 @@ namespace ErpServices
             {
                 var parentNumber = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("ParentNumber"));
                 if (parentNumber != null && parentNumber.Value != null && parentNumber.Value.ToString() != "")
-                {
                     return GetBomRows(parentNumber.Value.ToString());
-                }
             }
 
             return GetBomRows();
@@ -72,6 +73,7 @@ namespace ErpServices
                     var material = db.GetCollection<Material>()
                         .FindOne(x => x.Number.Equals(bomRow.ChildNumber));
                     bomRow.Description = material.Description;
+                    bomRow.UnitOfMeasure = material.UnitOfMeasure;
                 }
             }
             return bomRows;
