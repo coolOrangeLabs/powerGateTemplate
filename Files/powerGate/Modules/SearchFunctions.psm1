@@ -72,8 +72,13 @@ function OpenErpSearchWindow {
 }
 
 function CloseErpSearchWindow {
-	$searchWindow.DialogResult = "OK"
-	$searchWindow.Close()
+    $material = $searchWindow.FindName("SearchResults").SelectedItem
+    if ($material) {
+        $searchWindow.DialogResult = "OK"
+        $searchWindow.Close()        
+    } else {
+        Show-MessageBox -message "An item needs to be selected to proceed!" -icon "Hand"
+    }
 }
 
 function ExecuteErpSearch {
