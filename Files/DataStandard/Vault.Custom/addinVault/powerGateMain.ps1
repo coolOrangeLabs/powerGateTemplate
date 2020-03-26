@@ -183,7 +183,7 @@ function PrepareErpBomHeader($erpBomHeader, $vaultEntity) {
 	$erpBomHeader.Description = $vaultEntity.$descriptionProp   
 	
 	#TODO: Property default values for bom header creation
-	$erpBomHeader.Status = "Released"
+	$erpBomHeader.State = "Released"
 
 	return $erpBomHeader
 }

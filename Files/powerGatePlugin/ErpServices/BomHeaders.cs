@@ -12,10 +12,10 @@ namespace ErpServices
     public class BomHeader
     {
         public string Number { get; set; }
+        [BsonIgnore]
         public string Description { get; set; }
-        public string Status { get; set; }
-        public DateTime CreateDate { get; set; }
-        public DateTime ModifyDate { get; set; }
+        public string State { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         public List<BomRow> BomRows { get; set;  }
 
@@ -42,31 +42,39 @@ namespace ErpServices
             {
                 var number = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("Number"));
                 if (number != null && number.Value != number && number.Value.ToString() != "")
-                {
-                    using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
-                    {
-                        var bomHeaders = db.GetCollection<BomHeader>().Find(x => x.Number.Equals(number.Value)).ToList();
-                        if (expression.Expand.Any(e => e.PropertyNames.Contains("BomRows")))
-                        {
-                            foreach (var bomHeader in bomHeaders)
-                                bomHeader.BomRows = BomRows.GetBomRows(bomHeader.Number);
-                        }
-                        return bomHeaders;
-                    }
-                }
-                return null;
+                    return GetBomHeaders(number.Value.ToString());
             }
 
+            return GetBomHeaders();
+        }
+
+        public static List<BomHeader> GetBomHeaders(string number = null)
+        {
+            List<BomHeader> bomHeaders;
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
-                var bomHeaders = db.GetCollection<BomHeader>().FindAll().ToList();
-                if (expression.Expand.Any(e => e.PropertyNames.Contains("BomRows")))
+                if (number == null)
                 {
-                    foreach (var bomHeader in bomHeaders)
-                        bomHeader.BomRows = BomRows.GetBomRows(bomHeader.Number);
+                    bomHeaders = db.GetCollection<BomHeader>()
+                        .FindAll()
+                        .ToList();
                 }
-                return bomHeaders;
+                else
+                {
+                    bomHeaders = db.GetCollection<BomHeader>()
+                        .Find(x => x.Number.Equals(number))
+                        .ToList();
+                }
+
+                foreach (var bomHeader in bomHeaders)
+                {
+                    var material = db.GetCollection<Material>()
+                        .FindOne(x => x.Number.Equals(bomHeader.Number));
+                    bomHeader.Description = material.Description;
+                    bomHeader.BomRows = BomRows.GetBomRows(bomHeader.Number);
+                }
             }
+            return bomHeaders;
         }
 
         public override void Update(BomHeader entity)
