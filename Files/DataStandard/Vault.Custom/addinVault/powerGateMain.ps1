@@ -72,17 +72,6 @@ function RefreshView {
 	$sc.Select($null)    
 }
 
-function SetEntityNumber($number) {
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster") {
-		$file = Get-VaultFile -FileId $vaultContext.SelectedObject.Id
-		Update-VaultFile -File $file._FullPath -Properties @{"_PartNumber" = $number }
-	}
-	elseif ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster") {
-		$item = Get-VaultItem -ItemId $vaultContext.SelectedObject.Id
-		Update-VaultItem -Number $item._Number -NewNumber $number
-	}
-}
-
 function InitBomTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
@@ -117,23 +106,53 @@ function ValidateErpMaterialTab {
 
 function CreateOrUpdateErpMaterial {
 	$dsDiag.Trace(">>CreateOrUpdateMaterial")
-	$material = $dswindow.FindName("DataGrid").DataContext
-	if ($material.IsUpdate) {
-		$material = UpdateErpMaterial -erpMaterial $material
-		if ($material) { 
+	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
+	if ($erpMaterial.IsUpdate) {
+		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
+		if ($erpMaterial) { 
 			Show-MessageBox -message "Update successful" -icon "Information"
 		} else { 
-			Show-MessageBox -message $material._ErrorMessage -icon "Error" -title "ERP material update error"
+			Show-MessageBox -message $erpMaterial._ErrorMessage -icon "Error" -title "ERP material update error"
 		}
 		InitMaterialTab
 	} else {
-		$material = CreateErpMaterial -erpMaterial $material
-		SetEntityNumber -number $material.Number		
+		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
+		SetEntityProperties -erpMaterial $erpMaterial
 		RefreshView
 	}
 	$dsDiag.Trace("<<CreateOrUpdateMaterial")
 }
 
+function LinkErpMaterial {
+	$erpMaterial = OpenErpSearchWindow
+    if ($erpMaterial) {
+        $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
+        if ($answer -eq "Yes") {
+            SetEntityProperties -erpMaterial $erpMaterial
+			RefreshView
+            #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
+        }       
+    }
+}
+
+function SetEntityProperties($erpMaterial) {
+	#TODO: Update Entity UDPs with values from ERP
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster") {
+		$file = Get-VaultFile -FileId $vaultContext.SelectedObject.Id
+		Update-VaultFile -File $file._FullPath -Properties @{
+			"_PartNumber" = $erpMaterial.Number
+			"_Description" = $erpMaterial.Description
+		}
+	}
+	elseif ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster") {
+		$item = Get-VaultItem -ItemId $vaultContext.SelectedObject.Id
+		$item = Update-VaultItem -Number $item._Number -NewNumber $erpMaterial.Number
+		Update-VaultItem -Number $item._Number -Properties @{
+			#the item description cannot be updated, since "Description (Item,CO)" is a system property!
+			"_Description(Item,CO)" = $erpMaterial.Description
+		}
+	}
+}
 
 function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
@@ -198,17 +217,4 @@ function PrepareErpBomRow($erpBomRow, $parentNumber, $vaultEntity) {
 	$erpBomRow.Quantity = [double]$vaultEntity.'Bom_Quantity'
 
 	return $erpBomRow
-}
-
-function LinkErpMaterial {
-	$erpMaterial = OpenErpSearchWindow
-    if ($erpMaterial) {
-        $number = $erpMaterial.Number
-        $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$number'?", "Link ERP Item", "YesNo", "Question")	
-        if ($answer -eq "Yes") {
-            SetEntityNumber -number $number			
-			RefreshView
-            #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
-        }       
-    }
 }

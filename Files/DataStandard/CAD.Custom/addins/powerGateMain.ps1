@@ -44,8 +44,8 @@ function OpenErpMaterialWindow {
 	InitErpMaterialTab -number $prop["Part Number"].Value
 
 	if ($window.ShowDialog() -eq "OK") {
-		$prop["Part Number"].Value = $userControl.FindName("DataGrid").DataContext.Number
-		#TODO: Write back properties from ERP to iProperties (if needed)
+		$erpMaterial = $userControl.FindName("DataGrid").DataContext
+		$prop["Part Number"].Value = $erpMaterial.Number
 	}
 }
 
@@ -96,6 +96,7 @@ function CreateOrUpdateErpMaterial {
 		}
 	} else {
 		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
+		SetEntityProperties -erpMaterial $erpMaterial
 		InitErpMaterialTab -number $erpMaterial.Number
 	}
 }
@@ -103,11 +104,17 @@ function CreateOrUpdateErpMaterial {
 function LinkErpMaterial {
 	$erpMaterial = OpenErpSearchWindow
     if ($erpMaterial) {
-        $number = $erpMaterial.Number
-        $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$number'?", "Link ERP Item", "YesNo", "Question")	
+        $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
         if ($answer -eq "Yes") {
-			$prop["Part Number"].Value = $number
-			InitErpMaterialTab -number $erpMaterial.Number
+            SetEntityProperties -erpMaterial $erpMaterial
+			RefreshView
+            #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
         }       
     }
+}
+
+function SetEntityProperties($erpMaterial) {
+	#TODO: Update Inventor iProperties with values from ERP
+	$prop["Part Number"].Value = $erpMaterial.Number
+	$prop["Description"].Value = $erpMaterial.Description
 }
