@@ -9,11 +9,13 @@
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  #
 #=============================================================================#
 
-$script:supportedDwfExtensions = @("iam", "idw", "dwg", "ipn", "ipt")
+$script:supportedPdfExtensions = @("iam", "idw", "dwg", "ipn", "ipt")
+$script:requiresErpItemExtensions = @("iam", "ipn", "ipt")
 
 Register-VaultEvent -EventName UpdateFileStates_Restrictions -Action 'RestrictFileRelease'
 function RestrictFileRelease($files) {
-	foreach ($file in $files) {
+	$filesToCheck = $files | Where-Object { $_._Extension -in $script:requiresErpItemExtensions }
+	foreach ($file in $filesToCheck) {
 		if ($file._NewState -like "*release*") {
 			$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $file._PartNumber }
 			if ($null -eq $material) {
@@ -25,8 +27,12 @@ function RestrictFileRelease($files) {
 
 Register-VaultEvent -EventName UpdateItemStates_Restrictions -Action 'RestrictItemRelease'
 function RestrictItemRelease($items) {
+	
 	foreach ($item in $items) {
-		if ($item._NewState -like "*release*") {
+		$allItemAssociations = Get-VaultItemAssociations -Number $item._Number
+		$itemIncludesFilesToCheck = $allItemAssociations | Where-Object { $_._Extension -in $script:requiresErpItemExtensions }
+
+		if ($itemIncludesFilesToCheck -and $item._NewState -like "*release*") {
 			$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $item._Number }
 			if ($null -eq $material) {
 				Add-VaultRestriction -EntityName ($item._Name) -Message "An item with the number '$($item._Number)' does not exist in the ERP system."
@@ -40,7 +46,7 @@ function AddPdfJob($files, $successful) {
     if(-not $successful) {
 		return 
 	}
-    $releasedFiles = @($files | Where-Object { $supportedDwfExtensions -contains $_._Extension -and $_._ReleasedRevision -eq $true })
+    $releasedFiles = @($files | Where-Object { $supportedPdfExtensions -contains $_._Extension -and $_._ReleasedRevision -eq $true })
     foreach($file in $releasedFiles) {
         $jobType = "ErpService.Create.PDF"
         Write-Host "Adding job '$jobType' for released file '$($file._Name)' to queue."
