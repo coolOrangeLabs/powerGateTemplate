@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Services;
 using System.Data.Services.Common;
 using System.IO;
 using System.Linq;
@@ -44,7 +43,8 @@ namespace ErpServices
                     using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
                     {
                         return db.GetCollection<Document>()
-                            .Find(x => x.Number.Equals(number.Value));
+                            .Find(x => x.Number.Equals(number.Value))
+                            .ToList();
                     }
                 }
                 return null;
@@ -53,7 +53,8 @@ namespace ErpServices
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
             {
                 return db.GetCollection<Document>()
-                    .FindAll();
+                    .FindAll()
+                    .ToList();
             }
         }
 

@@ -20,8 +20,9 @@ function NewErpMaterial {
 	$erpMaterial = New-ERPObject -EntityType $materialEntityType
 
 	#TODO: Property default values for material creation
-	$erpMaterial.UnitOfMeasure = "KG"
-	$erpMaterial.Type = "M"
+	$erpMaterial.UnitOfMeasure = "PCS"
+	$erpMaterial.Type = "Services"
+	$erpMaterial.Category = "TABLE"
 
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $true -MemberType NoteProperty -Force
 	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $false -MemberType NoteProperty -Force
@@ -35,7 +36,7 @@ function CreateErpMaterial($erpMaterial) {
 		$erpMaterial.Number = "*"
 	}
 	#TODO: Properties that need to be set on create
-	$erpMaterial.CreateDate = [DateTime]::Now
+	$erpMaterial.ModifiedDate = [DateTime]::Now
 
 	$erpMaterial.PSObject.Properties.Remove('IsCreate')
 	$erpMaterial.PSObject.Properties.Remove('IsUpdate')
@@ -49,7 +50,7 @@ function CreateErpMaterial($erpMaterial) {
 
 function UpdateErpMaterial($erpMaterial) {
 	#TODO: Properties that need to be set on update
-	$erpMaterial.ModifyDate = [DateTime]::Now
+	$erpMaterial.ModifiedDate = [DateTime]::Now
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Update-ERPObject -EntitySet $materialEntitySet -Key $erpMaterial._Keys -Properties $erpMaterial._Properties

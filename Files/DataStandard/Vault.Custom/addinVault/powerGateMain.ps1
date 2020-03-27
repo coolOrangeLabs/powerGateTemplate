@@ -36,15 +36,40 @@ function GetEntityNumber($entity) {
 	return $number
 }
 
-function SetEntityNumber($number) {
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster") {
-		$file = Get-VaultFile -FileId $vaultContext.SelectedObject.Id
-		Update-VaultFile -File $file._FullPath -Properties @{"_PartNumber" = $number }
+function RefreshView {
+	$entity = GetSelectedObject
+	if ($null -eq $entity) {
+		return
 	}
-	elseif ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster") {
-		$item = Get-VaultItem -ItemId $vaultContext.SelectedObject.Id
-		Update-VaultItem -Number $item._Number -NewNumber $number
+
+	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
+
+	if ($entity._EntityTypeID -eq "FILE") {
+		$file = $vault.DocumentService.GetLatestFileByMasterId($entity.MasterId)
+		$folder = $vault.DocumentService.GetFolderById($file.FolderId)
+		$cFolder = New-Object Connectivity.Services.Document.Folder($folder)
+		$cDocFolder = New-Object Connectivity.Explorer.Document.DocFolder($cFolder)
+		$cFile = New-Object Connectivity.Services.Document.File($file)
+		$cFileExplorerObject = New-Object Connectivity.Explorer.Document.FileExplorerObject($cFile)
+
+		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cFileExplorerObject, $cDocFolder)
+		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cDocFolder)
+	} elseif ($entity._EntityTypeID -eq "ITEM") {
+		$item = $vault.ItemService.GetLatestItemByItemMasterId($entity.MasterId)
+		$cItemRev = New-Object Connectivity.Services.Item.ItemRevision($vaultConnection, $item)
+		$cItemRevExpObj = New-Object Connectivity.Explorer.Item.ItemRevisionExplorerObject($cItemRev)
+		$cItemMaster = New-Object Connectivity.Explorer.Item.ItemMaster
+
+		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemRevExpObj)
+		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemMaster)
+	} else {
+		return
 	}
+
+	$sc = New-Object Connectivity.Explorer.Framework.ShortcutMgr+Shortcut
+	$sc.NavigationContext = $navCtx
+	$sc.ViewContext = $vwCtx
+	$sc.Select($null)    
 }
 
 function InitBomTab {
@@ -81,33 +106,63 @@ function ValidateErpMaterialTab {
 
 function CreateOrUpdateErpMaterial {
 	$dsDiag.Trace(">>CreateOrUpdateMaterial")
-	$material = $dswindow.FindName("DataGrid").DataContext
-	if ($material.IsUpdate) {
-		$material = UpdateErpMaterial -erpMaterial $material
-		if ($material) { 
+	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
+	if ($erpMaterial.IsUpdate) {
+		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
+		if ($erpMaterial) { 
 			Show-MessageBox -message "Update successful" -icon "Information"
 		} else { 
-			Show-MessageBox -message $material._ErrorMessage -icon "Error" -title "ERP material update error"
+			Show-MessageBox -message $erpMaterial._ErrorMessage -icon "Error" -title "ERP material update error"
 		}
 		InitMaterialTab
 	} else {
-		$material = CreateErpMaterial -erpMaterial $material
-		SetEntityNumber -number $material.Number
-		[System.Windows.Forms.SendKeys]::SendWait("{F5}")
+		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
+		SetEntityProperties -erpMaterial $erpMaterial
+		RefreshView
 	}
 	$dsDiag.Trace("<<CreateOrUpdateMaterial")
 }
 
+function LinkErpMaterial {
+	$erpMaterial = OpenErpSearchWindow
+    if ($erpMaterial) {
+        $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
+        if ($answer -eq "Yes") {
+            SetEntityProperties -erpMaterial $erpMaterial
+			RefreshView
+            #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
+        }       
+    }
+}
+
+function SetEntityProperties($erpMaterial) {
+	#TODO: Update Entity UDPs with values from ERP
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster") {
+		$file = Get-VaultFile -FileId $vaultContext.SelectedObject.Id
+		Update-VaultFile -File $file._FullPath -Properties @{
+			"_PartNumber" = $erpMaterial.Number
+			"_Description" = $erpMaterial.Description
+		}
+	}
+	elseif ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster") {
+		$item = Get-VaultItem -ItemId $vaultContext.SelectedObject.Id
+		$item = Update-VaultItem -Number $item._Number -NewNumber $erpMaterial.Number
+		Update-VaultItem -Number $item._Number -Properties @{
+			#the item description cannot be updated, since "Description (Item,CO)" is a system property!
+			"_Description(Item,CO)" = $erpMaterial.Description
+		}
+	}
+}
 
 function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
 	
-	if ($vaultEntity._EntityTypeID -eq "FILE") { $titleProp = '_Title' }
-	else { $titleProp = '_Title(Item,CO)' }
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
 
 	#TODO: Property mapping for material creation
 	$erpMaterial.Number = $number
-	$erpMaterial.Description = $vaultEntity.$titleProp
+	$erpMaterial.Description = $vaultEntity.$descriptionProp
 
 	return $erpMaterial
 }
@@ -115,17 +170,22 @@ function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 function CompareErpMaterial($erpMaterial, $vaultEntity) {	
 	$number = GetEntityNumber -entity $vaultEntity
 
-	if ($vaultEntity._EntityTypeID -eq "FILE") { $titleProp = '_Title' }
-	else { $titleProp = '_Title(Item,CO)' }
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
 	
 	$differences = @()
 	
 	#TODO: Property mapping for material comparison
-	if ($erpMaterial.Number -ne $number) {
-		$differences += "ERP: $($erpMaterial.Number) <> Vault: $number"
+	if ($erpMaterial.Number -or $number) {
+		if ($erpMaterial.Number -ne $number) {
+			$differences += "Number - ERP: $($erpMaterial.Number) <> Vault: $number"
+		}
 	}
-	if ($erpMaterial.Description -ne $vaultEntity.$titleProp) {
-		$differences += "ERP: $($erpMaterial.Description) <> Vault: $($vaultEntity.$titleProp)"
+
+	if ($erpMaterial.Description -or $vaultEntity.$descriptionProp) {
+		if ($erpMaterial.Description -ne $vaultEntity.$descriptionProp) {
+			$differences += "Description - ERP: $($erpMaterial.Description) <> Vault: $($vaultEntity.$descriptionProp)"
+		}
 	}
 
 	return $differences -join '\n'
@@ -133,38 +193,28 @@ function CompareErpMaterial($erpMaterial, $vaultEntity) {
 
 function PrepareErpBomHeader($erpBomHeader, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
+
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
 	
 	#TODO: Property mapping for bom header creation
 	$erpBomHeader.Number = $number
-	$erpBomHeader.Description = $vaultEntity._Description   
+	$erpBomHeader.Description = $vaultEntity.$descriptionProp   
 	
 	#TODO: Property default values for bom header creation
-	$erpBomHeader.Status = "Released"
+	$erpBomHeader.State = "Released"
 
 	return $erpBomHeader
 }
 
 function PrepareErpBomRow($erpBomRow, $parentNumber, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
-	
+
 	#TODO: Property mapping for bom row creation
 	$erpBomRow.ParentNumber = $parentNumber
 	$erpBomRow.ChildNumber = $number
-	$erpBomRow.Position = $vaultEntity.Bom_PositionNumber
-	$erpBomRow.Quantity = $vaultEntity.Bom_Quantity
+	$erpBomRow.Position = [int]$vaultEntity.'Bom_PositionNumber'
+	$erpBomRow.Quantity = [double]$vaultEntity.'Bom_Quantity'
 
 	return $erpBomRow
-}
-
-function LinkErpMaterial {
-	$erpMaterial = OpenErpSearchWindow
-    if ($erpMaterial) {
-        $number = $erpMaterial.Number
-        $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$number'?", "Link ERP Item", "YesNo", "Question")	
-        if ($answer -eq "Yes") {
-            SetEntityNumber -number $number
-            [System.Windows.Forms.SendKeys]::SendWait("{F5}")
-            #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
-        }       
-    }
 }

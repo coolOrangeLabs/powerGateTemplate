@@ -19,7 +19,6 @@ MultiSelectEnabled: If true, command is active for multiple selections, can be t
     <EditFolder Label="$UIString[MNU4]" Description="$UIString[MNU14]" Hint="$UIString[MNU10]" PSFile="EditFolder.ps1" Image="EditFolderDatasheet.ico" ToolbarPaintStyle="TextAndGlyph" NavigationTypes="Folder" MultiSelectEnabled="False" />
     <ShowLog Label="$UIString[MNU5]" Description="$UIString[MNU15]" Hint="$UIString[MNU5]" PSFile="ShowLog.ps1" Image="Log.ico" ToolbarPaintStyle="TextAndGlyph" MultiSelectEnabled="False" />
     <AboutDialog Label="$UIString[MNU6]" Description="$UIString[MNU16]" Hint="$UIString[MNU6]" PSFile="ShowAboutDialog.ps1" Image="About.ico" ToolbarPaintStyle="TextAndGlyph" MultiSelectEnabled="False" />
-    <pgsTransferBOM Label="Transfer BOM" Description="Transfer BOM" Hint="Transfer BOM" PSFile="powerGateBomTransfer.ps1" Image="co.ico" ToolbarPaintStyle="TextAndGlyph" NavigationTypes="File,Item" MultiSelectEnabled="False"></pgsTransferBOM>
     <pgsEditCfg Label="Edit powerGate configuration" Description="Edit powerGate configuration" Hint="Edit powerGate configuration" PSFile="powerGateEditConfiguration.ps1" Image="co.ico" ToolbarPaintStyle="TextAndGlyph" NavigationTypes="" MultiSelectEnabled="True"></pgsEditCfg>
     <pgsSaveCfg Label="Save powerGate configuration" Description="Save powerGate configuration" Hint="Save powerGate configuration" PSFile="powerGateSaveConfiguration.ps1" Image="co.ico" ToolbarPaintStyle="TextAndGlyph" NavigationTypes="" MultiSelectEnabled="True"></pgsSaveCfg>
   </MenuItem>
@@ -32,14 +31,9 @@ MultiSelectEnabled: If true, command is active for multiple selections, can be t
     <FileContext Label="myMenu" DeployAsPullDown="False" Location="FileContextMenu">
       <Item Name="NewFile"></Item>
       <Item Name="EditFile"></Item>
-      <Item Name="pgsTransferBOM"></Item>
     </FileContext>
-    <ItemContextMenu Label="myMenu" DeployAsPullDown="False" Location="ItemContextMenu">
-      <Item Name="pgsTransferBOM"></Item>
-    </ItemContextMenu>
     <FolderContex Label="myMenu" DeployAsPullDown="False" Location="FolderContextMenu">
-      <Item Name="NewFile"></Item>
-	  
+      <Item Name="NewFile"></Item>  
       <Item Name="NewFolder"></Item>
       <Item Name="EditFolder"></Item>
     </FolderContex>

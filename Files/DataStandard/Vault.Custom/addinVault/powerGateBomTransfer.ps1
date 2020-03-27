@@ -1,7 +1,11 @@
-﻿$dsDiag.Clear()
-#$dsDiag.ShowLog()
+﻿function ShowBomWindow {
+    $entity = GetSelectedObject
+    Show-BomWindow -Entity $entity
+    RefreshView
+}
 
-#region Dialog functions
+#region BOm Window functions: 
+#https://www.coolorange.com/wiki/doku.php?id=powergate:code_reference:commandlets:show-bomwindow:required_functions
 function Get-BomRows($entity) {
     if ($null -eq $entity._EntityTypeID) { return @() }
     if ($entity._EntityTypeID -eq "File") {
@@ -198,7 +202,8 @@ function Transfer-Boms($entityBoms) {
                 elseif ($entityBomRow._Status -eq "Remove") {
                     $erpBomRow = RemoveErpBomRow -parentNumber $parentNumber -childNumber $entityBomRow.Bom_Number -position $entityBomRow.Bom_PositionNumber
                     if ($erpBomRow) {
-                        Update-BomWindowEntity $entityBomRow -Status "Identical" -Tooltip ""
+                        #Update-BomWindowEntity $entityBomRow -Status "Identical" -Tooltip ""
+                        $entityBomRow | Remove-BomWindowEntity
                     }
                     else {
                         Update-BomWindowEntity $entityBomRow -Status "Error" -Tooltip $erpBomRow._ErrorMessage
@@ -220,15 +225,3 @@ function Transfer-Boms($entityBoms) {
     }
 }
 #endregion
-
-$Global:ErrorActionPreference = "Stop"
-$vaultContext.ForceRefresh = $true
-$id = $vaultContext.CurrentSelectionSet[0].Id
-if ($vaultContext.CurrentSelectionSet[0].TypeId.EntityClassId -eq "FILE") {
-    $entity = Get-VaultFile -FileId $id
-}
-else {
-    $entity = Get-VaultItem -ItemId $id
-}
-
-Show-BomWindow -Entity $entity

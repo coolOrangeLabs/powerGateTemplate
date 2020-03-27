@@ -18,7 +18,8 @@ function NewErpBomHeader {
 
 function CreateErpBomHeader($erpBomHeader) {
 	#TODO: Property manipulation for bom header create
-	$erpBomHeader.CreateDate = [DateTime]::Now
+	$erpBomHeader.ModifiedDate = [DateTime]::Now
+	$erpBomHeader.State = "New"
 
 	$erpBomHeader = Add-ERPObject -EntitySet $bomHeaderEntitySet -Properties $erpBomHeader
 	$erpBomHeader = CheckResponse -entity $erpBomHeader
@@ -27,7 +28,7 @@ function CreateErpBomHeader($erpBomHeader) {
 
 function UpdateErpBomHeader($erpBomHeader) {
 	#TODO: Property manipulation for bom header update
-	$erpBomHeader.ModifyDate = [DateTime]::Now
+	$erpBomHeader.ModifiedDate = [DateTime]::Now
 
 	$erpBomHeader = Update-ERPObject -EntitySet $bomHeaderEntitySet -keys $erpBomHeader._Keys -Properties $erpBomHeader._Properties
 	$erpBomHeader = CheckResponse -entity $erpBomHeader
@@ -49,7 +50,8 @@ function NewErpBomRow {
 
 function CreateErpBomRow($erpBomRow) {
 	#TODO: Property manipulation for bom row create
-	$erpBomRow.CreateDate = [DateTime]::Now
+	$erpBomRow.ModifiedDate = [DateTime]::Now
+	$erpBomRow.Type = "Item"
 
 	$erpBomRow = Add-ERPObject -EntitySet $bomRowEntitySet -Properties $erpBomRow
 	$erpBomRow = CheckResponse -entity $erpBomRow
@@ -58,7 +60,7 @@ function CreateErpBomRow($erpBomRow) {
 
 function UpdateErpBomRow($erpBomRow) {
 	#TODO: Property manipulation for bom row update
-	$erpBomRow.ModifyDate = [DateTime]::Now
+	$erpBomRow.ModifiedDate = [DateTime]::Now
 
 	$erpBomRow = Update-ERPObject -EntitySet $bomRowEntitySet -Keys $erpBomRow._Keys -Properties @{Quantity = $erpBomRow.Quantity }
 	$erpBomRow = CheckResponse -entity $erpBomRow
