@@ -53,13 +53,20 @@ This setup contains Autodesk Vault DataStandard customizations and coolOrange po
 ### powerJobs
 This setup contains powerJobs jobs. It needs to be installed on the machine that hosts a Autodesk Vault JobProcessor and coolOrange powerJobs.
 
-## Configuration
-
-TBD!
-
 ## Usage
 
-TBD!
+The script located at https://github.com/coolOrangeProjects/PowerShell.Extensions/tree/master/Others/Automated%20Repository%20Creation allows a dynamic creation of a new repository under `https://www.github.com/coolOrangeProjects`. The repository copies source code, issues, labels, projects and wiki from this template.
+
+## Configuration
+
+#### Wiki
+The wiki under https://github.com/coolOrangeLabs/powerGateTemplate.wiki represents the exact same structure and files which will be created if a new repository of powerGateTemplate is created. Each change in these files will also be applied to new repositories of powerGateTemplate. 
+The following strings are modifed when using the script:
+| File | Expresson | Expected Value |
+| - | - | - |
+| Home.md |{REPO_NAME} | The name of the repository | 
+| Client-Installation.md |{YEAR} | The version/year of the Autodesk products |
+
 
 ## Product Documentation
 
