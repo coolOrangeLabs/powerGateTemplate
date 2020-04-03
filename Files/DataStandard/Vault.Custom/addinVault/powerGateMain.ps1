@@ -125,6 +125,25 @@ function CreateOrUpdateErpMaterial {
 
 function LinkErpMaterial {
 	$erpMaterial = OpenErpSearchWindow
+	
+	$vaultEntity = GetSelectedObject
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
+		$searchProperty = "Number"
+	} elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+		# TODO:  Rename "Part Number" on a german system to "Teilenummer"
+		$searchProperty = "Part Number"
+	} else {
+		throw "Not supported to search for entity type $($vaultEntity._EntityTypeID)!"
+	}
+	$entitesWithSameErpMaterial = Search-EntitiesByPropertyValue -EntityClassId $vaultEntity._EntityTypeID -PropertyName $searchProperty -SearchValue $ErpMaterial.Number -SearchCondition "IsExactly"
+	if($entitesWithSameErpMaterial) {
+		$entityType = $entitesWithSameErpMaterial[0]._EntityTypeID
+		$filePaths = $entitesWithSameErpMaterial._FullPath
+		$itemNumbers = $entitesWithSameErpMaterial.Number
+		([System.Windows.Forms.MessageBox]::Show("The ERP item '$($erpMaterial.Number)' is already linked to other $($entityType)s: `n $($filePaths+$itemNumbers)", "ERP Item is already used in Vault", "Ok", "Warning")	) | Out-Null
+		return;
+	}
+
     if ($erpMaterial) {
         $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
         if ($answer -eq "Yes") {

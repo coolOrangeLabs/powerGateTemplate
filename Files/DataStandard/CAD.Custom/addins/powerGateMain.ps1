@@ -101,8 +101,16 @@ function CreateOrUpdateErpMaterial {
 	}
 }
 
+
 function LinkErpMaterial {
 	$erpMaterial = OpenErpSearchWindow
+	# TODO:  Rename "Part Number" on a german system to "Teilenummer"
+	$entitesWithSameErpMaterial = Search-EntitiesByPropertyValue -EntityClassId "FILE" -PropertyName "Part Number" -SearchValue $ErpMaterial.Number -SearchCondition "IsExactly"
+	if($entitesWithSameErpMaterial) {
+		$entityNames = $entitesWithSameErpMaterial | Select-Object -ExpandProperty @("_FullPath")
+		([System.Windows.Forms.MessageBox]::Show("The ERP item '$($erpMaterial.Number)' is already linked to other files: `n $entityNames", "ERP Item is already used in Vault", "Ok", "Warning")	) | Out-Null
+		return;
+	}
     if ($erpMaterial) {
         $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
         if ($answer -eq "Yes") {
