@@ -55,7 +55,8 @@ function Check-Items($entities) {
     foreach ($entity in $entities) {
         $number = GetEntityNumber -entity $entity
         if ($null -eq $number -or $number -eq "") {
-            Update-BomWindowEntity $entity -Status "Error" -Tooltip "Part Number is empty!"
+            #Update-BomWindowEntity $entity -Status "Error" -Tooltip "Part Number is empty!"
+            Update-BomWindowEntity $entity -Status "New" -Tooltip "Item does not exist in ERP. Will be created."
             continue
         }
         $erpMaterial = GetErpMaterial -number $number
@@ -69,7 +70,13 @@ function Check-Items($entities) {
             }
         }
         else {
-            Update-BomWindowEntity $entity -Status "New" -Tooltip "Item does not exist in ERP. Will be created."
+            #TODO: check if obligatory fields are filled!
+            if ($missing) {
+                Update-BomWindowEntity $entity -Status "Error" -Tooltip $missing
+            }
+            else {
+                Update-BomWindowEntity $entity -Status "New" -Tooltip "Item does not exist in ERP. Will be created."
+            }
         }
     }
 }
@@ -80,6 +87,7 @@ function Transfer-Items($entities) {
             $erpMaterial = NewErpMaterial
             $erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
             $erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
+            SetEntityProperties -erpMaterial $erpMaterial
             if ($erpMaterial) {
                 Update-BomWindowEntity $entity -Status "Identical" -Properties $entity
             }
@@ -111,7 +119,13 @@ function Check-Boms($entityBoms) {
         if ($erpBomHeader -eq $false) {
             Update-BomWindowEntity $entityBom -Status "New" -Tooltip "BOM does not exist in ERP. Will be created."
             foreach ($entityBomRow in $entityBom.Children) {
-                Update-BomWindowEntity $entityBomRow -Status "New" -Tooltip "Position will be added to ERP"
+                $erpMaterial = GetErpMaterial -number $number
+                if ($erpMaterial) {
+                    Update-BomWindowEntity $entityBomRow -Status "New" -Tooltip "Position will be added to ERP"
+                } else {
+                    Update-BomWindowEntity $entityBomRow -Status "Error" -Tooltip "Position doesn't exist as Item in ERP"
+                    Update-BomWindowEntity $entityBom -Status "Error" -Tooltip "BOM contains positions that do not exist as Items in ERP"
+                }
             }
         }
         else {
@@ -129,8 +143,14 @@ function Check-Boms($entityBoms) {
                     }
                 }
                 else {
-                    Update-BomWindowEntity $entityBomRow -Status "New" -Tooltip "Position will be added to ERP"
-                    Update-BomWindowEntity $entityBom -Status "Different" -Tooltip "BOMs are different between Vault and ERP!"
+                $erpMaterial = GetErpMaterial -number $number
+                    if ($erpMaterial) {
+                        Update-BomWindowEntity $entityBomRow -Status "New" -Tooltip "Position will be added to ERP"
+                        Update-BomWindowEntity $entityBom -Status "Different" -Tooltip "BOMs are different between Vault and ERP!"
+                    } else {
+                        Update-BomWindowEntity $entityBomRow -Status "Error" -Tooltip "Position doesn't exist as Item in ERP"
+                        Update-BomWindowEntity $entityBom -Status "Error" -Tooltip "BOM contains positions that do not exist as Items in ERP"
+                    }
                 }
             }
             foreach ($erpBomRow in $erpBomHeader.BomRows) {
@@ -202,7 +222,6 @@ function Transfer-Boms($entityBoms) {
                 elseif ($entityBomRow._Status -eq "Remove") {
                     $erpBomRow = RemoveErpBomRow -parentNumber $parentNumber -childNumber $entityBomRow.Bom_Number -position $entityBomRow.Bom_PositionNumber
                     if ($erpBomRow) {
-                        #Update-BomWindowEntity $entityBomRow -Status "Identical" -Tooltip ""
                         $entityBomRow | Remove-BomWindowEntity
                     }
                     else {
