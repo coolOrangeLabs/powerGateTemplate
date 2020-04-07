@@ -34,11 +34,6 @@ function GetMaterialTypeList($withBlank = $false) {
     return $list | Sort-Object -Property value
 }
 
-function GetMaterialCategoryList($withBlank = $false) {
-    $list = GetSelectionList -section "MaterialCategories" -withBlank $withBlank
-    return $list | Sort-Object -Property value
-}
-
 function GetBOMStateList($withBlank = $false) {
     $list = GetSelectionList -section "BomStates" -withBlank $withBlank
     return $list | Sort-Object -Property value

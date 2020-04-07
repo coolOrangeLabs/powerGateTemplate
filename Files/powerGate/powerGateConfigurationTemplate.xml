@@ -14,14 +14,10 @@
     <Entry Key="PALLET" Value="Pallet" />
   </UnitOfMeasures>
   <MaterialTypes>
-    <Entry Key="Inventory" Value="Inventory" />
-    <Entry Key="Services" Value="Services" />
+    <Entry Key="CONSTRUCTION" Value="Construction Part" />
+    <Entry Key="PURCHASED" Value="Purchased Part" />
+    <Entry Key="STANDARD" Value="Catalog Part" />
   </MaterialTypes>
-  <MaterialCategories>
-    <Entry Key="CHAIR" Value="Office Chair" />
-    <Entry Key="DESK" Value="Office Desk" />
-    <Entry Key="TABLE" Value="Assorted Tables" />
-  </MaterialCategories>
   <BomStates>
     <Entry Key="New" Value="New" />
     <Entry Key="Certified" Value="Certified" />
