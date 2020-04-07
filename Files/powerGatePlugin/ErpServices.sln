@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dataStandard.UI", "dataStandard.UI\dataStandard.UI.csproj", "{457A8BB7-9E85-4857-9B0C-420DA9ABC427}"
 EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "ErpServices.WorkflowEnhancements", "ErpServices.WorkflowEnhancements\ErpServices.WorkflowEnhancements.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{457A8BB7-9E85-4857-9B0C-420DA9ABC427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{457A8BB7-9E85-4857-9B0C-420DA9ABC427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{457A8BB7-9E85-4857-9B0C-420DA9ABC427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
