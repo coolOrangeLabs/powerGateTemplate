@@ -125,6 +125,25 @@ function CreateOrUpdateErpMaterial {
 
 function LinkErpMaterial {
 	$erpMaterial = OpenErpSearchWindow
+
+	$vaultEntity = GetSelectedObject
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
+		$searchProperty = "Number"
+	} elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+		#TODO:  Rename "Part Number" on a german system to "Teilenummer"
+		$searchProperty = "Part Number"
+	} else {
+		throw "Not supported to search for entity type $($vaultEntity._EntityTypeID)!"
+	}
+	$entitesWithSameErpMaterial = Search-EntitiesByPropertyValue -EntityClassId $vaultEntity._EntityTypeID -PropertyName $searchProperty -SearchValue $ErpMaterial.Number -SearchCondition "IsExactly"
+	if($entitesWithSameErpMaterial) {
+		$entityType = $entitesWithSameErpMaterial[0]._EntityTypeID
+		$filePaths = $entitesWithSameErpMaterial._FullPath
+		$itemNumbers = $entitesWithSameErpMaterial.Number
+		([System.Windows.Forms.MessageBox]::Show("The ERP item '$($erpMaterial.Number)' is already linked to other $($entityType)s: `n $($filePaths+$itemNumbers)", "ERP Item is already used in Vault", "Ok", "Warning")	) | Out-Null
+		return;
+	}
+
     if ($erpMaterial) {
         $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
         if ($answer -eq "Yes") {
@@ -163,6 +182,7 @@ function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 	#TODO: Property mapping for material creation
 	$erpMaterial.Number = $number
 	$erpMaterial.Description = $vaultEntity.$descriptionProp
+	$erpMaterial.Type = "CONSTRUCTION"
 
 	return $erpMaterial
 }
@@ -197,12 +217,10 @@ function PrepareErpBomHeader($erpBomHeader, $vaultEntity) {
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
 	else { $descriptionProp = '_Description' }
 	
-	#TODO: Property mapping for bom header creation
+	#TODO: Property mapping and assignment for bom header creation
 	$erpBomHeader.Number = $number
 	$erpBomHeader.Description = $vaultEntity.$descriptionProp   
-	
-	#TODO: Property default values for bom header creation
-	$erpBomHeader.State = "Released"
+	$erpBomHeader.State = "New"
 
 	return $erpBomHeader
 }
@@ -214,6 +232,11 @@ function PrepareErpBomRow($erpBomRow, $parentNumber, $vaultEntity) {
 	$erpBomRow.ParentNumber = $parentNumber
 	$erpBomRow.ChildNumber = $number
 	$erpBomRow.Position = [int]$vaultEntity.'Bom_PositionNumber'
+	if ($vaultEntity.Children) {
+		$erpBomRow.Type = "Assembly"
+	} else {
+		$erpBomRow.Type = "Part"
+	}
 	$erpBomRow.Quantity = [double]$vaultEntity.'Bom_Quantity'
 
 	return $erpBomRow
