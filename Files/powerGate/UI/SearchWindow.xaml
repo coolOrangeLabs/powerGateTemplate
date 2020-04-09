@@ -23,6 +23,10 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Height" Value="24" />
         </Style>
+        <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="1" />
+        </Style>
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontSize" Value="12" />
@@ -135,10 +139,15 @@
                         <ComboBox Name="UomListSearch" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding UnitOfMeasure, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
                         <Label Content="Type" Grid.Column="3"/>
                         <ComboBox Name="MaterialTypeListSearch" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4"/>
-                        <Label Content="Width" Grid.Row="1"/>
-                        <TextBox Text="{Binding Width, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"/>
-                        <Label Content="Height" Grid.Column="3" Grid.Row="1"/>
-                        <TextBox Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Grid.Row="1"/>
+                        <Label Content="Blocked" Grid.Row="1"/>
+                        <CheckBox Grid.Column="1" Grid.Row="1" IsChecked="{Binding IsBlocked, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <Label Content="Weight" Grid.Row="2"/>
+                        <TextBox Text="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
+                        <Label Content="Storage Area / Shelf" Grid.Column="3" Grid.Row="2"/>
+                        <TextBox Text="{Binding Shelf, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Grid.Row="2"/>
+                        <Label Content="Dimensions" Grid.Row="3"/>
+                        <TextBox Text="{Binding Dimensions, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="3"/>
                     </Grid>
                 </Expander>
             </Grid>
@@ -163,11 +172,12 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
                     <DataGridTextColumn Binding="{Binding Description}" Header="Description"/>
-                    <DataGridTextColumn Binding="{Binding UnitOfMeasure}" Header="UOM"/>
+                    <DataGridTextColumn Binding="{Binding IsBlocked}" Header="Blocked"/>
+                    <DataGridTextColumn Binding="{Binding UnitOfMeasure}" Header="Base UOM"/>
                     <DataGridTextColumn Binding="{Binding Type}" Header="Type"/>
                     <DataGridTextColumn Binding="{Binding Weight}" Header="Weight"/>
-                    <DataGridTextColumn Binding="{Binding Width}" Header="Width"/>
-                    <DataGridTextColumn Binding="{Binding Height}" Header="Height"/>
+                    <DataGridTextColumn Binding="{Binding Dimensions}" Header="Dimensions"/>
+                    <DataGridTextColumn Binding="{Binding Shelf}" Header="Storage Area / Shelf"/>
                 </DataGrid.Columns>
             </DataGrid>
 
