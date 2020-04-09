@@ -117,7 +117,8 @@ function CreateOrUpdateErpMaterial {
 		InitMaterialTab
 	} else {
 		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
-		SetEntityProperties -erpMaterial $erpMaterial
+		$vaultEntity = GetSelectedObject
+		SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
 		RefreshView
 	}
 	$dsDiag.Trace("<<CreateOrUpdateMaterial")
@@ -130,10 +131,8 @@ function LinkErpMaterial {
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
 		$searchProperty = "Number"
 	} elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
-		#TODO:  Rename "Part Number" on a german system to "Teilenummer"
+		#TODO: Rename "Part Number" on a german system to "Teilenummer"
 		$searchProperty = "Part Number"
-	} else {
-		throw "Not supported to search for entity type $($vaultEntity._EntityTypeID)!"
 	}
 	$entitesWithSameErpMaterial = Search-EntitiesByPropertyValue -EntityClassId $vaultEntity._EntityTypeID -PropertyName $searchProperty -SearchValue $ErpMaterial.Number -SearchCondition "IsExactly"
 	if($entitesWithSameErpMaterial) {
@@ -147,29 +146,28 @@ function LinkErpMaterial {
     if ($erpMaterial) {
         $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
         if ($answer -eq "Yes") {
-            SetEntityProperties -erpMaterial $erpMaterial
+            SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
 			RefreshView
             #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
         }       
     }
 }
 
-function SetEntityProperties($erpMaterial) {
+function SetEntityProperties($erpMaterial, $vaultEntity) {
 	#TODO: Update Entity UDPs with values from ERP
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster") {
-		$file = Get-VaultFile -FileId $vaultContext.SelectedObject.Id
-		Update-VaultFile -File $file._FullPath -Properties @{
-			"_PartNumber" = $erpMaterial.Number
-			"_Description" = $erpMaterial.Description
-		}
-	}
-	elseif ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster") {
-		$item = Get-VaultItem -ItemId $vaultContext.SelectedObject.Id
-		$item = Update-VaultItem -Number $item._Number -NewNumber $erpMaterial.Number
-		Update-VaultItem -Number $item._Number -Properties @{
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
+		$vaultEntity = Update-VaultItem -Number $vaultEntity._Number -NewNumber $erpMaterial.Number
+		Update-VaultItem -Number $vaultEntity._Number -Properties @{
 			#the item description cannot be updated, since "Description (Item,CO)" is a system property!
 			"_Description(Item,CO)" = $erpMaterial.Description
 		}
+		$vaultEntity._Number = $erpMaterial.Number
+	} elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+		Update-VaultFile -File $vaultEntity._FullPath -Properties @{
+			"_PartNumber" = $erpMaterial.Number
+			"_Description" = $erpMaterial.Description
+		}
+		$vaultEntity._PartNumber = $erpMaterial.Number
 	}
 }
 
