@@ -33,6 +33,7 @@ function GetEntityNumber($entity) {
 	else {
 		$number = $entity._Number
 	}
+	if ($number) { $number = $number.ToUpper() }
 	return $number
 }
 
@@ -180,7 +181,6 @@ function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 	#TODO: Property mapping for material creation
 	$erpMaterial.Number = $number
 	$erpMaterial.Description = $vaultEntity.$descriptionProp
-	$erpMaterial.Type = "CONSTRUCTION"
 
 	return $erpMaterial
 }

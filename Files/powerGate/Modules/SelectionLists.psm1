@@ -40,6 +40,11 @@ function GetBOMStateList($withBlank = $false) {
     return $list | Sort-Object -Property value
 }
 
+function GetSearchableFieldsList($withBlank = $false) {
+    $list = GetSelectionList -section "SearchFields" -withBlank $withBlank
+    return $list | Sort-Object -Property value    
+}
+
 function Set-PowerGateConfigFromVault {
     Log -Begin
     param(
