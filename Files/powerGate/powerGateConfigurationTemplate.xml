@@ -24,4 +24,15 @@
     <Entry Key="Under Development" Value="Under Development" />
     <Entry Key="Closed" Value="Closed" />
   </BomStates>
+  <!-- Key = binding Name & Vault = Lable Name -->
+  <SearchFields>
+    <Entry Key="Number" Value="Number" />
+    <Entry Key="Description" Value="Description" />
+    <Entry Key="UnitOfMeasure" Value="Unit of Measure" />
+    <Entry Key="Type" Value="Type" />
+    <Entry Key="IsBlocked" Value="Blocked" />
+    <Entry Key="Weight" Value="Weight" />
+    <Entry Key="Shelf" Value="Storage Area / Shelf" />
+    <Entry Key="Dimensions" Value="Dimensions" />
+  </SearchFields>
 </Root>

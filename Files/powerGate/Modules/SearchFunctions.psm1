@@ -44,7 +44,9 @@ function OpenErpSearchWindow {
         $key = $dataGrid.CurrentColumn.SortMemberPath
         $value = $dataGrid.SelectedItem.$key
         $dataSource = $searchWindow.FindName("SearchCriteria").DataContext
-        if ($value -ne "" -and $null -ne $value -and $key -in $dataSource.PSObject.Properties.Name) {
+        $searchableFields = GetSearchableFieldsList
+
+        if ($value -ne "" -and $null -ne $value -and $key -in $searchableFields.Key) {
             $dataSource.$key = $value;
             $searchWindow.FindName("SearchCriteria").DataContext = $null
             $searchWindow.FindName("SearchCriteria").DataContext = $dataSource
