@@ -152,7 +152,19 @@ function Check-Boms($entityBoms) {
             foreach ($erpBomRow in $erpBomHeader.BomRows) {
                 $entityBomRow = $entityBom.Children | Where-Object { (GetEntityNumber -entity $_) -eq $erpBomRow.ChildNumber -and $_.Bom_PositionNumber -eq $erpBomRow.Position }
                 if ($null -eq $entityBomRow) {
-                    $remove = Add-BomWindowEntity -Type BomRow -Properties @{'Bom_Number' = $erpBomRow.ChildNumber; 'Name' = $erpBomRow.ChildNumber; 'Bom_Name' = $erpBomRow.ChildNumber; '_Name' = $erpBomRow.ChildNumber; 'Bom_Quantity' = $erpBomRow.Quantity; 'Bom_PositionNumber' = $erpBomRow.Position } -Parent $entityBom
+                    $remove = Add-BomWindowEntity  -Parent $entityBom -Type BomRow -Properties @{
+                        'Part Number' = $erpBomRow.ChildNumber; 
+                        '_PartNumber' = $erpBomRow.ChildNumber; 
+                        'Name' = $erpBomRow.ChildNumber; 
+                        '_Name' = $erpBomRow.ChildNumber; 
+                        'Number' = $erpBomRow.ChildNumber; 
+                        '_Number' = $erpBomRow.ChildNumber; 
+                        'Bom_Number' = $erpBomRow.ChildNumber; 
+                        'Bom_Name' = $erpBomRow.ChildNumber; 
+                        'Bom_Quantity' = $erpBomRow.Quantity; 
+                        'Bom_Position' = $erpBomRow.Position;
+                        'Bom_PositionNumber' = $erpBomRow.Position
+                    }
                     Update-BomWindowEntity $remove -Status "Remove" -Tooltip "Position will be deleted in ERP"
                     Update-BomWindowEntity $entityBom -Status "Different" -Tooltip "BOM rows are different between Vault and ERP!"
                 }

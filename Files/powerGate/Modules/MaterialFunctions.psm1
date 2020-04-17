@@ -21,8 +21,7 @@ function NewErpMaterial {
 
 	#TODO: Property default values for material creation
 	$erpMaterial.UnitOfMeasure = "PCS"
-	$erpMaterial.Type = "Services"
-	$erpMaterial.Category = "TABLE"
+	$erpMaterial.Type = "Service"
 
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $true -MemberType NoteProperty -Force
 	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $false -MemberType NoteProperty -Force
@@ -61,6 +60,6 @@ function UpdateErpMaterial($erpMaterial) {
 
 function TransformErpMaterial($erpMaterial) {
 	#TODO: Property transformations on create and update
-	if ($erpMaterial.Description) {	$erpMaterial.Description = $erpMaterial.Description.ToUpper() }
+	$erpMaterial.Number = $erpMaterial.Number.ToUpper()
 	return $erpMaterial
 }
