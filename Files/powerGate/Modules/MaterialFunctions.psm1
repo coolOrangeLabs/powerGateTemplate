@@ -2,6 +2,7 @@
 $materialEntityType = "Material"
 
 function GetErpMaterial($number) {
+	Log -Begin
 	if ([string]::IsNullOrEmpty($number)) { 
 		$erpMaterial = $false
 		Add-Member -InputObject $erpMaterial -Name "_ErrorMessage" -Value "Number is empty!" -MemberType NoteProperty -Force
@@ -12,11 +13,12 @@ function GetErpMaterial($number) {
 	
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $false -MemberType NoteProperty -Force
 	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $true -MemberType NoteProperty -Force	
-	
+	Log -End
 	return $erpMaterial
 }
 
 function NewErpMaterial {
+	Log -Begin
 	$erpMaterial = New-ERPObject -EntityType $materialEntityType
 
 	#TODO: Property default values for material creation
@@ -26,11 +28,12 @@ function NewErpMaterial {
 
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $true -MemberType NoteProperty -Force
 	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $false -MemberType NoteProperty -Force
-
+	Log -End
 	return $erpMaterial
 }
 
 function CreateErpMaterial($erpMaterial) {
+	Log -Begin
 	#TODO: Numbering generation for material creation (only if needed)
 	if ($null -eq $erpMaterial.Number -or $erpMaterial.Number -eq "") {
 		$erpMaterial.Number = "*"
@@ -44,23 +47,26 @@ function CreateErpMaterial($erpMaterial) {
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Add-ErpObject -EntitySet $materialEntitySet -Properties $erpMaterial
 	$erpMaterial = CheckResponse -entity $erpMaterial
-	
+	Log -End
 	return $erpMaterial
 }
 
 function UpdateErpMaterial($erpMaterial) {
+	Log -Begin
 	#TODO: Properties that need to be set on update
 	$erpMaterial.ModifiedDate = [DateTime]::Now
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Update-ERPObject -EntitySet $materialEntitySet -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
 	$erpMaterial = CheckResponse -entity $erpMaterial
-
+	Log -End
 	return $erpMaterial
 }
 
 function TransformErpMaterial($erpMaterial) {
+	Log -Begin
 	#TODO: Property transformations on create and update
 	if ($erpMaterial.Description) {	$erpMaterial.Description = $erpMaterial.Description.ToUpper() }
+	Log -End
 	return $erpMaterial
 }

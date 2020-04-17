@@ -1,4 +1,5 @@
 ﻿function GetSelectionList($section, $withBlank = $false) {
+    Log -Begin
     $list = @()
     if (-not $vault) { return $list }
     
@@ -20,7 +21,7 @@
             $list = , $empty + $list 
         }        
     }
-
+    Log -End
     return $list
 }
 
@@ -40,6 +41,7 @@ function GetBOMStateList($withBlank = $false) {
 }
 
 function Set-PowerGateConfigFromVault {
+    Log -Begin
     param(
         [string]$Content
     )
@@ -47,9 +49,11 @@ function Set-PowerGateConfigFromVault {
     $encodedContentBytes = [System.Text.Encoding]::UTF8.GetBytes($Content)
     $encodedContentBase64 =[Convert]::ToBase64String($encodedContentBytes)
     $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $encodedContentBase64)
+    Log -End
 }
 
 function Get-PowerGateConfigFromVault {
+    Log -Begin
     # In order to support special characters like ö, Ü
     $encodedContentBase64 = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
     if($encodedContentBase64) {
@@ -58,4 +62,5 @@ function Get-PowerGateConfigFromVault {
             [System.Text.Encoding]::UTF8.GetString($encodedContentBytes)
         } catch { }        
     }
+    Log -End
 }

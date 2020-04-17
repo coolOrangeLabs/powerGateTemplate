@@ -7,10 +7,12 @@ $powerGateServerPort = "8080"
 $powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
 
 function ConnectToErpServer {
+	Log -Begin
 	$connected = Connect-ERP -Service $powerGateServerErpPluginUrl -OnConnect $onConnect
 	if (-not $connected) {
 		Show-MessageBox -message "Connection to $powerGateServerErpPluginUrl could not be established!!!" -icon "Error"
 	}
+	Log -End
 }
 
 function Show-MessageBox($message, $title = "powerGate ERP Integration", $icon = "Information") {
@@ -20,6 +22,7 @@ function Show-MessageBox($message, $title = "powerGate ERP Integration", $icon =
 }
 
 function GetPowerGateError {
+	Log -Begin
 	$powerGateErrMsg = $null
 	$powerGateLastResponse = [AppDomain]::CurrentDomain.GetData("powerGate_lastResponse")
 	if ($powerGateLastResponse) {
@@ -33,10 +36,12 @@ function GetPowerGateError {
 			}
 		}
 	}
+	Log -End
 	return $powerGateErrMsg
 }
 
 function CheckResponse($entity) {
+	Log -Begin
 	if ($null -eq $entity) {
 		$entity = $false
 		$pGError = GetPowerGateError
@@ -46,6 +51,7 @@ function CheckResponse($entity) {
 			Show-MessageBox -message $message -icon "Error"
 		}
 	}
+	Log -End
 	return $entity
 }
 

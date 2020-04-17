@@ -8,6 +8,7 @@ function SearchErpMaterials ($filter, $top = 100) {
 }
 
 function OpenErpSearchWindow {
+    Log -Begin
     [xml]$searchWindowXaml = Get-Content "C:\ProgramData\coolOrange\powerGate\UI\SearchWindow.xaml"
     $reader = (New-Object System.Xml.XmlNodeReader $searchWindowXaml)
     $searchWindow = [Windows.Markup.XamlReader]::Load($reader) 
@@ -62,7 +63,7 @@ function OpenErpSearchWindow {
         $searchWindow.FindName("SearchResults").ItemsSource = $null
         $searchWindow.FindName("RecordsFound").Content = ""
     })
-    
+    Log -End
     if ($searchWindow.ShowDialog() -eq "OK") {
         $material = $searchWindow.FindName("SearchResults").SelectedItem
         return $material
@@ -72,6 +73,7 @@ function OpenErpSearchWindow {
 }
 
 function CloseErpSearchWindow {
+    Log -Begin
     $material = $searchWindow.FindName("SearchResults").SelectedItem
     if ($material) {
         $searchWindow.DialogResult = "OK"
@@ -79,9 +81,11 @@ function CloseErpSearchWindow {
     } else {
         Show-MessageBox -message "An item needs to be selected to proceed!" -icon "Hand"
     }
+    Log -End
 }
 
 function ExecuteErpSearch {
+    Log -Begin
     $dsDiag.Clear()
     $searchCriteria = $searchWindow.FindName("SearchCriteria").DataContext
     $CaseSensitive = $searchWindow.FindName("CaseSensitive").IsChecked
@@ -100,9 +104,11 @@ function ExecuteErpSearch {
             #Show-MessageBox -message $results._ErrorMessage -icon "Error"
         }
     }
+    Log -End
 }
 
 function ConvertSearchCriteriaToFilter ($SearchCriteria, $CaseSensitive) {
+    Log -Begin
     $wildcardQuery = @()
     foreach ($criterion in $SearchCriteria.PSObject.Properties) {
         $valueIsSet = CheckIfValueIsSet -value $criterion.Value -type $criterion.TypeNameOfValue
@@ -111,6 +117,7 @@ function ConvertSearchCriteriaToFilter ($SearchCriteria, $CaseSensitive) {
         $wildcardQuery += ConvertValueToFilter -WildcardValue $criterion.Value -Property $criterion.Name -Type $criterion.TypeNameOfValue -CaseSensitive $CaseSensitive -WildCard "*"
     }
     $filter = $wildcardQuery -Join " and "
+    Log -End
     return $filter
 }
 
