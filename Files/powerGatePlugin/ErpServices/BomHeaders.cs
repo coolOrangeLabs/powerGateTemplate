@@ -15,6 +15,7 @@ namespace ErpServices
         [BsonIgnore]
         public string Description { get; set; }
         public string State { get; set; }
+        public string UnitOfMeasure { get; set; }
         public DateTime ModifiedDate { get; set; }
 
         public List<BomRow> BomRows { get; set;  }
