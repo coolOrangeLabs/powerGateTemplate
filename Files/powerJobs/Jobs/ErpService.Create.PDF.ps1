@@ -17,7 +17,7 @@ $fastOpen = $file._Extension -eq "idw" -or $file._Extension -eq "dwg" -and $file
 
 Write-Host "Starting job 'Create PDF as attachment' for file '$($file._Name)' ..."
 
-if( @("iam", "idw", "dwg", "ipn", "ipt") -notcontains $file._Extension ) {
+if( @("idw", "dwg") -notcontains $file._Extension ) {
     Write-Host "Files with extension: '$($file._Extension)' are not supported"
     return
 }
