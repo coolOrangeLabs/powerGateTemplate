@@ -163,7 +163,7 @@
                 </Grid.ColumnDefinitions>
                 <Button Name="Search" Content="Search..." Grid.Column="0" Width="100" DataContext="{Binding DataContext}" HorizontalAlignment="Left"/>
                 <Button Name="Clear" Content="Clear" Grid.Column="1" Width="100" DataContext="{Binding DataContext}" />
-                <CheckBox Name="CaseSensitive" IsChecked="False" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">Case sensitive</CheckBox>
+                <CheckBox Name="CaseSensitive" IsChecked="True" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">Case sensitive</CheckBox>
                 <Label Content="Max records" Grid.Column="4" HorizontalAlignment="Right"/>
                 <ComboBox Name="NumberOfRecords" Grid.Column="5" Width="50"/>
             </Grid>
