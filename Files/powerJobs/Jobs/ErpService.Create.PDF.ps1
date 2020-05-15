@@ -14,6 +14,7 @@ $workingDirectory = "C:\Temp\$($file._Name)"
 $localPDFfileLocation = "$workingDirectory\$($file._Name).pdf"
 $vaultPDFfileLocation = $file._EntityPath +"/"+ (Split-Path -Leaf $localPDFfileLocation)
 $fastOpen = $file._Extension -eq "idw" -or $file._Extension -eq "dwg" -and $file._ReleasedRevision
+$global:loggingSettings.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.txt"
 
 Write-Host "Starting job 'Create PDF as attachment' for file '$($file._Name)' ..."
 

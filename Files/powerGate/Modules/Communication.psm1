@@ -15,12 +15,6 @@ function ConnectToErpServer {
 	Log -End
 }
 
-function Show-MessageBox($message, $title = "powerGate ERP Integration", $icon = "Information") {
-	#icons: Error, Exclamation, Hand, Information, Question, Stop, Warning
-	$button = "OK"
-	$null = [System.Windows.Forms.MessageBox]::Show($message, $title, $button, $icon)	
-}
-
 function GetPowerGateError {
 	Log -Begin
 	$powerGateErrMsg = $null
