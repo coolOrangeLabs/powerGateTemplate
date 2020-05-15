@@ -1,5 +1,6 @@
 Name,Description
 XXXX - powerGate Initialisation, project for the preparation of the test environment / sample data and the ERP API/webservices
-XXXX - powerGate Items, functionalities related ERP items (retieving/searching ERP items / updating/transfering ERP items)
-XXXX - powerGate Bill of Material, functionalities related to the ERP Bill of Material (retieving of the ERP BOM / comparison fo ERP BOM with Vault BOM / updating/transfering Vault BOM to ERP)
-XXXX - powerGate Documents, functionalities related to the transfer of drawings to ERP (storage of PDF drawing into network share/ assignment of PDF to ERP item)
+XXXX - powerGate Configuration Phase, changing in the powerGate template the properties in the GUI and transfers to include all required ERP properties
+XXXX - powerGate Integration Phase, consume the ERP API and let the Vault&Inventor talk to the customers ERP system
+XXXX - powerGate Business-logic Phase, implementing custom workflows like validations and automations
+XXXX - powerGate After Go-Live Phase, requirments which are not relevant for the go-live
