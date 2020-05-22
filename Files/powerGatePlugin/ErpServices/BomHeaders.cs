@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Services.Common;
 using System.Linq;
+using System.Reflection;
 using LiteDB;
+using log4net;
 using powerGateServer.SDK;
 
 namespace ErpServices
@@ -29,6 +31,8 @@ namespace ErpServices
 
     public class BomHeaders : ServiceMethod<BomHeader>
     {
+        static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public override string Name => "BomHeaders";
 
         public BomHeaders()

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Services.Common;
 using System.Linq;
+using System.Reflection;
 using LiteDB;
+using log4net;
 using powerGateServer.SDK;
 
 namespace ErpServices
@@ -34,6 +36,8 @@ namespace ErpServices
 
     public class Materials : ServiceMethod<Material>
     {
+        static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public override string Name => "Materials";
 
         public Materials()
@@ -43,6 +47,7 @@ namespace ErpServices
 
         public string GetNextNumber()
         {
+            Log.Info(">> GetNextNumber >>");
             var nextNumber = "500000";
 
             using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
@@ -54,7 +59,9 @@ namespace ErpServices
                 if (material != null)
                     nextNumber = material.Number;
 
-                return (int.Parse(nextNumber) +1).ToString();
+                var nextIntNumber = int.Parse(nextNumber) + 1;
+                Log.InfoFormat("GetNextNumber: {0}", nextIntNumber.ToString());
+                return (nextIntNumber).ToString();
             }
         }
 

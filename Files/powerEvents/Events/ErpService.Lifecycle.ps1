@@ -24,7 +24,11 @@ function RestrictFileRelease($files) {
 			if ($state.ReleasedState) {
 				$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $file._PartNumber }
 				if ($null -eq $material) {
-					Add-VaultRestriction -EntityName ($file._Name) -Message "An item with the number '$($file._PartNumber)' does not exist in the ERP system."
+					$restrictMessage = "An item with the number '$($file._PartNumber)' does not exist in the ERP system."
+					Log -Message $restrictMessage -LogLevel "ERROR"
+					Add-VaultRestriction -EntityName ($file._Name) -Message $restrictMessage
+				} else {
+					Log -Message "No restrictions"
 				}
 			}
 		}
@@ -47,7 +51,11 @@ function RestrictItemRelease($items) {
 			if ($itemIncludesFilesToCheck -and $state.ReleasedState) {
 				$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $item._Number }
 				if ($null -eq $material) {
-					Add-VaultRestriction -EntityName ($item._Name) -Message "An item with the number '$($item._Number)' does not exist in the ERP system."
+					$restrictMessage = "An item with the number '$($item._Number)' does not exist in the ERP system."
+					Log -Message $restrictMessage -LogLevel "ERROR"
+					Add-VaultRestriction -EntityName ($item._Name) -Message $restrictMessage
+				} else {
+					Log -Message "No restrictions"
 				}
 			}
 		}		
@@ -67,7 +75,7 @@ function AddPdfJob($files, $successful) {
 			$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $file._PartNumber }
 			if ($material) {
 				$jobType = "ErpService.Create.PDF"
-				Write-Host "Adding job '$jobType' for released file '$($file._Name)' to queue."
+				Log -Message "Adding job '$jobType' for released file '$($file._Name)' to queue."
 				Add-VaultJob -Name $jobType -Parameters @{ "EntityId"=$file.Id; "EntityClassId"="FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system"
 			}
 	   }
