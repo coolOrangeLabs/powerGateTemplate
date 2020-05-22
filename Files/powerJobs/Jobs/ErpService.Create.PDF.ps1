@@ -9,6 +9,11 @@
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  #
 #=============================================================================#
 
+Get-ChildItem -LiteralPath 'C:\ProgramData\coolOrange\Modules\' -File -Recurse -Force -Filter '*.ps*' | `
+ForEach-Object {
+    Import-Module $_.FullName -Global -Force -DisableNameChecking
+}
+
 $hidePDF = $false
 $workingDirectory = "C:\Temp\$($file._Name)"
 $localPDFfileLocation = "$workingDirectory\$($file._Name).pdf"

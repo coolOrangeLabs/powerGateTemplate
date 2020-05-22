@@ -37,7 +37,7 @@
 			-dMinor=$(Minor)
 			-dBuild=$(Build)
 			-dRevision=$(Revision)</CompilerAdditionalOptions>
-    <DefineConstants>Debug;HarvestPowerJobs=..\..\Files\powerJobs;</DefineConstants>
+    <DefineConstants>Debug;HarvestPowerJobs=..\..\Files\powerJobs;HarvestModules=..\..\Files\powerGate\Modules;</DefineConstants>
     <WixVariables>
     </WixVariables>
     <SuppressIces>ICE30</SuppressIces>
@@ -45,6 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Directories.wxs" />
+    <Compile Include="HeatGenerated\HeatGeneratedFileList_Modules.wxs" />
     <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerJobs.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UserInterface.wxs" />
@@ -81,6 +82,10 @@
     <PreBuildEvent>cd  "$(ProjectDir)"
 
 ::  Heat for powerJobs files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerJobs -cg HeatGenerated_PowerJobsFiles -dr POWERJOBS_INSTALL -sreg -srd -var var.HarvestPowerJobs -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerJobs.wxs</PreBuildEvent>
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerJobs -cg HeatGenerated_PowerJobsFiles -dr POWERJOBS_INSTALL -sreg -srd -var var.HarvestPowerJobs -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerJobs.wxs
+
+
+::  Heat for powerGate files
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGate\Modules -cg HeatGenerated_Modules -dr MODULES_INSTALL -sreg -srd -var var.HarvestModules -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_Modules.wxs</PreBuildEvent>
   </PropertyGroup>
 </Project>

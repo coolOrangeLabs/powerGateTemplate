@@ -7,6 +7,7 @@
       <Directory Id="CommonAppDataFolder" Name="ProgramData">
         <Directory Id='coolOrange' Name='coolOrange'>
           <Directory Id='POWERJOBS_INSTALL' Name='powerJobs' />
+          <Directory Id='MODULES_INSTALL' Name='Modules' />
         </Directory>
       </Directory>
     </Directory>
