@@ -8,9 +8,10 @@ $powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServe
 
 function ConnectToErpServer {
 	Log -Begin
+	Log -Message "Connecting with URL: $powerGateServerErpPluginUrl"
 	$connected = Connect-ERP -Service $powerGateServerErpPluginUrl -OnConnect $onConnect
 	if (-not $connected) {
-		Show-MessageBox -message "Connection to $powerGateServerErpPluginUrl could not be established!!!" -icon "Error"
+		Log -Message "Connection to $powerGateServerErpPluginUrl could not be established!" -MessageBox -LogLevel "Error"
 	}
 	Log -End
 }

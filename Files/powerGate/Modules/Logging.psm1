@@ -27,7 +27,7 @@ function Log {
     [CmdletBinding()]
     Param(
         [Parameter(ValueFromPipeline=$True, Position=1)]
-        [string]$Message = "`r`n",
+        [string]$Message,
         [Parameter(Position=2)]
         [LogLevel]$LogLevel = [LogLevel]::INFO,
         [switch]$Begin,
