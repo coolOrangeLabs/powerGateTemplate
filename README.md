@@ -63,6 +63,7 @@ Detailed information on which componentes are taken to the new repo:
 - All wiki files (the string {REPO_NAME} and {YEAR} will be overwritten with the input from the script)
 - labes are taken from the `labels.csv` which is located as a hidden file in the wiki. Can be modified by cloning wiki locally, changing contents and pushing again to this repo.
 
+Run the script as administrator.
 Information on how to execute the script can be found when executing `Get-Help .\createGithubRepository.ps1 -full`
 
 
