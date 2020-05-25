@@ -55,7 +55,14 @@ This setup contains powerJobs jobs. It needs to be installed on the machine that
 
 ## Usage
 
-The script located [createGithubRepository.ps1](https://github.com/coolOrangeProjects/PowerShell.Extensions/tree/master/Others/Automated%20Repository%20Creation) allows a dynamic creation of a new repository in `https://www.github.com/`. The repository copies source code, issues, labels, projects and wiki from this template. More detailed information can be found when executing `Get-Help .\createGithubRepository.ps -full`
+The script located [createGithubRepository.ps1](https://github.com/coolOrangeProjects/PowerShell.Extensions/tree/master/Others/Automated%20Repository%20Creation) allows a dynamic creation of a new repository in `https://www.github.com/`. The repository copies source code, issues, labels, projects, cards and wiki from this template.
+
+Detailed information on which componentes are taken to the new repo:
+- All projects with state `closed` and their cards
+- All issues with the label `automation` and state `closed`
+- All wiki files (the string {REPO_NAME} and {YEAR} will be overwritten with the input from the script)
+
+Information on how to execute the script can be found when executing `Get-Help .\createGithubRepository.ps1 -full`
 
 
 ## Product Documentation
