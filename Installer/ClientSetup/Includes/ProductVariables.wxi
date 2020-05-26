@@ -4,10 +4,10 @@
 	<?define WikiLink="https://github.com/coolOrangeLabs/powerGateTemplate/wiki"?>
 	<?define IconName="..\Resources\coolOrange.ico"?>
 	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
-  <?define VaultYear="Vault 2020"?>
-  <?define PName="coolOrange ErpService Client Customization"?>
-  <?define PShortVersion="$(var.Major).$(var.Minor)"?>
-  <?define CompanyDirectory="coolOrange"?>
+	<?define VaultYear="Vault 2020"?>
+	<?define PName="powerGate Standard - Client integration for Vault $(var.VaultYear)"?>
+	<?define PShortVersion="$(var.Major).$(var.Minor)"?>
+	<?define CompanyDirectory="coolOrange"?>
 	
 	<?if $(var.Platform) = x64 ?>
 	  <?define Win64 = "yes" ?>
