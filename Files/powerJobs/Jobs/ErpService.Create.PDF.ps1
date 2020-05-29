@@ -9,22 +9,18 @@
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  #
 #=============================================================================#
 
-Get-ChildItem -LiteralPath 'C:\ProgramData\coolOrange\Modules\' -File -Recurse -Force -Filter '*.ps*' | `
-ForEach-Object {
-    Import-Module $_.FullName -Global -Force -DisableNameChecking
-}
+$global:loggingSettings.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.txt"
 
 $hidePDF = $false
 $workingDirectory = "C:\Temp\$($file._Name)"
 $localPDFfileLocation = "$workingDirectory\$($file._Name).pdf"
 $vaultPDFfileLocation = $file._EntityPath +"/"+ (Split-Path -Leaf $localPDFfileLocation)
 $fastOpen = $file._Extension -eq "idw" -or $file._Extension -eq "dwg" -and $file._ReleasedRevision
-$global:loggingSettings.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.txt"
 
-Write-Host "Starting job 'Create PDF as attachment' for file '$($file._Name)' ..."
+Log -Message "Starting job 'Create PDF as attachment' for file '$($file._Name)' ..."
 
 if( @("idw", "dwg") -notcontains $file._Extension ) {
-    Write-Host "Files with extension: '$($file._Extension)' are not supported"
+    Log -Message "Files with extension: '$($file._Extension)' are not supported"
     return
 }
 
@@ -43,14 +39,13 @@ if($openResult) {
         $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
         $file = Update-VaultFile -File $file._FullPath -AddAttachments @($PDFfile._FullPath)
 
-        $commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
-        $modules = Get-ChildItem -path $commonModulePath -Recurse -Filter *.ps*
-        $modules | ForEach-Object { Import-Module -Name $_.FullName -Global }	
-        
-        Write-Host "Connecting to powerGate..."
-        ConnectToErpServer
+        Log -Message "Connecting to powerGate..."
+        $connected = ConnectToErpServer
+        if (-not $connected) {
+            throw "Connection to powerGateServer could not be established!"
+        }
 
-        Write-Host "Uploading PDF file $($PDFfile._Name) to ERP system..."
+        Log -Message "Uploading PDF file $($PDFfile._Name) to ERP system..."
         $d = New-ERPObject -EntityType "Document"
         $d.FileName = $PDFfile._Name
         $d.Number = $file._PartNumber
@@ -71,4 +66,4 @@ if(-not $exportResult) {
 if(-not $closeResult) {
     throw("Failed to close document $($file.LocalPath)! Reason: $($closeResult.Error.Message))")
 }
-Write-Host "Completed job 'Create PDF as attachment'"
+Log -Message "Completed job 'Create PDF as attachment'"
