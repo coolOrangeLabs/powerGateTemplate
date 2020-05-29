@@ -25,6 +25,7 @@
     <Feature Id="PowerJobsFiles" Title="powerJobs Custom Jobs">
 	<ComponentGroupRef Id="SETUP_UI" />
       <ComponentGroupRef Id="HeatGenerated_PowerJobsFiles" />
+      <ComponentGroupRef Id="HeatGenerated_Modules" />
     </Feature>
 
     <Property Id="SAMEVERSIONINSTALLED" />
