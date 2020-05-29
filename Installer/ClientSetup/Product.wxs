@@ -83,7 +83,7 @@
 	  <Property Id="POWEREVENTSINSTALLEDVERSION">
 	    <RegistrySearch Id="PowerEventsInstalledVersion"
 	                    Root="HKLM"
-	                    Key="SOFTWARE\coolOrange s.r.l.\powerGate"
+	                    Key="SOFTWARE\coolOrange s.r.l.\powerEvents"
 	                    Name="Version"
 	                    Type="raw" />
 	  </Property>
