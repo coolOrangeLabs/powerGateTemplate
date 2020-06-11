@@ -150,57 +150,44 @@ function Get-VaultToErpBomsDifferences {
         $number = GetEntityNumber -entity $entityBom
         $erpBomHeader = GetErpBomHeader -number $number
         if ($erpBomHeader -eq $false) {
-			$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
-            Update-BomWindowEntity $entityBom -Status "New" -Tooltip "BOM does not exist in ERP. Will be created."
+			$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "New"; Message = "BOM does not exist in ERP. Will be created."; IsHeader = $true} 
             foreach ($entityBomRow in $entityBom.Children) {
                 $erpMaterial = GetErpMaterial -number $number
                 if ($erpMaterial) {
-					Update-BomWindowEntity $entityBomRow -Status "New" -Tooltip "Position will be added to ERP"
-					$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
+					$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "New"; Message = "Position will be added to ERP"; IsHeader = $false} 
                 } else {
-                    Update-BomWindowEntity $entityBomRow -Status "Error" -Tooltip "Position doesn't exist as Item in ERP"
-					Update-BomWindowEntity $entityBom -Status "Error" -Tooltip "BOM contains positions that do not exist as Items in ERP"
-					$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
-					$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
+					$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "Position doesn't exist as Item in ERP"; IsHeader = $false} 
+					$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "BOM contains positions that do not exist as Items in ERP"; IsHeader = $true} 
                 }
             }
         }
         else {
-			Update-BomWindowEntity $entityBom -Status "Identical" -Tooltip "BOM is identical between Vault and ERP"
-			$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
+			$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Identical"; Message = "BOM is identical between Vault and ERP"; IsHeader = $true} 
             foreach ($entityBomRow in $entityBom.Children) {
                 $childNumber = GetEntityNumber -entity $entityBomRow
                 $erpBomRow = $erpBomHeader.BomRows | Where-Object { $_.ChildNumber -eq $childNumber -and $_.Position -eq $entityBomRow.Bom_PositionNumber }
                 if ($null -ne $erpBomRow) {
                     if ($entityBomRow.Bom_Quantity -eq $erpBomRow.Quantity) {
-						Update-BomWindowEntity $entityBomRow -Status "Identical" -Tooltip "Position is identical"
-						$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
+						$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Identical"; Message = "Position is identical"; IsHeader = $false} 
                     } else {
-                        Update-BomWindowEntity $entityBomRow -Status "Different" -Tooltip "Quantity is different: '$($entityBomRow.Bom_Quantity) <> $($erpBomRow.Quantity)'"
-						Update-BomWindowEntity $entityBom -Status "Different" -Tooltip "BOMs are different between Vault and ERP!"
-						$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
-						$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
+						$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Different"; Message = "Quantity is different: '$($entityBomRow.Bom_Quantity) <> $($erpBomRow.Quantity)'"; IsHeader = $false} 
+						$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Different"; Message = "BOMs are different between Vault and ERP!"; IsHeader = $true} 
                     }
                 } else {
                     $erpMaterial = GetErpMaterial -number $number
                     if ($erpMaterial) {
-                        Update-BomWindowEntity $entityBomRow -Status "New" -Tooltip "Position will be added to ERP"
-						Update-BomWindowEntity $entityBom -Status "Different" -Tooltip "BOMs are different between Vault and ERP!"
-						$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
-						$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
+						$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "New"; Message = "Position will be added to ERP"; IsHeader = $false} 
+						$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Different"; Message = "BOMs are different between Vault and ERP!"; IsHeader = $true} 
                     } else {
-                        Update-BomWindowEntity $entityBomRow -Status "Error" -Tooltip "Position doesn't exist as Item in ERP"
-						Update-BomWindowEntity $entityBom -Status "Error" -Tooltip "BOM contains positions that do not exist as Items in ERP"
-						$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
-						$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
+						$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "Position doesn't exist as Item in ERP"; IsHeader = $false} 
+						$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "BOM contains positions that do not exist as Items in ERP"; IsHeader = $true} 
                     }
                 }
             }
             foreach ($erpBomRow in $erpBomHeader.BomRows) {
                 $entityBomRow = $entityBom.Children | Where-Object { (GetEntityNumber -entity $_) -eq $erpBomRow.ChildNumber -and $_.Bom_PositionNumber -eq $erpBomRow.Position }
                 if ($null -eq $entityBomRow) {
-					#TODO MANNI
-                    $remove = Add-BomWindowEntity  -Parent $entityBom -Type BomRow -Properties @{
+					$remove = @{
                         'Part Number' = $erpBomRow.ChildNumber; 
                         '_PartNumber' = $erpBomRow.ChildNumber; 
                         'Name' = $erpBomRow.ChildNumber; 
@@ -213,15 +200,15 @@ function Get-VaultToErpBomsDifferences {
                         'Bom_Position' = $erpBomRow.Position;
                         'Bom_PositionNumber' = $erpBomRow.Position
                     }
-                    Update-BomWindowEntity $remove -Status "Remove" -Tooltip "Position will be deleted in ERP"
-					Update-BomWindowEntity $entityBom -Status "Different" -Tooltip "BOM rows are different between Vault and ERP!"
-					$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
-					$differences += New-Object -Type PsObject -Property @{AffectedObject = $bomRow; Status = "Error"; Message = $fehlermeldung; IsHeader = $false} 
+
+					$differences += New-Object -Type PsObject -Property @{AffectedObject = $remove; Status = "Remove"; Message = "Position will be deleted in ERP"; IsHeader = $false; Parent = $entityBom} 
+					$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Different"; Message = "BOM rows are different between Vault and ERP!"; IsHeader = $true} 
                 }
             }
         }
-    }
+	}
+	
+	return ,$differences
 }
-
 
 #endregion
