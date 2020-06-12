@@ -59,6 +59,7 @@
     <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ErpManager\ErpManager.cs" />
     <Compile Include="BomRows.cs" />
     <Compile Include="BomHeaders.cs" />
     <Compile Include="Document.cs" />
