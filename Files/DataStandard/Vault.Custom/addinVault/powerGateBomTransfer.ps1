@@ -74,8 +74,7 @@ function Transfer-Items($entities) {
 function Check-Boms($entityBoms) {
     $differences = Get-VaultToErpBomsDifferences -VaultBomHeaders $entityBoms
 	foreach($diff in $differences){
-        if($diff.Status -eq "Remove" -and ($null -ne $diff.Parent)){
-            #TODO manni; schiach
+        if($diff.Status -eq "Remove" -and $diff.Parent){
             $remove = Add-BomWindowEntity -Parent $diff.Parent -Type BomRow -Properties $diff.AffectedObject
             Update-BomWindowEntity $remove -Status $diff.Status -Tooltip $diff.Message
         }
@@ -86,7 +85,6 @@ function Check-Boms($entityBoms) {
 }
 
 function Transfer-Boms($entityBoms) {
-    #TODO manni; auch hier, oder?
     [array]::Reverse($entityBoms)
     foreach ($entityBom in $entityBoms) {
         $parentNumber = GetEntityNumber -entity $entityBom

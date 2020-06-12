@@ -143,7 +143,6 @@ function Get-VaultToErpBomsDifferences {
 	param($vaultBomHeaders)
 
 	$differences = @()
-	#TODO manni schun?
 	[array]::Reverse($vaultBomHeaders)
 
     foreach ($entityBom in $vaultBomHeaders) {

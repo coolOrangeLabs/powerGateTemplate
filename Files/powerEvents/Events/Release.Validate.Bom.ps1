@@ -9,25 +9,20 @@
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  #
 #=============================================================================#
 
-#TODO manni; relativer pfad geht nicht, oder? brauchts connect?
-Connect-ToErpServer
-Get-ChildItem -path ($env:ProgramData+'\Autodesk\Vault 2020\Extensions\DataStandard\powerGate\Modules') -Filter BomFunctions.psm1 | foreach { Import-Module -Name $_.FullName -Global -Force}
-
 Register-VaultEvent -EventName UpdateFileStates_Restrictions -Action 'RestrictReleaseStateBOM'
 
 function RestrictReleaseStateBOM($files) {
 
     $IamFiles = $files | Where-Object { $_._Extension -eq 'iam'} 
-
     foreach($file in $IamFiles){
-        if($file._NewState -eq 'Freigegeben'){
+        if($file._NewState -eq 'Released'){
             $bomRows = Get-VaultBomRowsForEntity -Entity $file
 			Add-Member -InputObject $file -Name "Children" -Value $bomRows -MemberType NoteProperty -Force      
             try{
 				Check-VaultBom -bomHeader $file
             }
             catch{
-			   $message = "Stücklisten sind zwischen Vault und ERP unterschiedlich: $($_)! Öffne den Stücklisten-Dialog"
+			   $message = "$($_)! Please open the BOM dialog"
 			   Add-VaultRestriction -EntityName $file._Name -Message $message
 			   break;
             }            
