@@ -1,34 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Services.Common;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ErpServices.Metadata;
 using LiteDB;
 using log4net;
 using powerGateServer.SDK;
 
-namespace ErpServices
+namespace ErpServices.Services
 {
-    [DataServiceKey("Number")]
-    [DataServiceEntity]
-    public class BomHeader
-    {
-        public string Number { get; set; }
-        [BsonIgnore]
-        public string Description { get; set; }
-        public string State { get; set; }
-        public string UnitOfMeasure { get; set; }
-        public DateTime ModifiedDate { get; set; }
-
-        public List<BomRow> BomRows { get; set;  }
-
-        public BomHeader()
-        {
-            BomRows = new List<BomRow>();
-        }
-    }
-
-
     public class BomHeaders : ServiceMethod<BomHeader>
     {
         static readonly ILog Log =

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ErpServices.ErpManager.Interfaces;
+using ErpServices.Metadata;
 
 namespace ErpServices.ErpManager.Implementation
 {
