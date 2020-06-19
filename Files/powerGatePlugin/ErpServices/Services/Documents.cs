@@ -1,31 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Services.Common;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel.Web;
+using ErpServices.Metadata;
 using LiteDB;
 using log4net;
 using powerGateServer.SDK;
 
-namespace ErpServices
+namespace ErpServices.Services
 {
-    [DataServiceKey("Number")]
-    [DataServiceEntity]
-    //[IgnoreProperties("Directory")]
-    public class Document : Streamable
-    {
-        public string Number { get; set; }
-        public string Description { get; set; }
-        public string Directory { get; set; }
-
-        public override string GetContentType()
-        {
-            return ContentTypes.Application.Pdf;
-        }
-    }
-
     public class Documents : ServiceMethod<Document>, IStreamableServiceMethod<Document>
     {
         static readonly ILog Log =

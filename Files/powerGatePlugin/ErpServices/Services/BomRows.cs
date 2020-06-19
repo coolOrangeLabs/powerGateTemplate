@@ -1,34 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Services;
-using System.Data.Services.Common;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ErpServices.Metadata;
 using LiteDB;
 using log4net;
 using powerGateServer.SDK;
 
-namespace ErpServices
+namespace ErpServices.Services
 {
-    [DataServiceKey("ParentNumber","ChildNumber","Position")]
-    [DataServiceEntity]
-    [IgnoreProperties("Id")]
-    public class BomRow
-    {
-        public string ParentNumber { get; set; }
-        public string ChildNumber { get; set; }
-        public int Position { get; set; }
-        public string Type { get; set; }
-        public double Quantity { get; set; }
-        [BsonIgnore]
-        public string UnitOfMeasure { get; set; }
-        [BsonIgnore]
-        public string Description { get; set; }
-        public DateTime ModifiedDate { get; set; }
-
-        public string Id => $"{ParentNumber}+{ChildNumber}+{Position.ToString()}";
-    }
-
     public class BomRows : ServiceMethod<BomRow>
     {
         static readonly ILog Log =

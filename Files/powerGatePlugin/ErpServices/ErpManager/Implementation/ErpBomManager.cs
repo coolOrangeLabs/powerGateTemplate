@@ -1,5 +1,6 @@
 ﻿using System;
 using ErpServices.ErpManager.Interfaces;
+using ErpServices.Metadata;
 
 namespace ErpServices.ErpManager.Implementation
 {
