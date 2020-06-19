@@ -1,37 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 
-namespace ErpServices.ErpManager
+namespace ErpServices.ErpManager.Interfaces
 {
-    public enum ErpSearchOperator
-    {
-        Contains
-    }
-
-    public enum ErpSearchProperty
-    {
-        Number,
-        Description
-    }
-
-    public struct ErpMaterialSearchSettings
-    {
-        public ErpSearchProperty PropertyName { get; set; }
-        public ErpSearchOperator Operator { get; set; }
-        public string SearchValue { get; set; }
-    }
-
-    public struct ErpLogin
-    {
-        public IPEndPoint Server { get; }
-        public string ConnectionString { get; }
-        public string Mandant { get; }
-        public string UserName { get; }
-        public string Password { get; }
-    }
-
     public interface IErpManager : IDisposable
     {
         ErpLogin Login { get; }
@@ -61,9 +33,5 @@ namespace ErpServices.ErpManager
         BomRow UpdateBomRow(BomRow bomRow);
         BomRow DeleteBomRow(BomRow bomRow);
 
-    }
-
-    public partial class ErpManager : IErpManager
-    {
     }
 }
