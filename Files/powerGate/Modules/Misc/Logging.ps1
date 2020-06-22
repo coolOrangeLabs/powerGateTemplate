@@ -16,7 +16,7 @@ class LoggingSettings {
 
     LoggingSettings() {
         $this.LogLevel = [LogLevel]::DEBUG
-        $this.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Custom\cOLog.txt"
+        $this.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\cOLog.txt"
         $this.WriteHost = $false
     }
 }
@@ -27,7 +27,7 @@ function Log {
     [CmdletBinding()]
     Param(
         [Parameter(ValueFromPipeline=$True, Position=1)]
-        [string]$Message = "`r`n",
+        [string]$Message,
         [Parameter(Position=2)]
         [LogLevel]$LogLevel = [LogLevel]::INFO,
         [switch]$Begin,
@@ -56,6 +56,7 @@ function Log {
 
             if(($LogLevel -eq [LogLevel]::BEGIN) -or $Begin) { 
                 if($callStack -and $callStack.count -gt 1) {
+                    $log += "`n"
                     $log += ">> {0} >>" -f $callStack[1].Command 
                     $log += "Parameters: {0} " -f $callStack[1].Arguments
                 }
@@ -65,7 +66,7 @@ function Log {
             }
             if(($LogLevel -eq [LogLevel]::END) -or $End) { 
                 if($callStack -and $callStack.count -gt 1) {
-                    $log += "<< {0} <<" -f $callStack[1].Command 
+                    $log += "<< {0} <<" -f $callStack[1].Command
                 }
             }
         }
@@ -75,7 +76,7 @@ function Log {
         try {
             $processname = Get-Process -Id $PID | Select-Object -ExpandProperty ProcessName -ErrorAction SilentlyContinue
             if($processname -iin 'ScriptEditor', 'powershell_ise', 'Code') {
-                $log | Format-LogMessage | Write-Host
+                $log | Format-LogMessage -LogLevel $LogLevel | Write-Host
             }
             elseif($global:loggingSettings.WriteHost) {
                 $log | ForEach-Object { Write-Host -InputObject $_ }
@@ -86,13 +87,19 @@ function Log {
                     $loggingSettings.LogFile.Directory.Create()
                 }
                 if($loggingSettings.LogFile.Directory.Exists) {
-                    $log | Format-LogMessage | ForEach-Object { 
+                    $log | Format-LogMessage -LogLevel $LogLevel | ForEach-Object { 
                         Out-File -LiteralPath $($loggingSettings.LogFile.FullName) -InputObject $_ -Append:(-not $OverrideLog) -Force -Encoding utf8
                     }
                 }
             }
 
-            if($MessageBox) { $null = New-MessageBox -Text $Message -Button Ok}
+            if($MessageBox) { 
+                $icon = "Information"
+                if($LogLevel -eq "Error") {
+                    $icon = "Error"
+                }
+                $null = Show-MessageBox -Message $Message -Icon $icon
+            }
         
             $ErrorActionPreference = $OldErrorActionPreference
         }
@@ -103,31 +110,27 @@ function Format-LogMessage {
     [CmdletBinding()]
     Param(
         [Parameter(ValueFromPipeline=$True)]
-        [string[]]$Message = @()
+        [string[]]$Message = @(),
+        [LogLevel]$LogLevel = [LogLevel]::INFO
     )
     Process {
         $callStack = Get-PSCallStack
         $spaces = ''
         0..$callStack.Count | ForEach-Object { $spaces += ' ' }
-        return "{0} - {1}{2}" -f [DateTime]::Now.ToString("yyyy/MM/dd hh:mm:ss:ms"), $spaces, $_
+        return "{0} - {1} - {2}{3}" -f [DateTime]::Now.ToString("yyyy/MM/dd HH:mm:ss:ms"), $LogLevel, $spaces, $_
     }
 }
 
-function New-MessageBox
-{
-	param
-	(
+function Show-MessageBox {
+	param(
 		[string]
-		$Text,
-
+		$Message,
 		[string]
-		$Caption,
-
-		[System.Windows.MessageBoxButton]
-		$Button,
-
-		[System.Windows.MessageBoxImage]
-		$Icon
+		$Title = "powerGate ERP Integration",
+		[System.Windows.Forms.MessageBoxButtons]
+		$Button = "OK", # OK, OKCancel, AbortRetryIgnore, YesNoCancel, YesNo, RetryCancel
+		[System.Windows.Forms.MessageBoxIcon]
+		$Icon = "Information" #icons: Error, Exclamation, Hand, Information, Question, Stop, Warning
 	)
-	return [System.Windows.MessageBox]::Show($Text, $Caption, $Button, $Icon)
+	return [System.Windows.Forms.MessageBox]::Show($Message, $Title, $Button, $Icon)
 }
