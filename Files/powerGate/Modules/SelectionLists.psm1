@@ -46,10 +46,10 @@ function GetSearchableFieldsList($withBlank = $false) {
 }
 
 function Set-PowerGateConfigFromVault {
-    Log -Begin
     param(
         [string]$Content
     )
+    Log -Begin
     # In order to support special characters like ö, Ü
     $encodedContentBytes = [System.Text.Encoding]::UTF8.GetBytes($Content)
     $encodedContentBase64 =[Convert]::ToBase64String($encodedContentBytes)

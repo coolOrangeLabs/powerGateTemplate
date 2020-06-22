@@ -60,6 +60,8 @@ The script located [createGithubRepository.ps1](https://github.com/coolOrangePro
 Detailed information on which componentes are taken to the new repo:
 - All projects with state `closed` and their cards
 - All issues with the label `automation` and state `closed`
+  - {REPO_OWNER} is replaced with the Github organization
+  - {REPO_NAME} is replaced with the Github repository name 
 - All wiki files (the string {REPO_NAME} and {YEAR} will be overwritten with the input from the script)
 - labes are taken from the `labels.csv` which is located as a hidden file in the wiki. Can be modified by cloning wiki locally, changing contents and pushing again to this repo.
 

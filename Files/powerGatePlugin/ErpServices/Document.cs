@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data.Services.Common;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.ServiceModel.Web;
 using LiteDB;
+using log4net;
 using powerGateServer.SDK;
 
 namespace ErpServices
@@ -26,6 +28,8 @@ namespace ErpServices
 
     public class Documents : ServiceMethod<Document>, IStreamableServiceMethod<Document>
     {
+        static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public override string Name => "Documents";
 
         public Documents()

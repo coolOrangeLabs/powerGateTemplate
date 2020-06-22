@@ -6,19 +6,22 @@ $powerGateServerName = "localhost"
 $powerGateServerPort = "8080"
 $powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
 
-function ConnectToErpServer {
+function ConnectToErpServerWithMessageBox {
 	Log -Begin
-	$connected = Connect-ERP -Service $powerGateServerErpPluginUrl -OnConnect $onConnect
+	$connected = ConnectToErpServer
 	if (-not $connected) {
-		Show-MessageBox -message "Connection to $powerGateServerErpPluginUrl could not be established!!!" -icon "Error"
+		Log -Message "Connection to $powerGateServerErpPluginUrl could not be established!" -MessageBox -LogLevel "Error"
 	}
 	Log -End
 }
 
-function Show-MessageBox($message, $title = "powerGate ERP Integration", $icon = "Information") {
-	#icons: Error, Exclamation, Hand, Information, Question, Stop, Warning
-	$button = "OK"
-	$null = [System.Windows.Forms.MessageBox]::Show($message, $title, $button, $icon)	
+function ConnectToErpServer {
+	Log -Begin
+	Log -Message "Connecting with URL: $powerGateServerErpPluginUrl"
+	$connected = Connect-ERP -Service $powerGateServerErpPluginUrl -OnConnect $onConnect
+	Log -Message "Connection: $connected"
+	Log -End
+	return $connected
 }
 
 function GetPowerGateError {

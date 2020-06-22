@@ -1,4 +1,4 @@
-enum LogLevel {
+﻿enum LogLevel {
     ALL;
     LOOP2;
     LOOP;
@@ -79,7 +79,7 @@ function Log {
                 $log | Format-LogMessage -LogLevel $LogLevel | Write-Host
             }
             elseif($global:loggingSettings.WriteHost) {
-                $log | ForEach-Object { Write-Host -InputObject $_ }
+                $log | ForEach-Object { Write-Host $_ }
             }
 
             if($loggingSettings.LogFile) {

@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Reflection;
+using log4net;
 using powerGateServer.SDK;
 
 namespace ErpServices
@@ -7,6 +8,8 @@ namespace ErpServices
     [WebServiceData("coolOrange", "ErpServices")]
     public class WebService : powerGateServer.SDK.WebService
     {
+        static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public static readonly string DatabaseFileLocation;
         public static readonly string FileStorageLocation;
 
@@ -20,6 +23,7 @@ namespace ErpServices
 
         static WebService()
         {
+            Log.Info("Reading .config file");
             var configFullName = Assembly.GetExecutingAssembly().Location + ".config";
             var fileMap = new ExeConfigurationFileMap { ExeConfigFilename = configFullName };
             var configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
@@ -27,6 +31,7 @@ namespace ErpServices
             if (section == null) return;
             DatabaseFileLocation = section.Settings["DatabaseFileLocation"].Value;
             FileStorageLocation = section.Settings["FileStorageLocation"].Value;
+            Log.Info("Reading .config file successfully done!");
         }
     }
 }
