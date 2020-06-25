@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using ErpServices.Metadata;
 using powerGateServer.SDK;
 
@@ -8,7 +7,6 @@ namespace ErpServices.ErpManager.Interfaces
 {
     public interface IErpManager : IDisposable
     {
-        ErpLogin Login { get; }
         bool IsConnected { get; }
 
         bool Connect(ErpLogin login);

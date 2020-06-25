@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using ErpServices.ErpManager.Interfaces;
-using ErpServices.Metadata;
 using log4net;
 using powerGateServer.SDK;
 using powerGateServer.SDK.Helper;
@@ -20,7 +19,6 @@ namespace ErpServices.Services
         {
             ErpManager = erpManager;
         }
-
 
         protected IEnumerable<ErpMaterialSearchSettings> GetSearchSettings(IExpression<T> expression)
         {
@@ -44,6 +42,5 @@ namespace ErpServices.Services
             }
             return query;
         }
-
     }
 }
