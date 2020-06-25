@@ -18,11 +18,16 @@ function OnTabContextChanged_powerGate($xamlFile) {
 
 function GetSelectedObject {
 	$entity = $null
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster") {
-		$entity = Get-VaultFile -FileId $vaultContext.SelectedObject.Id
+
+	$selectedObject = $VaultContext.SelectedObject
+	if(-not $selectedObject) {
+		$selectedObject = $VaultContext.CurrentSelectionSet | Select-Object -First 1
 	}
-	elseif ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster") {
-		$entity = Get-VaultItem -ItemId $vaultContext.SelectedObject.Id
+	if ($selectedObject.TypeId.SelectionContext -eq "FileMaster") {
+		$entity = Get-VaultFile -FileId $selectedObject.Id
+	}
+	elseif ($selectedObject.TypeId.SelectionContext -eq "ItemMaster") {
+		$entity = Get-VaultItem -ItemId $selectedObject.Id
 	}
 	return $entity
 }
