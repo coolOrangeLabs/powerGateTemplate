@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ErpServices.ErpManager.Interfaces;
 using ErpServices.Metadata;
 using LiteDB;
-using powerGateServer.SDK;
 
 namespace ErpServices.ErpManager.Implementation
 {
     public partial class ErpManager : IErpManager
     {
-
         public Material GetMaterialyByNumber(string number)
         {
             return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number == number)).FirstOrDefault();

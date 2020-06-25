@@ -8,6 +8,7 @@ function GetErpMaterial($number) {
 		Add-Member -InputObject $erpMaterial -Name "_ErrorMessage" -Value "Number is empty!" -MemberType NoteProperty -Force
 		return $erpMaterial
 	}
+	$number = $number.ToUpper()
 	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Key @{ Number = $number }
 	$erpMaterial = CheckResponse -entity $erpMaterial
 	

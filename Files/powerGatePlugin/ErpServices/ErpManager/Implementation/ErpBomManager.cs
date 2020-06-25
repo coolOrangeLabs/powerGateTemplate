@@ -8,7 +8,6 @@ namespace ErpServices.ErpManager.Implementation
 {
     public partial class ErpManager : IErpManager
     {
-
         public BomHeader GetBomWithChildrenByNumber(string number)
         {
             return ExecuteOnDatabase(delegate(LiteDatabase database)
