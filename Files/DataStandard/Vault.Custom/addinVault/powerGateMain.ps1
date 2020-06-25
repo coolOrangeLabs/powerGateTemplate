@@ -34,7 +34,6 @@ function GetEntityNumber($entity) {
 	else {
 		$number = $entity._Number
 	}
-	if ($number) { $number = $number.ToUpper() }
 	return $number
 }
 

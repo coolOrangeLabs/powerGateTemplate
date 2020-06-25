@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using ErpServices.ErpManager.Interfaces;
@@ -10,6 +11,8 @@ namespace ErpServices.ErpManager.Implementation
 {
     public partial class ErpManager : IErpManager
     {
+        public DirectoryInfo BinaryStorage { get; }
+
         static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -25,8 +28,9 @@ namespace ErpServices.ErpManager.Implementation
             }
         }
 
-        public ErpManager()
+        public ErpManager(DirectoryInfo binaryStorage)
         {
+            BinaryStorage = binaryStorage;
             BsonMapper.Global.Entity<Material>().Id(x => x.Number);
             BsonMapper.Global.Entity<Document>().Id(x => x.Number);
             BsonMapper.Global.Entity<BomHeader>().Id(x => x.Number);

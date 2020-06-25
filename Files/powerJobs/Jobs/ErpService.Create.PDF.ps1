@@ -10,6 +10,7 @@
 #=============================================================================#
 
 $global:loggingSettings.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.txt"
+Write-Host "Set new logging file: $($global:loggingSettings.LogFile)"
 
 $hidePDF = $false
 $workingDirectory = "C:\Temp\$($file._Name)"

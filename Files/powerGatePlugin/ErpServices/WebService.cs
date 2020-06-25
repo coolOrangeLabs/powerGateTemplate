@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Reflection;
 using ErpServices.ErpManager.Interfaces;
 using ErpServices.Services;
@@ -19,7 +20,11 @@ namespace ErpServices
         public WebService()
         {
             var erpStorageConfiguration = GetErpStorageConfiguration();
-            var erpManager = new ErpManager.Implementation.ErpManager();
+
+            var storeForBinaryFiles = erpStorageConfiguration.Settings["DatabaseFileLocation"].Value;
+            var binaryStoreDirectory = new DirectoryInfo(storeForBinaryFiles);
+
+            var erpManager = new ErpManager.Implementation.ErpManager(binaryStoreDirectory);
             var erpLogin = new ErpLogin
             {
                 ConnectionString = erpStorageConfiguration.Settings["FileStorageLocation"].Value,
@@ -35,8 +40,8 @@ namespace ErpServices
             AddMethod(new BomHeaders(erpManager));
             AddMethod(new BomRows(erpManager));
 
-            var storeForBinaryFiles = erpStorageConfiguration.Settings["DatabaseFileLocation"].Value;
-            AddMethod(new Documents(storeForBinaryFiles, erpManager));
+            
+            AddMethod(new Documents(erpManager));
         }
 
         AppSettingsSection GetErpStorageConfiguration()

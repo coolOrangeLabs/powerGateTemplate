@@ -22,7 +22,7 @@ function RestrictFileRelease($files) {
 			$def = $defs | Where-Object { $_.DispName -eq $file._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $file._NewState }
 			if ($state.ReleasedState) {
-				$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $file._PartNumber }
+				$material = GetErpMaterial -Number $file._PartNumber
 				if ($null -eq $material) {
 					$restrictMessage = "An item with the number '$($file._PartNumber)' does not exist in the ERP system."
 					Log -Message $restrictMessage -LogLevel "ERROR"
@@ -49,7 +49,7 @@ function RestrictItemRelease($items) {
 			$def = $defs | Where-Object { $_.DispName -eq $item._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $item._NewState }
 			if ($itemIncludesFilesToCheck -and $state.ReleasedState) {
-				$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $item._Number }
+				$material = GetErpMaterial -Number $item._Number
 				if ($null -eq $material) {
 					$restrictMessage = "An item with the number '$($item._Number)' does not exist in the ERP system."
 					Log -Message $restrictMessage -LogLevel "ERROR"
@@ -72,7 +72,7 @@ function AddPdfJob($files, $successful) {
 		if(-not $successful) { return }
 		$releasedFiles = @($files | Where-Object { $supportedPdfExtensions -contains $_._Extension -and $_._ReleasedRevision -eq $true })
 		foreach($file in $releasedFiles) {
-			$material = Get-ERPObject -EntitySet "Materials" -Key @{"Number" = $file._PartNumber }
+			$material = GetErpMaterial -Number $file._PartNumber
 			if ($material) {
 				$jobType = "ErpService.Create.PDF"
 				Log -Message "Adding job '$jobType' for released file '$($file._Name)' to queue."

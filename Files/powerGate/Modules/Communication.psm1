@@ -2,7 +2,7 @@
 Import-Module powerGate
 
 #TODO: configure the powerGate server url and port
-$powerGateServerName = "localhost"
+$powerGateServerName = $ENV:Computername
 $powerGateServerPort = "8080"
 $powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
 

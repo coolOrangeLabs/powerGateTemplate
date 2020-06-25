@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ErpServices.Metadata;
+using powerGateServer.SDK;
 
 namespace ErpServices.ErpManager.Interfaces
 {
@@ -19,10 +20,12 @@ namespace ErpServices.ErpManager.Interfaces
         Material UpdateMaterial(Material material);
         
         // Documents functionality 
+        Document GetDocumentMetadata(string number);
         Document CreateDocumentMetadata(Document documentMetadata);
-        Document UploadDocumentWithMetadata(MemoryStream fileStream, Document documentMetadata);
         Document UpdateDocumentMetadata(Document documentMetadata);
-        Document UpdateDocumentWithMetadata(MemoryStream fileStream, Document documentMetadata);
+        Document UploadDocumentWithMetadata(IStream stream, Document documentMetadata);
+        IStream DownloadDocument(Document documentMetadata);
+        Document ChangeDocumentWithMetadata(IStream stream, Document documentMetadata);
 
         // BOM functionality 
         BomHeader GetBomWithChildrenByNumber(string number);
