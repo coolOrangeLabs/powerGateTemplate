@@ -51,6 +51,9 @@
       <HintPath>ReferenceAssemblies\powerGateServer.SDK.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="powerGateServer.SDK.Helper">
+      <HintPath>ReferenceAssemblies\powerGateServer.SDK.Helper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -73,6 +76,7 @@
     <Compile Include="Metadata\Document.cs" />
     <Compile Include="ErpManager\Interfaces\ErpMaterialSearchSettings.cs" />
     <Compile Include="Services\Documents.cs" />
+    <Compile Include="Services\ErpBaseService.cs" />
     <Compile Include="Services\Materials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebService.cs" />
