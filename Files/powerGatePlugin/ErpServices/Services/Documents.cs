@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel.Web;
+using ErpServices.ErpManager.Interfaces;
 using ErpServices.Metadata;
 using LiteDB;
 using log4net;
@@ -11,15 +12,15 @@ using powerGateServer.SDK;
 
 namespace ErpServices.Services
 {
-    public class Documents : ServiceMethod<Document>, IStreamableServiceMethod<Document>
+    public class Documents : ErpBaseService<Document>, IStreamableServiceMethod<Document>
     {
         static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public override string Name => "Documents";
 
-        public Documents()
+        public Documents(string storeForBinaryFiles, IErpManager erpManager) : base(erpManager)
         {
-            BsonMapper.Global.Entity<Document>().Id(x => x.Number);
+            
         }
 
         public override IEnumerable<Document> Query(IExpression<Document> expression)

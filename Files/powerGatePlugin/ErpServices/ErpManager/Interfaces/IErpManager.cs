@@ -17,8 +17,7 @@ namespace ErpServices.ErpManager.Interfaces
         IEnumerable<Material> SearchMaterials(IEnumerable<ErpMaterialSearchSettings> query);
         Material CreateMaterial(Material material);
         Material UpdateMaterial(Material material);
-
-
+        
         // Documents functionality 
         Document CreateDocumentMetadata(Document documentMetadata);
         Document UploadDocumentWithMetadata(MemoryStream fileStream, Document documentMetadata);
@@ -26,13 +25,12 @@ namespace ErpServices.ErpManager.Interfaces
         Document UpdateDocumentWithMetadata(MemoryStream fileStream, Document documentMetadata);
 
         // BOM functionality 
-        BomHeader GetBomByNumber(string number);
+        BomHeader GetBomWithChildrenByNumber(string number);
         BomRow GetBomRowByNumber(string parentNumber, string childNumber);
         BomHeader CreateBomWithChildren(BomHeader bom);
         BomRow CreateBomRow(BomRow bomRow);
         BomHeader UpdateBomHeader(BomHeader bom);
         BomRow UpdateBomRow(BomRow bomRow);
         BomRow DeleteBomRow(BomRow bomRow);
-
     }
 }

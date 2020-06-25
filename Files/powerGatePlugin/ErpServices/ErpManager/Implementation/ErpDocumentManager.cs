@@ -2,11 +2,13 @@
 using System.IO;
 using ErpServices.ErpManager.Interfaces;
 using ErpServices.Metadata;
+using LiteDB;
 
 namespace ErpServices.ErpManager.Implementation
 {
     public partial class ErpManager : IErpManager
     {
+
         public Document CreateDocumentMetadata(Document documentMetadata)
         {
             throw new NotImplementedException();

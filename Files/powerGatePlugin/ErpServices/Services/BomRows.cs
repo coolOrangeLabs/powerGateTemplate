@@ -1,92 +1,55 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ErpServices.ErpManager.Interfaces;
 using ErpServices.Metadata;
-using LiteDB;
 using log4net;
 using powerGateServer.SDK;
+using powerGateServer.SDK.Helper;
 
 namespace ErpServices.Services
 {
-    public class BomRows : ServiceMethod<BomRow>
+    public class BomRows :  ErpBaseService<BomRow>
     {
         static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public override string Name => "BomRows";
 
-        public BomRows()
+        public BomRows(IErpManager erpManager) : base(erpManager)
         {
-            BsonMapper.Global.Entity<BomRow>().Id(x => x.Id);
         }
 
         public override IEnumerable<BomRow> Query(IExpression<BomRow> expression)
         {
-            if (expression.Where.Any(w => w.PropertyName.Equals("ParentNumber")))
+            if (expression.IsSimpleWhereToken())
             {
-                var parentNumber = expression.Where.FirstOrDefault(w => w.PropertyName.Equals("ParentNumber"));
-                if (parentNumber != null && parentNumber.Value != null && parentNumber.Value.ToString() != "")
-                    return GetBomRows(parentNumber.Value.ToString());
+                var parentNumber = expression.GetWhereValuesAsString("ParentNumber");
+                var childNumber = expression.GetWhereValuesAsString("ChildNumber");
+                Log.InfoFormat("Single query for bom row, header number {0} and child number", parentNumber, childNumber);
+                var bomRow = ErpManager.GetBomRowByNumber(parentNumber, childNumber);
+                if(bomRow != null)
+                    return new[] { bomRow };
+                return Enumerable.Empty<BomRow>();
             }
 
-            return GetBomRows();
-        }
-
-        public static List<BomRow> GetBomRows(string parentNumber = null)
-        {
-            List<BomRow> bomRows;
-            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
-            {
-                if (parentNumber == null)
-                {
-                    bomRows = db.GetCollection<BomRow>()
-                        .FindAll()
-                        .OrderBy(x => x.Position)
-                        .ToList();
-                }
-                else
-                {
-                    bomRows = db.GetCollection<BomRow>()
-                        .Find(x => x.ParentNumber.Equals(parentNumber))
-                        .OrderBy(x => x.Position)
-                        .ToList();                    
-                }
-
-                foreach (var bomRow in bomRows)
-                {
-                    var material = db.GetCollection<Material>()
-                        .FindOne(x => x.Number.Equals(bomRow.ChildNumber));
-                    bomRow.Description = material.Description;
-                    bomRow.UnitOfMeasure = material.UnitOfMeasure;
-                }
-            }
-            return bomRows;
+            //var searchSettings = GetSearchSettings(expression);
+            throw new NotSupportedException("Search ERP BOM headers is not supported!");
         }
 
         public override void Update(BomRow entity)
         {
-            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
-            {
-                db.GetCollection<BomRow>()
-                    .Update(entity);
-            }
+            ErpManager.UpdateBomRow(entity);
         }
 
         public override void Create(BomRow entity)
         {
-            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
-            {
-                db.GetCollection<BomRow>()
-                    .Insert(entity);
-            }
+            ErpManager.CreateBomRow(entity);
         }
 
         public override void Delete(BomRow entity)
         {
-            using (var db = new LiteDatabase(WebService.DatabaseFileLocation))
-            {
-                db.GetCollection<BomRow>()
-                    .Delete(x => x.Id.Equals(entity.Id));
-            }
+            ErpManager.DeleteBomRow(entity);
         }
     }
 }

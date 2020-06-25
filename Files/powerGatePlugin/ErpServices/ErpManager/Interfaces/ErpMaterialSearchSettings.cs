@@ -1,9 +1,11 @@
-﻿namespace ErpServices.ErpManager.Interfaces
+﻿using powerGateServer.SDK;
+
+namespace ErpServices.ErpManager.Interfaces
 {
     public struct ErpMaterialSearchSettings
     {
         public ErpSearchProperty PropertyName { get; set; }
-        public ErpSearchOperator Operator { get; set; }
+        public OperatorType? Operator { get; set; }
         public string SearchValue { get; set; }
     }
 
@@ -11,10 +13,5 @@
     {
         Number,
         Description
-    }
-
-    public enum ErpSearchOperator
-    {
-        Contains
     }
 }
