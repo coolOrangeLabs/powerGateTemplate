@@ -12,8 +12,6 @@ namespace ErpServices.Services
 {
     public class BomRows :  ErpBaseService<BomRow>
     {
-        static readonly ILog Log =
-            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public override string Name => "BomRows";
 
         public BomRows(IErpManager erpManager) : base(erpManager)
