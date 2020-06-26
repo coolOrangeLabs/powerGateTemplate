@@ -177,6 +177,7 @@
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\Resources\BuildCommon.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
