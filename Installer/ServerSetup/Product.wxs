@@ -29,7 +29,7 @@
 			<ComponentGroupRef Id="SETUP_UI" />
 		</Feature>
 
-     <Property Id="SAMEVERSIONINSTALLED" />
+    <Property Id="SAMEVERSIONINSTALLED" Admin="yes" />
 		<Upgrade Id="$(var.UpgradeCode)">
 			<UpgradeVersion OnlyDetect="no"
 							Property="SAMEVERSIONINSTALLED"
