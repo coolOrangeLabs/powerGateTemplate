@@ -13,6 +13,7 @@
     <Entry Key="PAIR" Value="Pair" />
     <Entry Key="PALLET" Value="Pallet" />
   </UnitOfMeasures>
+  
   <MaterialTypes>
     <Entry Key="Inventory" Value="Inventory" />
     <Entry Key="Service" Value="Service" />
