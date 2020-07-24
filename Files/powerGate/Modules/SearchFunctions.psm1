@@ -102,7 +102,7 @@ function CloseErpSearchWindow {
         $searchWindow.DialogResult = "OK"
         $searchWindow.Close()        
     } else {
-        Show-MessageBox -message "An item needs to be selected to proceed!" -icon "Hand"
+        ShowMessageBox -Message "An item needs to be selected to proceed!" -Icon "Hand" -Title "powerGate ERP - Link Item"
     }
     Log -End
 }
@@ -128,7 +128,7 @@ function ExecuteErpSearch {
         $searchWindow.FindName("SearchResults").ItemsSource = $null
         $searchWindow.FindName("RecordsFound").Content = "Results found: 0"
         if ($results._ErrorMessage) {
-            Show-MessageBox -message $results._ErrorMessage -icon "Error"
+            ShowMessageBox -Message $results._ErrorMessage -Icon "Error" -Title "powerGate ERP - Search"
         }
     } else {
         $searchWindow.FindName("SearchResults").ItemsSource = @($results) #this is because PowerShell transforms one result into a single object instead of keeping it as a list of one element

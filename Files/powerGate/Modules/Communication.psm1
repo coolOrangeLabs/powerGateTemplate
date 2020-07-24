@@ -51,7 +51,6 @@ function CheckResponse($entity) {
 		if ($pGError) {
 			$message = "The communication with ERP failed!`n '$pGError'"
 			Add-Member -InputObject $entity -Name "_ErrorMessage" -Value $message -MemberType NoteProperty -Force
-			Show-MessageBox -message $message -icon "Error"
 		}
 	}
 	Log -End
