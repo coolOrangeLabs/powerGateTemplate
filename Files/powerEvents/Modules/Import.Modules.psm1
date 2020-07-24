@@ -1,8 +1,7 @@
-
-Import-module "C:\ProgramData\coolOrange\powerGate\Modules\Logging.psm1" -Force
+$global:ErrorActionPreference = "Stop"
+$commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
+$modules = Get-ChildItem -path $commonModulePath -Recurse -Filter *.ps* 
+$modules | ForEach-Object { Import-Module -Name $_.FullName -Global }
 $global:loggingSettings.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\powerEvents.txt"
-$Global:ErrorActionPreference = "STOP"
 
-#TODO: This could be improved
-Import-module "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\Vault.Custom\addinVault\powerGateMain.ps1" -Force
-Import-module "C:\ProgramData\coolOrange\powerGate\Modules\BomFunctions.psm1" -Force
+ConnectToErpServer

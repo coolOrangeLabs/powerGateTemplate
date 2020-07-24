@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.IO;
 using System.Reflection;
+using System.ServiceModel;
+using System.ServiceModel.Discovery;
 using ErpServices.ErpManager.Interfaces;
 using ErpServices.Services;
 using log4net;
@@ -14,7 +16,7 @@ namespace ErpServices
     {
         static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+        
         public WebService()
         {
             var erpStorageConfiguration = GetErpStorageConfiguration();
@@ -38,6 +40,12 @@ namespace ErpServices
             AddMethod(new BomHeaders(erpManager));
             AddMethod(new BomRows(erpManager));
             AddMethod(new Documents(erpManager));
+
+            if (OperationContext.Current != null)
+            {
+                OperationContext.Current.Host.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                OperationContext.Current.Host.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+            }
         }
 
         AppSettingsSection GetErpStorageConfiguration()
