@@ -16,15 +16,15 @@ function OpenErpInsertWindow {
 				$matrix = $Application.TransientGeometry.CreateMatrix()
 				$occur = $Document.ComponentDefinition.Occurrences
 				$occur.AddVirtual($number, $matrix)
-				Show-MessageBox -message "Virtual Component '$number' successfully inserted." -title "powerGate ERP - Virtual Component" -icon "Information"
+				ShowMessageBox -Message "Virtual Component '$number' successfully inserted." -Title "powerGate ERP - Virtual Component" -Icon "Information" | Out-Null
 			} catch {
-				Show-MessageBox -message "'$number' already exists. Please choose another ERP item." -title "powerGate ERP - Virtual Component" -icon "Warning"
+				ShowMessageBox -Message "'$number' already exists. Please choose another ERP item." -Title "powerGate ERP - Virtual Component" -Icon "Warning"  | Out-Null
 			}
 		}
 		if ($prop["_FileExt"].Value -eq ".IPT") {
 			$prop["Raw_Number"].Value = $number
 			$prop["Raw_Quantity"].Value = 1
-			Show-MessageBox -message "Raw Material '$number' successfully inserted." -title "powerGate ERP - Raw Material" -icon "Information"
+			ShowMessageBox -Message "Raw Material '$number' successfully inserted." -Title "powerGate ERP - Raw Material" -Icon "Information" | Out-Null
 		}     
     }
 }
@@ -57,11 +57,12 @@ function CloseErpMaterialWindow {
 
 function InitErpMaterialTab($number) {
 	$erpMaterial = GetErpMaterial -number $number
-	if (-not $erpMaterial) {
+	if (-not $erpMaterial -or $false -eq $erpMaterial) {
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial
 	}
 	$userControl.FindName("DataGrid").DataContext = $erpMaterial
+	$userControl.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
 }
 
 function PrepareErpMaterial($erpMaterial) {
@@ -72,8 +73,26 @@ function PrepareErpMaterial($erpMaterial) {
 	return $erpMaterial
 }
 
+function IsEntityUnlocked {
+	$workingFolders = $vaultConnection.WorkingFoldersManager.GetAllWorkingFolders($false)
+	$vaultPath = $prop["_VaultVirtualPath"].Value
+	$localPath = $workingFolders[$vaultPath]
+	$vaultFolder = $prop["_FilePath"].Value.Replace($localPath, $vaultPath).Replace("\", "/")
+	$fullFileName = $vaultFolder + "/" + $prop["_FileName"].Value
+	$entity = Get-VaultFile -File $fullFileName
+	$entityUnlocked = $entity._VaultStatus.Status.LockState -ne "Locked" -and $entity.IsCheckedOut -ne $true
+
+	return $entityUnlocked
+}
+
 function ValidateErpMaterialTab {
 	$erpMaterial = $userControl.FindName("DataGrid").DataContext
+	if ($erpMaterial.Number) {
+		$entityUnlocked = $true
+	} else {
+		$entityUnlocked = IsEntityUnlocked
+	}
+
 	#TODO: Setup obligatory fields that need to be filled out to activate the 'Create' button
 	$enabled = $false
 	if ($null -ne $erpMaterial.Type -and $erpMaterial.Type -ne "") {
@@ -82,7 +101,7 @@ function ValidateErpMaterialTab {
 	if ($null -ne $erpMaterial.Description -and $erpMaterial.Description -ne "") {
 		$description = $true
 	}
-	$enabled = $type -and $description
+	$enabled = $entityUnlocked -and $type -and $description
 	$userControl.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
 }
 
@@ -90,36 +109,49 @@ function CreateOrUpdateErpMaterial {
 	$erpMaterial = $userControl.FindName("DataGrid").DataContext
 	if ($erpMaterial.IsUpdate) {
 		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
-		if ($erpMaterial) { 
-			Show-MessageBox -message "Update successful" -icon "Information"
+		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
+			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
 		} else { 
-			Show-MessageBox -message $erpMaterial._ErrorMessage -icon "Error" -title "ERP material update error"
+			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
 		}
+		InitMaterialTab
 	} else {
 		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
-		SetEntityProperties -erpMaterial $erpMaterial
-		InitErpMaterialTab -number $erpMaterial.Number
+		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
+			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
+		} else { 
+			ShowMessageBox -Message "$($erpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"  | Out-Null
+			SetEntityProperties -erpMaterial $erpMaterial
+			InitErpMaterialTab -number $erpMaterial.Number
+		}
+
+		RefreshView
 	}
 }
 
-
 function LinkErpMaterial {
 	$erpMaterial = OpenErpSearchWindow
-	# TODO:  Rename "Part Number" on a german system to "Teilenummer"
-	$entitesWithSameErpMaterial = Search-EntitiesByPropertyValue -EntityClassId "FILE" -PropertyName "Part Number" -SearchValue $ErpMaterial.Number -SearchCondition "IsExactly"
-	if($entitesWithSameErpMaterial) {
-		$entityNames = $entitesWithSameErpMaterial | Select-Object -ExpandProperty @("_FullPath")
-		([System.Windows.Forms.MessageBox]::Show("The ERP item '$($erpMaterial.Number)' is already linked to other files: `n $entityNames", "ERP Item is already used in Vault", "Ok", "Warning")	) | Out-Null
-		return;
+
+	#TODO: Rename "Part Number" on a german system to "Teilenummer"
+	$existingEntities = Get-VaultFiles -Properties @{"Part Number" = $erpMaterial.Number}
+	if ($existingEntities) {
+		$message = ""
+		#$existingEntities = $existingEntities | Where-Object { $_.MasterId -ne $vaultEntity.MasterId }
+		if ($existingEntities) {
+			$fileNames = $existingEntities._FullPath -join '\n'
+			$message = "The ERP item $($erpMaterial.Number) is already assigned to `n$($fileNames).`n"
+		}
 	}
-    if ($erpMaterial) {
-        $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
-        if ($answer -eq "Yes") {
-            SetEntityProperties -erpMaterial $erpMaterial
-			RefreshView
-            #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
-        }       
-    }
+
+	$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($erpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
+	if ($answer -eq "Yes") {
+		SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
+		RefreshView
+	}
+}
+
+function RefreshView {
+	[System.Windows.Forms.SendKeys]::SendWait("{F5}") 
 }
 
 function SetEntityProperties($erpMaterial) {

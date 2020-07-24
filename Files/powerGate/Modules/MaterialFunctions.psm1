@@ -80,39 +80,3 @@ function TransformErpMaterial($erpMaterial) {
 	Log -End
 	return $erpMaterial
 }
-
-function RefreshView {
-	$entity = GetSelectedObject
-	if ($null -eq $entity) {
-		return
-	}
-
-	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
-
-	if ($entity._EntityTypeID -eq "FILE") {
-		$file = $vault.DocumentService.GetLatestFileByMasterId($entity.MasterId)
-		$folder = $vault.DocumentService.GetFolderById($file.FolderId)
-		$cFolder = New-Object Connectivity.Services.Document.Folder($folder)
-		$cDocFolder = New-Object Connectivity.Explorer.Document.DocFolder($cFolder)
-		$cFile = New-Object Connectivity.Services.Document.File($file)
-		$cFileExplorerObject = New-Object Connectivity.Explorer.Document.FileExplorerObject($cFile)
-
-		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cFileExplorerObject, $cDocFolder)
-		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cDocFolder)
-	} elseif ($entity._EntityTypeID -eq "ITEM") {
-		$item = $vault.ItemService.GetLatestItemByItemMasterId($entity.MasterId)
-		$cItemRev = New-Object Connectivity.Services.Item.ItemRevision($vaultConnection, $item)
-		$cItemRevExpObj = New-Object Connectivity.Explorer.Item.ItemRevisionExplorerObject($cItemRev)
-		$cItemMaster = New-Object Connectivity.Explorer.Item.ItemMaster
-
-		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemRevExpObj)
-		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemMaster)
-	} else {
-		return
-	}
-
-	$sc = New-Object Connectivity.Explorer.Framework.ShortcutMgr+Shortcut
-	$sc.NavigationContext = $navCtx
-	$sc.ViewContext = $vwCtx
-	$sc.Select($null)    
-}
