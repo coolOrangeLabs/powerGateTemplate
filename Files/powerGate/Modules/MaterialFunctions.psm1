@@ -1,9 +1,19 @@
 ﻿$materialEntitySet = "Materials"
 $materialEntityType = "Material"
 
+function GetEntityNumber($entity) {
+	if ($entity._EntityTypeID -eq "FILE") {
+		$number = $entity._PartNumber
+	}
+	else {
+		$number = $entity._Number
+	}
+	return $number
+}
+
 function GetErpMaterial($number) {
 	Log -Begin
-	if ([string]::IsNullOrEmpty($number)) { 
+	if (-not $number) { 
 		$erpMaterial = $false
 		Add-Member -InputObject $erpMaterial -Name "_ErrorMessage" -Value "Number is empty!" -MemberType NoteProperty -Force
 		return $erpMaterial
