@@ -76,7 +76,7 @@ function Log {
         try {
             $processname = Get-Process -Id $PID | Select-Object -ExpandProperty ProcessName -ErrorAction SilentlyContinue
             if($processname -iin 'ScriptEditor', 'powershell_ise', 'Code') {
-                $log | Format-LogMessage -LogLevel $LogLevel | Write-Host
+                $log | FormatLogMessage -LogLevel $LogLevel | Write-Host
             }
             elseif($global:loggingSettings.WriteHost) {
                 $log | ForEach-Object { Write-Host $_ }
@@ -87,7 +87,7 @@ function Log {
                     $loggingSettings.LogFile.Directory.Create()
                 }
                 if($loggingSettings.LogFile.Directory.Exists) {
-                    $log | Format-LogMessage -LogLevel $LogLevel | ForEach-Object { 
+                    $log | FormatLogMessage -LogLevel $LogLevel | ForEach-Object { 
                         Out-File -LiteralPath $($loggingSettings.LogFile.FullName) -InputObject $_ -Append:(-not $OverrideLog) -Force -Encoding utf8
                     }
                 }
@@ -98,7 +98,7 @@ function Log {
                 if($LogLevel -eq "Error") {
                     $icon = "Error"
                 }
-                $null = Show-MessageBox -Message $Message -Icon $icon
+                $null = ShowMessageBox -Message $Message -Icon $icon
             }
         
             $ErrorActionPreference = $OldErrorActionPreference
@@ -106,7 +106,8 @@ function Log {
         catch { }
     }
 }
-function Format-LogMessage {
+
+function FormatLogMessage {
     [CmdletBinding()]
     Param(
         [Parameter(ValueFromPipeline=$True)]
@@ -121,7 +122,7 @@ function Format-LogMessage {
     }
 }
 
-function Show-MessageBox {
+function ShowMessageBox {
 	param(
 		[string]
 		$Message,
