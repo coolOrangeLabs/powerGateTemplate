@@ -96,8 +96,7 @@ function RemoveErpBomRow($parentNumber, $childNumber, $position) {
 #endregion
 
 #region Common Bom comparison logic
-
-function Get-VaultBomRowsForEntity {
+function GetVaultBomRows {
 	param($entity)
 
     if ($null -eq $entity._EntityTypeID) { return @() }
@@ -124,8 +123,8 @@ function Get-VaultBomRowsForEntity {
         #if($entity._FullPath -eq $null) { return @() } #due to a bug in the beta version.
         $bomRows = Get-VaultFileBom -File $entity._FullPath -GetChildrenBy LatestVersion
     } else {
-        if ($entity._Category -eq 'Part') { return @() }
-        $bomRows = Get-VaultItemBom -Number $entity._Number
+        #if ($entity._Category -eq 'Part') { return @() }
+        $bomRows = @(Get-VaultItemBom -Number $entity._Number)
     }
     
     foreach ($entityBomRow in $bomRows) {
@@ -141,17 +140,17 @@ function Get-VaultBomRowsForEntity {
     return $bomRows
 }
 
-
-function Get-VaultToErpBomsDifferences {
-	param($vaultBomHeaders)
+function CompareErpBoms {
+	param($entityBoms)
 
 	$differences = @()
-	[array]::Reverse($vaultBomHeaders)
+	[array]::Reverse($entityBoms)
 
-    foreach ($entityBom in $vaultBomHeaders) {
+    foreach ($entityBom in $entityBoms) {
         $number = GetEntityNumber -entity $entityBom
         $erpBomHeader = GetErpBomHeader -number $number
-        if (-not $erBomHeader -or $false -eq $erpBomHeader) {
+        Show-Inspector
+        if (-not $erpBomHeader -or $false -eq $erpBomHeader) {
 			$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "New"; Message = "BOM does not exist in ERP"; IsHeader = $true} 
             foreach ($entityBomRow in $entityBom.Children) {
                 $childNumber = GetEntityNumber -entity $entityBomRow

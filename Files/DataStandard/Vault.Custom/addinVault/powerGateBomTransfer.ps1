@@ -10,7 +10,7 @@
 #known limitations:
 #https://support.coolorange.com/support/solutions/articles/22000243916-same-bomrows-do-not-update-status
 function Get-BomRows($entity) {
-    $bomRows = Get-VaultBomRowsForEntity -Entity $entity
+    $bomRows = GetVaultBomRows -Entity $entity
     return $bomRows
 }
 
@@ -80,7 +80,7 @@ function Transfer-Items($entities) {
 }
 
 function Check-Boms($entityBoms) {
-    $differences = Get-VaultToErpBomsDifferences -VaultBomHeaders $entityBoms
+    $differences = CompareErpBoms -entityBoms $entityBoms
 	foreach($diff in $differences){
         if($diff.Status -eq "Remove" -and $diff.Parent) {
             $remove = Add-BomWindowEntity -Parent $diff.Parent -Type BomRow -Properties $diff.AffectedObject

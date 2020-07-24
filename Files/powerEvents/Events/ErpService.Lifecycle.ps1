@@ -12,13 +12,8 @@
 $supportedPdfExtensions = @("idw", "dwg")
 $requiresErpItemExtensions = @("iam", "ipn", "ipt")
 
-function CheckVaultBom {
-	param(
-		$bomHeader
-    )
-
-    $bomHeaders = @($bomHeader)
-    $differences = Get-VaultToErpBomsDifferences -VaultBomHeaders $bomHeaders
+function CheckVaultBom($entity) {
+    $differences = CompareErpBoms -EntityBoms @($entity)
 	foreach($diff in $differences){
 		if ($diff.Status -ne "Identical" -and $diff.IsHeader) {
 			throw $diff.Message
@@ -43,20 +38,20 @@ function RestrictFileRelease($files) {
 					continue
 				}
 
-				if ($file._Extension -eq 'iam') {
-					$bomRows = Get-VaultBomRowsForEntity -Entity $file
-					if (-not $file.Children) {
-						Add-Member -InputObject $file -Name "Children" -Value $bomRows -MemberType NoteProperty -Force
-					} else {
-						$file.Children = $bomRows
-					}
-					
-					try {
-						CheckVaultBom -bomHeader $file
-					} catch {
-					   $restrictMessage = "$($_)! Please open the BOM dialog"
-					   Add-VaultRestriction -EntityName $file._Name -Message $restrictMessage
-					} 					
+				$bomRows = GetVaultBomRows -Entity $file
+				if (-not $bomRows) { continue }
+
+				if (-not $file.Children) {
+					Add-Member -InputObject $file -Name "Children" -Value $bomRows -MemberType NoteProperty -Force
+				} else {
+					$file.Children = $bomRows
+				}
+				
+				try {
+					CheckVaultBom $file
+				} catch {
+					$restrictMessage = "$($_)! Please open the BOM dialog"
+					Add-VaultRestriction -EntityName $file._Name -Message $restrictMessage
 				}
 			}
 		}
@@ -82,6 +77,23 @@ function RestrictItemRelease($items) {
 				if (-not $erpMaterial -or $false -eq $erpMaterial) {
 					$restrictMessage = "An item with the number '$($item._Number)' does not exist in the ERP system."
 					Add-VaultRestriction -EntityName ($item._Name) -Message $restrictMessage
+					continue
+				}
+		
+				$bomRows = GetVaultBomRows -Entity $item
+				if (-not $bomRows) { continue }
+
+				if (-not $item.Children) {
+					Add-Member -InputObject $item -Name "Children" -Value $bomRows -MemberType NoteProperty -Force
+				} else {
+					$item.Children = $bomRows
+				}
+				
+				try {
+					CheckVaultBom $item
+				} catch {
+					$restrictMessage = "$($_)! Please open the BOM dialog"
+					Add-VaultRestriction -EntityName $item._Number -Message $restrictMessage
 				}
 			}
 		}		
