@@ -1,12 +1,37 @@
-﻿function GetSelectionList($section, $withBlank = $false) {
+﻿function SetConfigFromVault {
+    param(
+        [string]$Content
+    )
+    Log -Begin
+    # In order to support special characters like ö, Ü
+    $encodedContentBytes = [System.Text.Encoding]::UTF8.GetBytes($Content)
+    $encodedContentBase64 =[Convert]::ToBase64String($encodedContentBytes)
+    $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $encodedContentBase64)
+    Log -End
+}
+
+function GetConfigFromVault {
+    Log -Begin
+    # In order to support special characters like ö, Ü
+    $encodedContentBase64 = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
+    if($encodedContentBase64) {
+        try {
+            $encodedContentBytes =[Convert]::FromBase64String($encodedContentBase64)
+            [System.Text.Encoding]::UTF8.GetString($encodedContentBytes)
+        } catch { }        
+    }
+    Log -End
+}
+
+function GetSelectionList($section, $withBlank = $false) {
     Log -Begin
     $list = @()
     if (-not $vault) { return $list }
     
-    [xml]$cfg = Get-PowerGateConfigFromVault
+    [xml]$cfg = GetConfigFromVault
 	if ($null -eq $cfg) {
 		[xml]$cfg = Get-Content "C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml"
-        Set-PowerGateConfigFromVault -Content $cfg.InnerXml
+        SetConfigFromVault -Content $cfg.InnerXml
     }
     
     $entries = Select-Xml -Xml $cfg -XPath "//$section"   
@@ -40,32 +65,20 @@ function GetBOMStateList($withBlank = $false) {
     return $list | Sort-Object -Property value
 }
 
-function GetSearchableFieldsList($withBlank = $false) {
-    $list = GetSelectionList -section "SearchFields" -withBlank $withBlank
-    return $list | Sort-Object -Property value    
-}
-
-function Set-PowerGateConfigFromVault {
-    param(
-        [string]$Content
-    )
-    Log -Begin
-    # In order to support special characters like ö, Ü
-    $encodedContentBytes = [System.Text.Encoding]::UTF8.GetBytes($Content)
-    $encodedContentBase64 =[Convert]::ToBase64String($encodedContentBytes)
-    $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $encodedContentBase64)
-    Log -End
-}
-
-function Get-PowerGateConfigFromVault {
-    Log -Begin
-    # In order to support special characters like ö, Ü
-    $encodedContentBase64 = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
-    if($encodedContentBase64) {
-        try {
-            $encodedContentBytes =[Convert]::FromBase64String($encodedContentBase64)
-            [System.Text.Encoding]::UTF8.GetString($encodedContentBytes)
-        } catch { }        
+function GetCategoryList($withBlank = $false) {
+    $list = @()
+    $categories = Get-ERPObjects -EntitySet "Categories"
+    $categories = CheckResponse -entity $categories
+    if (-not $categories -or $false -eq $categories) {
+        return $list
     }
-    Log -End
+
+    foreach ($category in $categories) {
+        $list += New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @($category.Key, $category.Value)
+    }
+    if ($withBlank) { 
+        $empty = New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @("", "")
+        $list = , $empty + $list 
+    }
+    return $list | Sort-Object -Property Value
 }
