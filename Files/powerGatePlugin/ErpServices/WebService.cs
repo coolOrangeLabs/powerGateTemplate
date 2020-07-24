@@ -39,6 +39,7 @@ namespace ErpServices
             AddMethod(new Materials(erpManager));
             AddMethod(new BomHeaders(erpManager));
             AddMethod(new BomRows(erpManager));
+            AddMethod(new Categories(erpManager));
             AddMethod(new Documents(erpManager));
 
             if (OperationContext.Current != null)

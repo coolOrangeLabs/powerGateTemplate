@@ -64,6 +64,7 @@
     <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Metadata\Category.cs" />
     <Compile Include="Metadata\Material.cs" />
     <Compile Include="Metadata\BomHeader.cs" />
     <Compile Include="Metadata\BomRow.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="ErpManager\Implementation\ErpItemManager.cs" />
     <Compile Include="ErpManager\Implementation\ErpManager.cs" />
     <Compile Include="ErpManager\Interfaces\IErpManager.cs" />
+    <Compile Include="Services\Categories.cs" />
     <Compile Include="Services\BomRows.cs" />
     <Compile Include="Services\BomHeaders.cs" />
     <Compile Include="Metadata\Document.cs" />

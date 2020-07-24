@@ -21,6 +21,7 @@ function OpenErpSearchWindow {
     $searchWindow.FindName("NumberOfRecords").SelectedValue = "100"  
     $searchWindow.FindName("UomListSearch").ItemsSource = GetUnitOfMeasuresList -withBlank $true
     $searchWindow.FindName("MaterialTypeListSearch").ItemsSource = GetMaterialTypeList -withBlank $true
+    $searchWindow.FindName("CategoryListSearch").ItemsSource = GetCategoryList -withBlank $true
 
     $searchWindow.FindName("SearchCriteria").Add_KeyUp( {
         param ($sender, $e)

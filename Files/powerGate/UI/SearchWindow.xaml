@@ -161,7 +161,7 @@
                         <CheckBox Grid.Column="1" Grid.Row="1" IsChecked="{Binding IsBlocked, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Label Content="Item Category Code" Grid.Row="2"/>
-                        <TextBox Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
+                        <ComboBox Name="CategoryListSearch" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Category, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
                         <Label Content="Storage Area / Shelf" Grid.Column="3" Grid.Row="2"/>
                         <TextBox Text="{Binding Shelf, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Grid.Row="2"/>
                         <Label Content="Search Description" Grid.Row="3"/>
