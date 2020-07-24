@@ -86,7 +86,7 @@
                 </Label.Style>
             </Label>
 
-            <Button Grid.Row="0" Grid.Column="1" Content="Link ERP Item..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="110" HorizontalAlignment="Right" Margin="0,0,14,0" />
+            <Button Grid.Row="0" Grid.Column="1" x:Name="LinkMaterialButton" Content="Link ERP Item..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="110" HorizontalAlignment="Right" Margin="0,0,14,0" />
             <!-- Visibility="{Binding DataContext.IsCreate, ElementName=DataGrid, Converter={StaticResource BooleanToVisibility}}" -->
             <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="110" HorizontalAlignment="Right" Margin="0,0,14,0" >
                 <Button.Style>
