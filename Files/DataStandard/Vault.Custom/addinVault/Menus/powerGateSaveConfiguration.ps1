@@ -11,7 +11,7 @@ if ($testPath -eq $false) {
 }
 
 [xml]$cfg = Get-Content $cfgPath
-Set-PowerGateConfigFromVault -Content $cfg.InnerXml
+SetConfigFromVault -Content $cfg.InnerXml
 ShowMessageBox -Message "Config file saved to Vault server" -Button "OK" -Icon "Information" | Out-Null
 
 Remove-Item $cfgPath -Force

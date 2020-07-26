@@ -149,7 +149,6 @@ function CompareErpBoms {
     foreach ($entityBom in $entityBoms) {
         $number = GetEntityNumber -entity $entityBom
         $erpBomHeader = GetErpBomHeader -number $number
-        Show-Inspector
         if (-not $erpBomHeader -or $false -eq $erpBomHeader) {
 			$differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "New"; Message = "BOM does not exist in ERP"; IsHeader = $true} 
             foreach ($entityBomRow in $entityBom.Children) {

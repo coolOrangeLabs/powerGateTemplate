@@ -16,7 +16,7 @@
   
   <MaterialTypes>
     <Entry Key="Inventory" Value="Inventory" />
-    <Entry Key="Service" Value="Service" />
+    <!--<Entry Key="Service" Value="Service" />-->
   </MaterialTypes>
   
   <BomStates>

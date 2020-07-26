@@ -5,6 +5,8 @@ Import-Module powerGate
 $powerGateServerName = $ENV:Computername
 $powerGateServerPort = "8080"
 $powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
+#$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/DynamicsNav"
+# Dynamics NAV 2017 Plugin available here: https://github.com/coolOrangeLabs/powergate-dynamics-nav-sample/releases
 
 function ConnectToErpServerWithMessageBox {
 	Log -Begin

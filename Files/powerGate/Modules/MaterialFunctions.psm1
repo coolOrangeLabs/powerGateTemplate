@@ -34,7 +34,7 @@ function NewErpMaterial {
 
 	#TODO: Property default values for material creation
 	$erpMaterial.UnitOfMeasure = "PCS"
-	$erpMaterial.Type = "Service"
+	$erpMaterial.Type = "Inventory"
 
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $true -MemberType NoteProperty -Force
 	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $false -MemberType NoteProperty -Force

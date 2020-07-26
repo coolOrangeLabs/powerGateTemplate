@@ -150,8 +150,6 @@ function RefreshView {
 		return
 	}
 
-	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
-
 	if ($entity._EntityTypeID -eq "FILE") {
 		$file = $vault.DocumentService.GetLatestFileByMasterId($entity.MasterId)
 		$folder = $vault.DocumentService.GetFolderById($file.FolderId)
@@ -173,6 +171,8 @@ function RefreshView {
 	} else {
 		return
 	}
+
+	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
 
 	$sc = New-Object Connectivity.Explorer.Framework.ShortcutMgr+Shortcut
 	$sc.NavigationContext = $navCtx
