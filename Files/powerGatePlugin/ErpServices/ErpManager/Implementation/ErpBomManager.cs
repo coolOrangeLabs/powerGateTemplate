@@ -30,7 +30,7 @@ namespace ErpServices.ErpManager.Implementation
 
                 foreach (var bomRow in bomRows)
                 {
-                    var material = GetMaterialyByNumber(bomRow.ChildNumber);
+                    var material = GetMaterialByNumber(bomRow.ChildNumber);
                     bomRow.Description = material.Description;
                     bomRow.UnitOfMeasure = material.UnitOfMeasure;
                 }

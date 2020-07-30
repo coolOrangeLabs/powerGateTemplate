@@ -8,7 +8,7 @@ namespace ErpServices.ErpManager.Implementation
 {
     public partial class ErpManager : IErpManager
     {
-        public Material GetMaterialyByNumber(string number)
+        public Material GetMaterialByNumber(string number)
         {
             return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number == number)).FirstOrDefault();
         }

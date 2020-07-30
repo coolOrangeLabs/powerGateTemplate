@@ -12,7 +12,7 @@ namespace ErpServices.ErpManager.Interfaces
         bool Connect(ErpLogin login);
 
         // Material functionality 
-        Material GetMaterialyByNumber(string number);
+        Material GetMaterialByNumber(string number);
         IEnumerable<Material> SearchMaterials(IEnumerable<ErpMaterialSearchSettings> query);
         Material CreateMaterial(Material material);
         Material UpdateMaterial(Material material);

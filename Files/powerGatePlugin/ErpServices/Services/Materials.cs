@@ -23,7 +23,7 @@ namespace ErpServices.Services
             {
                 var number = expression.GetWhereValuesAsString("Number");
                 Log.InfoFormat("Single query for item number {0}", number);
-                var material = ErpManager.GetMaterialyByNumber(number);
+                var material = ErpManager.GetMaterialByNumber(number);
 
                 if (material != null)
                     return new[] { material };
