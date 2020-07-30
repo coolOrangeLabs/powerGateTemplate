@@ -91,7 +91,8 @@
         <Grid Grid.Row="0" Grid.Column="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="128" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
             <Label Margin="14,0,0,0" FontSize="14" FontWeight="Medium" VerticalAlignment="Center">
                 <Label.Style>
@@ -100,7 +101,8 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="CreateOrUpdateMaterialButton" Content="BOM Transfer..." Command="{Binding PsCmd[ShowBomWindow]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="114" HorizontalAlignment="Right" Margin="0,0,14,0" />
+            <Button Grid.Row="0" Grid.Column="1" x:Name="CreateOrUpdateMaterialButton" Content="BOM Transfer..." Command="{Binding PsCmd[ShowBomWindow]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
+            <Button Grid.Row="0" Grid.Column="2" x:Name="GoToBomButton" Content="Open BOM in ERP..." Command="{Binding PsCmd[GoToErpBom]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
         </Grid>
 
         <Rectangle Grid.Row="1">
@@ -114,7 +116,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
+            
             <GroupBox Header="Header Data" Grid.Row="0">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -135,7 +137,7 @@
                     <TextBox Text="{Binding Description}" Grid.Column="1" Grid.Row="1" IsEnabled="False"/>
                     <Label Content="State" Grid.Row="0" Grid.Column="3" />
                     <ComboBox Grid.Row="0" Grid.Column="4" SelectedValue="{Binding State}" DisplayMemberPath="Value" SelectedValuePath="Key" IsEnabled="False" 
-                                  ItemsSource="{Binding DataContext.PsList[GetBOMStateList], ElementName=MainWindow}" />
+                                  ItemsSource="{Binding DataContext.PsList[GetBOMStateList], ElementName=MainWindow}" />                    
                     <Label Content="Last Modified Date" Grid.Column="3" Grid.Row="1" />
                     <TextBox Text="{Binding ModifiedDate}" Grid.Column="4" Grid.Row="1" IsEnabled="False" />
                 </Grid>

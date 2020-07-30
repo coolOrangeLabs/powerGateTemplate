@@ -36,7 +36,13 @@ function InitBomTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
 	$bom = GetErpBomHeader -number $number
+	if (-not $bom -or $false -eq $bom) {
+		$goToEnabled = $false
+	} else {
+		$goToEnabled = $true
+	}
 	$dswindow.FindName("DataGrid").DataContext = $bom
+	$dswindow.FindName("GoToBomButton").IsEnabled = $goToEnabled
 }
 
 function InitMaterialTab {
@@ -46,9 +52,13 @@ function InitMaterialTab {
 	if (-not $erpMaterial -or $false -eq $erpMaterial) {
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
+		$goToEnabled = $false
+	} else {
+		$goToEnabled = $true
 	}
 	$dswindow.FindName("DataGrid").DataContext = $erpMaterial
 	$dsWindow.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
+	$dswindow.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
 }
 
 function IsEntityUnlocked {
@@ -107,6 +117,13 @@ function CreateOrUpdateErpMaterial {
 		RefreshView
 	}
 	$dsDiag.Trace("<<CreateOrUpdateMaterial")
+}
+
+function GoToErpMaterial {
+	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
+	if ($erpMaterial.Link) {
+		Start-Process -FilePath $erpMaterial.Link
+	}
 }
 
 function LinkErpMaterial {
@@ -264,4 +281,11 @@ function PrepareErpBomRow($erpBomRow, $parentNumber, $vaultEntity) {
 	$erpBomRow.Quantity = [double]$vaultEntity.'Bom_Quantity'
 
 	return $erpBomRow
+}
+
+function GoToErpBom {
+	$bom = $dswindow.FindName("DataGrid").DataContext
+	if ($bom.Link) {
+		Start-Process -FilePath $bom.Link
+	}
 }

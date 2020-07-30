@@ -70,8 +70,9 @@
         <Grid Grid.Row="0" Grid.Column="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="128" />
-                <ColumnDefinition Width="128" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
             <Label Margin="14,0,0,0" FontSize="14" FontWeight="Medium" VerticalAlignment="Center">
                 <Label.Style>
@@ -86,9 +87,9 @@
                 </Label.Style>
             </Label>
 
-            <Button Grid.Row="0" Grid.Column="1" x:Name="LinkMaterialButton" Content="Link ERP Item..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="110" HorizontalAlignment="Right" Margin="0,0,14,0" />
+            <Button Grid.Row="0" Grid.Column="1" x:Name="LinkMaterialButton" Content="Link ERP Item..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
             <!-- Visibility="{Binding DataContext.IsCreate, ElementName=DataGrid, Converter={StaticResource BooleanToVisibility}}" -->
-            <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="110" HorizontalAlignment="Right" Margin="0,0,14,0" >
+            <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" >
                 <Button.Style>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Content" Value="Create ERP Item"/>
@@ -100,6 +101,7 @@
                     </Style>
                 </Button.Style>
             </Button>
+            <Button Grid.Row="0" Grid.Column="3" x:Name="GoToMaterialButton" Content="Open Item in ERP..." Command="{Binding PsCmd[GoToErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
         </Grid>
 
         <Rectangle Grid.Row="1">

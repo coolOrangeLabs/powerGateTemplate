@@ -17,5 +17,10 @@ namespace ErpServices.Metadata
         public string Category { get; set; }
         public string Shelf { get; set; }
         public string SearchDescription { get; set; }
+        public string Link
+        {
+            get => "https://www.coolorange.com/en-us/connect.html";
+            set => _ = value;
+        }
     }
 }
