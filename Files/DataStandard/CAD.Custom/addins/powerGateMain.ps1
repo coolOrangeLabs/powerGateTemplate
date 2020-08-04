@@ -79,8 +79,12 @@ function PrepareErpMaterial($erpMaterial) {
 
 function IsEntityUnlocked {
 	$fullFileName = $prop["_FilePath"].Value + "\" + $prop["_FileName"].Value
-	$status = Get-ChildItem $fullFileName
-	return (-not $status.IsReadOnly)
+	if (Test-Path -Path $fullFileName) {
+		$status = Get-ChildItem $fullFileName
+		return (-not $status.IsReadOnly)		
+	} else {
+		return $true
+	}
 }
 
 function ValidateErpMaterialTab {
