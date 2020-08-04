@@ -60,9 +60,13 @@ function InitErpMaterialTab($number) {
 	if (-not $erpMaterial -or $false -eq $erpMaterial) {
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial
+		$goToEnabled = $false
+	} else {
+		$goToEnabled = $true
 	}
 	$userControl.FindName("DataGrid").DataContext = $erpMaterial
 	$userControl.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
+	$userControl.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
 }
 
 function PrepareErpMaterial($erpMaterial) {
@@ -74,15 +78,9 @@ function PrepareErpMaterial($erpMaterial) {
 }
 
 function IsEntityUnlocked {
-	$workingFolders = $vaultConnection.WorkingFoldersManager.GetAllWorkingFolders($false)
-	$vaultPath = $prop["_VaultVirtualPath"].Value
-	$localPath = $workingFolders[$vaultPath]
-	$vaultFolder = $prop["_FilePath"].Value.Replace($localPath, $vaultPath).Replace("\", "/")
-	$fullFileName = $vaultFolder + "/" + $prop["_FileName"].Value
-	$entity = Get-VaultFile -File $fullFileName
-	$entityUnlocked = $entity._VaultStatus.Status.LockState -ne "Locked" -and $entity.IsCheckedOut -ne $true
-
-	return $entityUnlocked
+	$fullFileName = $prop["_FilePath"].Value + "\" + $prop["_FileName"].Value
+	$status = Get-ChildItem $fullFileName
+	return (-not $status.IsReadOnly)
 }
 
 function ValidateErpMaterialTab {
@@ -114,7 +112,6 @@ function CreateOrUpdateErpMaterial {
 		} else { 
 			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
 		}
-		InitMaterialTab
 	} else {
 		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
 		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
@@ -122,10 +119,16 @@ function CreateOrUpdateErpMaterial {
 		} else { 
 			ShowMessageBox -Message "$($erpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"  | Out-Null
 			SetEntityProperties -erpMaterial $erpMaterial
-			InitErpMaterialTab -number $erpMaterial.Number
+			#InitErpMaterialTab -number $erpMaterial.Number
 		}
+	}
+	RefreshView
+}
 
-		RefreshView
+function GoToErpMaterial {
+	$erpMaterial = $userControl.FindName("DataGrid").DataContext
+	if ($erpMaterial.Link) {
+		Start-Process -FilePath $erpMaterial.Link
 	}
 }
 
@@ -138,7 +141,7 @@ function LinkErpMaterial {
 		$message = ""
 		#$existingEntities = $existingEntities | Where-Object { $_.MasterId -ne $vaultEntity.MasterId }
 		if ($existingEntities) {
-			$fileNames = $existingEntities._FullPath -join '\n'
+			$fileNames = $existingEntities._FullPath -join '`n'
 			$message = "The ERP item $($erpMaterial.Number) is already assigned to `n$($fileNames).`n"
 		}
 	}
@@ -152,6 +155,7 @@ function LinkErpMaterial {
 
 function RefreshView {
 	[System.Windows.Forms.SendKeys]::SendWait("{F5}") 
+	InitErpMaterialTab -number $prop["Part Number"].Value
 }
 
 function SetEntityProperties($erpMaterial) {

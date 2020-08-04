@@ -148,7 +148,7 @@ function LinkErpMaterial {
 			$existingEntities = $existingEntities | Where-Object { $_.MasterId -ne $vaultEntity.MasterId }
 			$message = ""
 			if ($existingEntities) {
-				$fileNames = $existingEntities._FullPath -join '\n'
+				$fileNames = $existingEntities._FullPath -join '`n'
 				$message = "The ERP item $($erpMaterial.Number) is already assigned to `n$($fileNames).`n"
 			}
 		}
@@ -249,7 +249,7 @@ function CompareErpMaterial($erpMaterial, $vaultEntity) {
 		}
 	}
 
-	return $differences -join '\n'
+	return $differences -join '`n'
 }
 
 function PrepareErpBomHeader($erpBomHeader, $vaultEntity) {
