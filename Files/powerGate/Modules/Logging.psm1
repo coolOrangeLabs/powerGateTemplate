@@ -15,7 +15,7 @@ class LoggingSettings {
     [System.IO.FileInfo]$LogFile
 
     LoggingSettings() {
-        $this.LogLevel = [LogLevel]::DEBUG
+        $this.LogLevel = [LogLevel]::OFF #TODO: Set this to OFF when not needed anymore, otherwise memory overflow if logFile becomes to big!
         $this.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\cOLog.txt"
         $this.WriteHost = $false
     }
