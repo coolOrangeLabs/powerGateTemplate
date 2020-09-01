@@ -13,7 +13,7 @@ $supportedPdfExtensions = @("idw", "dwg")
 $requiresErpItemExtensions = @("iam", "ipn", "ipt")
 
 function CheckVaultBom($entity) {
-    $differences = CompareErpBoms -EntityBoms @($entity)
+    $differences = CompareErpBom -EntityBom @($entity)
 	foreach($diff in $differences){
 		if ($diff.Status -ne "Identical" -and $diff.IsHeader) {
 			throw $diff.Message
@@ -48,7 +48,7 @@ function RestrictFileRelease($files) {
 				}
 				
 				try {
-					CheckVaultBom $file
+					CheckVaultBom $file | Out-Null
 				} catch {
 					$restrictMessage = "$($_)! Please open the BOM dialog"
 					Add-VaultRestriction -EntityName $file._Name -Message $restrictMessage
@@ -90,7 +90,7 @@ function RestrictItemRelease($items) {
 				}
 				
 				try {
-					CheckVaultBom $item
+					CheckVaultBom $item | Out-Null
 				} catch {
 					$restrictMessage = "$($_)! Please open the BOM dialog"
 					Add-VaultRestriction -EntityName $item._Number -Message $restrictMessage
