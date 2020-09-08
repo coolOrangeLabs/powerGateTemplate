@@ -3,8 +3,6 @@
 	<Fragment>
 		<?include Includes\ProductVariables.wxi ?>
 	  <ComponentGroup Id="SETUP_UI" />
-		<WixVariable Id="WixUILicenseRtf"
-					 Value="..\Resources\EULA.rtf" />
 		<WixVariable Id="WixUIBannerBmp"
 					 Value="..\Resources\bg_banner.bmp" />
 		<WixVariable Id="WixUIDialogBmp"
