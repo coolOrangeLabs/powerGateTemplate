@@ -6,7 +6,7 @@
     # In order to support special characters like ö, Ü, Convert from UTF-8 to Windows-1252
     [System.Text.Encoding]$srcEncoding = [System.Text.Encoding]::UTF8
     [System.Text.Encoding]$destEncoding = [System.Text.Encoding]::GetEncoding("Windows-1252")
-    $encodedContentBytes = [System.Text.Encoding]::Convert($srcEncoding, $destEncoding, $cfg)
+    $encodedContentBytes = [System.Text.Encoding]::Convert($srcEncoding, $destEncoding, $Content)
     $encodedContentString = $destEncoding.GetString($encodedContentBytes)
 
     $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $encodedContentString)
