@@ -1,4 +1,4 @@
-﻿<Root>
+<Root>
   <UnitOfMeasures>
     <Entry Key="BOX" Value="Box" />
     <Entry Key="CAN" Value="Can" />
@@ -13,12 +13,12 @@
     <Entry Key="PAIR" Value="Pair" />
     <Entry Key="PALLET" Value="Pallet" />
   </UnitOfMeasures>
-  
+
   <MaterialTypes>
     <Entry Key="Inventory" Value="Inventory" />
     <!--<Entry Key="Service" Value="Service" />-->
   </MaterialTypes>
-  
+
   <BomStates>
     <Entry Key="New" Value="New" />
     <Entry Key="Certified" Value="Certified" />

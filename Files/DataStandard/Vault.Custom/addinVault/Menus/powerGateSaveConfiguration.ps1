@@ -10,8 +10,8 @@ if ($testPath -eq $false) {
     return
 }
 
-[xml]$cfg = Get-Content $cfgPath
-SetConfigFromVault -Content $cfg.InnerXml
+[byte[]]$cfg = [System.IO.File]::ReadAllBytes($cfgPath)
+SetConfigFromVault -Content $cfg
 ShowMessageBox -Message "Config file saved to Vault server" -Button "OK" -Icon "Information" | Out-Null
 
 Remove-Item $cfgPath -Force

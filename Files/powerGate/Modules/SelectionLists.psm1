@@ -1,24 +1,30 @@
 ﻿function SetConfigFromVault {
     param(
-        [string]$Content
+        [byte[]]$Content
     )
     Log -Begin
-    # In order to support special characters like ö, Ü
-    $encodedContentBytes = [System.Text.Encoding]::UTF8.GetBytes($Content)
-    $encodedContentBase64 =[Convert]::ToBase64String($encodedContentBytes)
-    $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $encodedContentBase64)
+    # In order to support special characters like ö, Ü, Convert from UTF-8 to Windows-1252
+    [System.Text.Encoding]$srcEncoding = [System.Text.Encoding]::UTF8
+    [System.Text.Encoding]$destEncoding = [System.Text.Encoding]::GetEncoding("Windows-1252")
+    $encodedContentBytes = [System.Text.Encoding]::Convert($srcEncoding, $destEncoding, $cfg)
+    $encodedContentString = $destEncoding.GetString($encodedContentBytes)
+
+    $vault.KnowledgeVaultService.SetVaultOption("powerGateConfig", $encodedContentString)
     Log -End
 }
 
 function GetConfigFromVault {
     Log -Begin
-    # In order to support special characters like ö, Ü
-    $encodedContentBase64 = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
-    if($encodedContentBase64) {
-        try {
-            $encodedContentBytes =[Convert]::FromBase64String($encodedContentBase64)
-            [System.Text.Encoding]::UTF8.GetString($encodedContentBytes)
-        } catch { }        
+    $xmlString = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
+    if($xmlString) {
+        try{
+            $xmlObject = New-Object -TypeName System.Xml.XmlDocument
+            $xmlObject.LoadXml($xmlString)
+            return $xmlObject
+        } catch{
+            Log -message "Unable to parse XML-String to XML-Object!"
+            return $null
+         }
     }
     Log -End
 }
@@ -27,24 +33,25 @@ function GetSelectionList($section, $withBlank = $false) {
     Log -Begin
     $list = @()
     if (-not $vault) { return $list }
-    
+
     [xml]$cfg = GetConfigFromVault
-	if ($null -eq $cfg) {
-		[xml]$cfg = Get-Content "C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml"
-        SetConfigFromVault -Content $cfg.InnerXml
+    if ($null -eq $cfg) {
+        [byte[]]$cfg = [System.IO.File]::ReadAllBytes("C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml")
+        SetConfigFromVault -Content $cfg
+        [xml]$cfg = GetConfigFromVault
     }
-    
-    $entries = Select-Xml -Xml $cfg -XPath "//$section"   
+
+    $entries = Select-Xml -Xml $cfg -XPath "//$section"
     if ($entries) {
-        foreach ($entry in $entries.Node.ChildNodes) { 
+        foreach ($entry in $entries.Node.ChildNodes) {
             if ($entry.NodeType -eq "Comment") { continue }
             $list += New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @($entry.Key, $entry.Value)
         }
-        $list = $list | Sort-Object -Property "Value" 
-        if ($withBlank) { 
+        $list = $list | Sort-Object -Property "Value"
+        if ($withBlank) {
             $empty = New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @("", "")
-            $list = , $empty + $list 
-        }        
+            $list = , $empty + $list
+        }
     }
     Log -End
     return $list
@@ -76,9 +83,9 @@ function GetCategoryList($withBlank = $false) {
     foreach ($category in $categories) {
         $list += New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @($category.Key, $category.Value)
     }
-    if ($withBlank) { 
+    if ($withBlank) {
         $empty = New-Object 'System.Collections.Generic.KeyValuePair[String,String]' -ArgumentList @("", "")
-        $list = , $empty + $list 
+        $list = , $empty + $list
     }
     return $list | Sort-Object -Property Value
 }
