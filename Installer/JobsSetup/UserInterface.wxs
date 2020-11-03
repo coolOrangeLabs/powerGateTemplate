@@ -7,6 +7,8 @@
 					 Value="..\Resources\bg_banner.bmp" />
 		<WixVariable Id="WixUIDialogBmp"
 					 Value="..\Resources\bg_dialog.bmp" />
+    <WixVariable Id="WixUILicenseRtf"
+					 Value="..\Resources\EULA.rtf" />
 
 		<Icon Id="coolOrange.ico"
 			  SourceFile="$(var.IconName)" />
