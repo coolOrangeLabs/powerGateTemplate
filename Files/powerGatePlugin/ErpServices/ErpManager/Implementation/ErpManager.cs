@@ -42,6 +42,9 @@ namespace ErpServices.ErpManager.Implementation
             try
             {
                 Login = login;
+                var connectionStringDirectoryInfo = new DirectoryInfo(Login.ConnectionString);
+                if (!connectionStringDirectoryInfo.Parent.Exists)
+                    connectionStringDirectoryInfo.Parent.Create();
                 ExecuteOnDatabase(database => database.GetCollection<Material>());
                 return true;
             }

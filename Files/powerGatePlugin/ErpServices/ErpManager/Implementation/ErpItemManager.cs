@@ -3,6 +3,7 @@ using System.Linq;
 using ErpServices.ErpManager.Interfaces;
 using ErpServices.Metadata;
 using LiteDB;
+using powerGateServer.SDK;
 
 namespace ErpServices.ErpManager.Implementation
 {
@@ -16,6 +17,39 @@ namespace ErpServices.ErpManager.Implementation
         public IEnumerable<Material> SearchMaterials(IEnumerable<ErpMaterialSearchSettings> query)
         {
             // ToDO: Parse the Query parameter and execute on DB optimized query
+            if (query.Count() == 1)
+            {
+                var query1 = query.First();
+                if (query1.Operator == OperatorType.Contains)
+                {
+                    if (query1.PropertyName == ErpSearchProperty.Number)
+                        return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number.Contains(query1.SearchValue)).ToList());
+                    if (query1.PropertyName == ErpSearchProperty.Description)
+                        return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Description.Contains(query1.SearchValue)).ToList());
+                }
+                if (query1.Operator == OperatorType.StartsWith)
+                {
+                    if (query1.PropertyName == ErpSearchProperty.Number)
+                        return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number.StartsWith(query1.SearchValue)).ToList());
+                    if (query1.PropertyName == ErpSearchProperty.Description)
+                        return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Description.StartsWith(query1.SearchValue)).ToList());
+                }
+                if (query1.Operator == OperatorType.EndsWith)
+                {
+                    if (query1.PropertyName == ErpSearchProperty.Number)
+                        return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number.EndsWith(query1.SearchValue)).ToList());
+                    if (query1.PropertyName == ErpSearchProperty.Description)
+                        return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Description.EndsWith(query1.SearchValue)).ToList());
+                }
+
+                if (query1.Operator == OperatorType.Equals)
+                {
+                    if (query1.PropertyName == ErpSearchProperty.Number)
+                        return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number.Equals(query1.SearchValue)).ToList());
+                    if (query1.PropertyName == ErpSearchProperty.Description)
+                        return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Description.Equals(query1.SearchValue)).ToList());
+                }
+            }
             return ExecuteOnDatabase(database => database.GetCollection<Material>()
                 .FindAll().ToList());
         }
