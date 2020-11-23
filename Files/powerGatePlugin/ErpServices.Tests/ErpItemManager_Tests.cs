@@ -104,7 +104,6 @@ namespace ErpServices.Tests
             var erp_productionCredentials = Erp_TestCredentials; // ToDo Replace this in project with real production credentials
             var startedMeasure = StartMeasure("Connect to production system");
 
-            Thread.Sleep(1600);
             var connect = erpManager.Connect(erp_productionCredentials);
             StopMeasure(startedMeasure);
             Assert.IsTrue(connect);
