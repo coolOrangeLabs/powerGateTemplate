@@ -41,7 +41,11 @@ function GetSelectionList($section, $withBlank = $false) {
         [xml]$cfg = GetConfigFromVault
     }
 
-    $entries = Select-Xml -Xml $cfg -XPath "//$section"
+    try {
+        $entries = Select-Xml -Xml $cfg -XPath "//$section"
+    } catch {
+        throw "Failed to find XML node '$section' in the powerGateConfiguration! An administrator must edit and import the XML via the command 'powerGate->Save Configuration' in the Vault Client!"
+    }
     if ($entries) {
         foreach ($entry in $entries.Node.ChildNodes) {
             if ($entry.NodeType -eq "Comment") { continue }
