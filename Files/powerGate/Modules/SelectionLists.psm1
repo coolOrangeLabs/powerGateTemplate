@@ -28,12 +28,16 @@ function Get-PowerGateConfigFromVault {
     }
 
     try{
+        $byteOrderMarkUtf8 = [System.Text.Encoding]::UTF8.GetString([System.Text.Encoding]::UTF8.GetPreamble())
+        if ($xmlString.StartsWith($byteOrderMarkUtf8)) {
+            $xmlString = $xmlString.Remove(0, $byteOrderMarkUtf8.Length);
+        }
+
         $xmlObject = New-Object -TypeName System.Xml.XmlDocument
         $xmlObject.LoadXml($xmlString)
         return $xmlObject
-    } catch{
-        Log -message "Unable to parse XML-String to XML-Object!"
-        return $null
+    } catch {
+        throw "Unable to parse powerGateConfiguration from the Vault Options to a valid XML-Object! An administrator must import a new XML via the command 'powerGate->Save Configuration' in the Vault Client.`n $($_.Exception.Message)"
     }
     Log -End
 }
