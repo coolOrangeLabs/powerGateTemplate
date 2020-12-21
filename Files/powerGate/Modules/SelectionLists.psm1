@@ -1,4 +1,4 @@
-﻿function SetConfigFromVault {
+﻿function Set-PowerGateConfigFromVault {
     param(
         [byte[]]$Content
     )
@@ -13,18 +13,27 @@
     Log -End
 }
 
-function GetConfigFromVault {
+function Get-PowerGateConfigFromVault {
     Log -Begin
     $xmlString = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
-    if($xmlString) {
-        try{
-            $xmlObject = New-Object -TypeName System.Xml.XmlDocument
-            $xmlObject.LoadXml($xmlString)
-            return $xmlObject
-        } catch{
-            Log -message "Unable to parse XML-String to XML-Object!"
-            return $null
-         }
+
+    if (-not $xmlString) {
+        $xmlTemplatePath = "C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml"
+        [byte[]]$cfg = [System.IO.File]::ReadAllBytes($xmlTemplatePath)
+        Set-PowerGateConfigFromVault -Content $cfg
+        $xmlString = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
+        if (-not $xmlString) {
+            throw "PowerGateConfiguration is not saved in the Vault options! An administrator must import the XML via the command 'powerGate->Save Configuration' in the Vault Client."
+        }
+    }
+
+    try{
+        $xmlObject = New-Object -TypeName System.Xml.XmlDocument
+        $xmlObject.LoadXml($xmlString)
+        return $xmlObject
+    } catch{
+        Log -message "Unable to parse XML-String to XML-Object!"
+        return $null
     }
     Log -End
 }
@@ -34,12 +43,7 @@ function GetSelectionList($section, $withBlank = $false) {
     $list = @()
     if (-not $vault) { return $list }
 
-    [xml]$cfg = GetConfigFromVault
-    if ($null -eq $cfg) {
-        [byte[]]$cfg = [System.IO.File]::ReadAllBytes("C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml")
-        SetConfigFromVault -Content $cfg
-        [xml]$cfg = GetConfigFromVault
-    }
+    [xml]$cfg = Get-PowerGateConfigFromVault
 
     try {
         $entries = Select-Xml -Xml $cfg -XPath "//$section"
