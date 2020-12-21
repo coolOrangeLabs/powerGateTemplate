@@ -3,7 +3,7 @@ $materialEntityType = "Material"
 
 function SearchErpMaterials ($filter, $top = 100) {
 	$erpMaterials = Get-ERPObjects -EntitySet $materialEntitySet -Filter $filter -Top $top
-	$erpMaterials = CheckResponse -entity $erpMaterials
+	$erpMaterials = Edit-ResponseWithErrorMessage -Entity $erpMaterials
 	return $erpMaterials
 }
 

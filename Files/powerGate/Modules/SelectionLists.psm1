@@ -75,7 +75,7 @@ function GetBOMStateList($withBlank = $false) {
 function GetCategoryList($withBlank = $false) {
     $list = @()
     $categories = Get-ERPObjects -EntitySet "Categories"
-    $categories = CheckResponse -entity $categories
+    $categories = Edit-ResponseWithErrorMessage -entity $categories
     if (-not $categories -or $false -eq $categories) {
         return $list
     }
