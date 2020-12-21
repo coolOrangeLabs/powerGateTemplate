@@ -117,6 +117,7 @@ function ApplyFilter($key, $value) {
 
 function ExecuteErpSearch {
     Log -Begin
+    $dsWindow.Cursor = "Wait"
     $dsDiag.Clear()
     $searchCriteria = $searchWindow.FindName("SearchCriteria").DataContext
     $CaseSensitive = $searchWindow.FindName("CaseSensitive").IsChecked
@@ -124,6 +125,7 @@ function ExecuteErpSearch {
     $filter = ConvertSearchCriteriaToFilter -SearchCriteria $searchCriteria -CaseSensitive $CaseSensitive
     $dsDiag.Trace("filter = $filter")
     $results = SearchErpMaterials -filter $filter -top $topa
+    $dsWindow.Cursor = "Arrow"
     if (-not $results -or $false -eq $results) {
         $searchWindow.FindName("SearchResults").ItemsSource = $null
         $searchWindow.FindName("RecordsFound").Content = "Results found: 0"
