@@ -16,6 +16,9 @@
 function GetConfigFromVault {
     Log -Begin
     $xmlString = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
+    if($xmlString -match "^?") {
+        $xmlString = $xmlString.SubString(1)
+    }
     if($xmlString) {
         try{
             $xmlObject = New-Object -TypeName System.Xml.XmlDocument
