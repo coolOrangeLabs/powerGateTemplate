@@ -13,7 +13,7 @@ $rawMaterialQuantityProperty = "Raw Quantity"
 function GetErpBomHeader($number) {
     Log -Begin
     $erpBomHeader = Get-ERPObject -EntitySet $bomHeaderEntitySet -Keys @{Number = $number } -Expand "BomRows"
-    $erpBomHeader = CheckResponse -entity $erpBomHeader
+    $erpBomHeader = Edit-ResponseWithErrorMessage -Entity $erpBomHeader
     Log -End
     return $erpBomHeader
 }
@@ -31,7 +31,7 @@ function CreateErpBomHeader($erpBomHeader) {
     $erpBomHeader.ModifiedDate = [DateTime]::Now
 
     $erpBomHeader = Add-ERPObject -EntitySet $bomHeaderEntitySet -Properties $erpBomHeader
-    $erpBomHeader = CheckResponse -entity $erpBomHeader
+    $erpBomHeader = Edit-ResponseWithErrorMessage -Entity $erpBomHeader -WriteOperation
     Log -End
     return $erpBomHeader
 }
@@ -42,7 +42,7 @@ function UpdateErpBomHeader($erpBomHeader) {
     $erpBomHeader.ModifiedDate = [DateTime]::Now
 
     $erpBomHeader = Update-ERPObject -EntitySet $bomHeaderEntitySet -keys $erpBomHeader._Keys -Properties $erpBomHeader._Properties
-    $erpBomHeader = CheckResponse -entity $erpBomHeader
+    $erpBomHeader = Edit-ResponseWithErrorMessage -Entity $erpBomHeader -WriteOperation
     Log -End
     return $erpBomHeader
 }
@@ -52,7 +52,7 @@ function UpdateErpBomHeader($erpBomHeader) {
 function GetErpBomRow($parentNumber, $childNumber, $position) {
     Log -Begin
     $erpBomRow = Get-ERPObject -EntitySet $bomRowEntitySet -Keys @{ParentNumber = $parentNumber; ChildNumber = $childNumber; Position = $position }
-    $erpBomRow = CheckResponse -entity $erpBomRow
+    $erpBomRow = Edit-ResponseWithErrorMessage -Entity $erpBomRow
     Log -End
     return $erpBomRow
 }
@@ -70,7 +70,7 @@ function CreateErpBomRow($erpBomRow) {
     $erpBomRow.ModifiedDate = [DateTime]::Now
 
     $erpBomRow = Add-ERPObject -EntitySet $bomRowEntitySet -Properties $erpBomRow
-    $erpBomRow = CheckResponse -entity $erpBomRow
+    $erpBomRow = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
     Log -End
     return $erpBomRow
 }
@@ -81,7 +81,7 @@ function UpdateErpBomRow($erpBomRow) {
     $erpBomRow.ModifiedDate = [DateTime]::Now
 
     $erpBomRow = Update-ERPObject -EntitySet $bomRowEntitySet -Keys $erpBomRow._Keys -Properties @{Quantity = $erpBomRow.Quantity }
-    $erpBomRow = CheckResponse -entity $erpBomRow
+    $erpBomRow = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
     Log -End
     return $erpBomRow
 }
@@ -89,7 +89,7 @@ function UpdateErpBomRow($erpBomRow) {
 function RemoveErpBomRow($parentNumber, $childNumber, $position) {
     Log -Begin
     $erpBomRow = Remove-ERPObject -EntitySet $bomRowEntitySet -Keys @{ParentNumber = $parentNumber; ChildNumber = $childNumber; Position = $position }
-    $erpBomRow = CheckResponse -entity $erpBomRow
+    $erpBomRow = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
     Log -End
     return $erpBomRow
 }
