@@ -23,7 +23,13 @@ function GetSelectedObject {
 	if (-not $selectedObject) {
 		$selectedObject = $VaultContext.CurrentSelectionSet | Select-Object -First 1
 	}
-	return $number
+	if ($selectedObject.TypeId.SelectionContext -eq "FileMaster") {
+		$entity = Get-VaultFile -FileId $selectedObject.Id
+	}
+	elseif ($selectedObject.TypeId.SelectionContext -eq "ItemMaster") {
+		$entity = Get-VaultItem -ItemId $selectedObject.Id
+	}
+	return $entity
 }
 
 function RefreshView {
