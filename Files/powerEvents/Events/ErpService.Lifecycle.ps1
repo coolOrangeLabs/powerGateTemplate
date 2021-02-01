@@ -76,65 +76,56 @@ function RestrictItemRelease($items) {
 			$def = $defs | Where-Object { $_.DispName -eq $item._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $item._NewState }
 			if ($itemIncludesFilesToCheck -and $state.ReleasedState) {
-				<<<<<<< HEAD
-				$material = GetErpMaterial -Number $item._Number
-				if ($null -eq $material) {
-					=======
-					$erpMaterial = GetErpMaterial -Number $item._Number
-					if (-not $erpMaterial -or $false -eq $erpMaterial) {
-						>>>>>>> master
-						$restrictMessage = "An item with the number '$($item._Number)' does not exist in the ERP system."
-						Add-VaultRestriction -EntityName ($item._Name) -Message $restrictMessage
-						continue
-					}
-		
-					$bomRows = GetVaultBomRows -Entity $item
-					if (-not $bomRows) { continue }
-
-					if (-not $item.Children) {
-						Add-Member -InputObject $item -Name "Children" -Value $bomRows -MemberType NoteProperty -Force
-					}
-					else {
-						$item.Children = $bomRows
-					}
-				
-					try {
-						CheckVaultBom $item | Out-Null
-					}
-					catch {
-						$restrictMessage = "$($_)! Please open the BOM dialog"
-						Add-VaultRestriction -EntityName $item._Number -Message $restrictMessage
-					}
+				$erpMaterial = GetErpMaterial -Number $item._Number
+				if (-not $erpMaterial -or $false -eq $erpMaterial) {
+					$restrictMessage = "An item with the number '$($item._Number)' does not exist in the ERP system."
+					Add-VaultRestriction -EntityName ($item._Name) -Message $restrictMessage
+					continue
 				}
-			}		
-		}
-		catch {
-			Log -Message $_.Exception.Message -MessageBox -LogLevel "ERROR"
-		}
-		Log -End
-	}
+		
+				$bomRows = GetVaultBomRows -Entity $item
+				if (-not $bomRows) { continue }
 
-	Register-VaultEvent -EventName UpdateFileStates_Post -Action 'AddPdfJob'
-	function AddPdfJob($files, $successful) {
-		Log -Begin
-		try {
-			if (-not $successful) { return }
-			$releasedFiles = @($files | Where-Object { $supportedPdfExtensions -contains $_._Extension -and $_._ReleasedRevision -eq $true })
-			foreach ($file in $releasedFiles) {
-				$material = GetErpMaterial -Number $file._PartNumber
-				<<<<<<< HEAD
-				if ($material) {
-					=======
-					if ($false -ne $material -and $material) {
-						>>>>>>> master
-						$jobType = "ErpService.Create.PDF"
-						Log -Message "Adding job '$jobType' for file '$($file._Name)' to queue."
-						Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system"
-					}
-	   }
+				if (-not $item.Children) {
+					Add-Member -InputObject $item -Name "Children" -Value $bomRows -MemberType NoteProperty -Force
+				}
+				else {
+					$item.Children = $bomRows
+				}
+				
+				try {
+					CheckVaultBom $item | Out-Null
+				}
+				catch {
+					$restrictMessage = "$($_)! Please open the BOM dialog"
+					Add-VaultRestriction -EntityName $item._Number -Message $restrictMessage
+				}
 			}
-			catch {
-				Log -Message $_.Exception.Message -MessageBox
+		}		
+	}
+ catch {
+		Log -Message $_.Exception.Message -MessageBox -LogLevel "ERROR"
+	}
+	Log -End
+}
+
+Register-VaultEvent -EventName UpdateFileStates_Post -Action 'AddPdfJob'
+function AddPdfJob($files, $successful) {
+	Log -Begin
+	try {
+		if (-not $successful) { return }
+		$releasedFiles = @($files | Where-Object { $supportedPdfExtensions -contains $_._Extension -and $_._ReleasedRevision -eq $true })
+		foreach ($file in $releasedFiles) {
+			$material = GetErpMaterial -Number $file._PartNumber
+			if ($false -ne $material -and $material) {
+				$jobType = "ErpService.Create.PDF"
+				Log -Message "Adding job '$jobType' for file '$($file._Name)' to queue."
+				Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system"
 			}
-			Log -End
 		}
+	}
+ catch {
+		Log -Message $_.Exception.Message -MessageBox
+	}
+	Log -End
+}
