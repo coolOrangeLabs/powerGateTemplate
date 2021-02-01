@@ -16,7 +16,8 @@ namespace ErpServices
     {
         static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        
+
+
         public WebService()
         {
             var erpStorageConfiguration = GetErpStorageConfiguration();
@@ -33,12 +34,13 @@ namespace ErpServices
             };
             Log.Info("Connecting to ERP...");
             var connected = erpManager.Connect(erpLogin);
-            if(!connected)
+            if (!connected)
                 throw new Exception(string.Format("Failed to connect to ERP with Connection-String: {0}", erpLogin.ConnectionString));
 
             AddMethod(new Materials(erpManager));
             AddMethod(new BomHeaders(erpManager));
             AddMethod(new BomRows(erpManager));
+            AddMethod(new Documents(erpManager));
             AddMethod(new Categories(erpManager));
             AddMethod(new Documents(erpManager));
 
@@ -56,7 +58,7 @@ namespace ErpServices
             var fileMap = new ExeConfigurationFileMap { ExeConfigFilename = configFullName };
             var configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
             var section = configuration.GetSection("ErpStorage") as AppSettingsSection;
-            if (section == null) 
+            if (section == null)
                 throw new Exception("Failed to find 'ErpStorage' section inside the config file!");
 
             Log.Info(".config file successfully parsed!");

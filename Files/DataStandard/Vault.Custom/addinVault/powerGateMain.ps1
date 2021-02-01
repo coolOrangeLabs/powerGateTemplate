@@ -20,7 +20,7 @@ function GetSelectedObject {
 	$entity = $null
 
 	$selectedObject = $VaultContext.SelectedObject
-	if(-not $selectedObject) {
+	if (-not $selectedObject) {
 		$selectedObject = $VaultContext.CurrentSelectionSet | Select-Object -First 1
 	}
 	if ($selectedObject.TypeId.SelectionContext -eq "FileMaster") {
@@ -38,7 +38,8 @@ function InitBomTab {
 	$bom = GetErpBomHeader -number $number
 	if (-not $bom -or $false -eq $bom) {
 		$goToEnabled = $false
-	} else {
+	}
+ else {
 		$goToEnabled = $true
 	}
 	$dswindow.FindName("DataGrid").DataContext = $bom
@@ -53,7 +54,8 @@ function InitMaterialTab {
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
 		$goToEnabled = $false
-	} else {
+	}
+ else {
 		$goToEnabled = $true
 	}
 	$dswindow.FindName("DataGrid").DataContext = $erpMaterial
@@ -66,7 +68,8 @@ function IsEntityUnlocked {
 	if ($entity._EntityTypeID -eq "ITEM") { 
 		$item = $vault.ItemService.GetLatestItemByItemMasterId($entity.MasterId)
 		$entityUnlocked = $item.Locked -ne $true
-	} else {
+	}
+ else {
 		$entityUnlocked = $entity._VaultStatus.Status.LockState -ne "Locked" -and $entity.IsCheckedOut -ne $true
 	}
 
@@ -77,7 +80,8 @@ function ValidateErpMaterialTab {
 	$erpMaterial = $dsWindow.FindName("DataGrid").DataContext
 	if ($erpMaterial.Number) {
 		$entityUnlocked = $true
-	} else {
+	}
+ else {
 		$entityUnlocked = IsEntityUnlocked
 	}
 
@@ -100,15 +104,18 @@ function CreateOrUpdateErpMaterial {
 		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
 		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
 			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
-		} else { 
+		}
+		else { 
 			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
 		}
 		InitMaterialTab
-	} else {
+	}
+ else {
 		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
 		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
 			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
-		} else { 
+		}
+		else { 
 			ShowMessageBox -Message "$($erpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"  | Out-Null
 			$vaultEntity = GetSelectedObject
 			SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
@@ -141,9 +148,10 @@ function LinkErpMaterial {
 				return
 			}			
 		}
-	} elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+	}
+ elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
 		#TODO: Rename "Part Number" on a german system to "Teilenummer"
-		$existingEntities = Get-VaultFiles -Properties @{"Part Number" = $erpMaterial.Number}
+		$existingEntities = Get-VaultFiles -Properties @{"Part Number" = $erpMaterial.Number }
 		if ($existingEntities) {
 			$existingEntities = $existingEntities | Where-Object { $_.MasterId -ne $vaultEntity.MasterId }
 			$message = ""
@@ -177,7 +185,8 @@ function RefreshView {
 
 		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cFileExplorerObject, $cDocFolder)
 		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cDocFolder)
-	} elseif ($entity._EntityTypeID -eq "ITEM") {
+	}
+ elseif ($entity._EntityTypeID -eq "ITEM") {
 		$item = $vault.ItemService.GetLatestItemByItemMasterId($entity.MasterId)
 		$cItemRev = New-Object Connectivity.Services.Item.ItemRevision($vaultConnection, $item)
 		$cItemRevExpObj = New-Object Connectivity.Explorer.Item.ItemRevisionExplorerObject($cItemRev)
@@ -185,7 +194,8 @@ function RefreshView {
 
 		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemRevExpObj)
 		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemMaster)
-	} else {
+	}
+ else {
 		return
 	}
 
@@ -206,9 +216,10 @@ function SetEntityProperties($erpMaterial, $vaultEntity) {
 			"_Description(Item,CO)" = $erpMaterial.Description
 		}
 		$vaultEntity._Number = $erpMaterial.Number
-	} elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+	}
+ elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
 		Update-VaultFile -File $vaultEntity._FullPath -Properties @{
-			"_PartNumber" = $erpMaterial.Number
+			"_PartNumber"  = $erpMaterial.Number
 			"_Description" = $erpMaterial.Description
 		}
 		$vaultEntity._PartNumber = $erpMaterial.Number
@@ -275,7 +286,8 @@ function PrepareErpBomRow($erpBomRow, $parentNumber, $vaultEntity) {
 	$erpBomRow.Position = [int]$vaultEntity.'Bom_PositionNumber'
 	if ($vaultEntity.Children) {
 		$erpBomRow.Type = "Assembly"
-	} else {
+	}
+ else {
 		$erpBomRow.Type = "Part"
 	}
 	$erpBomRow.Quantity = [double]$vaultEntity.'Bom_Quantity'

@@ -13,6 +13,8 @@ namespace ErpServices.Services
 {
     public class Documents : ErpBaseService<Document>, IStreamableServiceMethod<Document>
     {
+        static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public override string Name => "Documents";
 
         public Documents(IErpManager erpManager) : base(erpManager)

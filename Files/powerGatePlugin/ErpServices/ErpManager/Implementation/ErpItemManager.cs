@@ -9,7 +9,7 @@ namespace ErpServices.ErpManager.Implementation
 {
     public partial class ErpManager : IErpManager
     {
-        public Material GetMaterialByNumber(string number)
+        public Material GetMaterialyByNumber(string number)
         {
             return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number == number)).FirstOrDefault();
         }
@@ -68,7 +68,7 @@ namespace ErpServices.ErpManager.Implementation
             Log.Info(">> GetNextNumber >>");
             var nextNumber = "500000";
 
-            return ExecuteOnDatabase(delegate(LiteDatabase database)
+            return ExecuteOnDatabase(delegate (LiteDatabase database)
             {
                 var collection = database.GetCollection<Material>();
 

@@ -1,4 +1,4 @@
-﻿function SetConfigFromVault {
+﻿function Set-PowerGateConfigFromVault {
     param(
         [byte[]]$Content
     )
@@ -13,18 +13,31 @@
     Log -End
 }
 
-function GetConfigFromVault {
+function Get-PowerGateConfigFromVault {
     Log -Begin
     $xmlString = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
-    if($xmlString) {
-        try{
-            $xmlObject = New-Object -TypeName System.Xml.XmlDocument
-            $xmlObject.LoadXml($xmlString)
-            return $xmlObject
-        } catch{
-            Log -message "Unable to parse XML-String to XML-Object!"
-            return $null
-         }
+
+    if (-not $xmlString) {
+        $xmlTemplatePath = "C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml"
+        [byte[]]$cfg = [System.IO.File]::ReadAllBytes($xmlTemplatePath)
+        Set-PowerGateConfigFromVault -Content $cfg
+        $xmlString = $vault.KnowledgeVaultService.GetVaultOption("powerGateConfig")
+        if (-not $xmlString) {
+            throw "PowerGateConfiguration is not saved in the Vault options! An administrator must import the XML via the command 'powerGate->Save Configuration' in the Vault Client."
+        }
+    }
+
+    try{
+        $byteOrderMarkUtf8 = [System.Text.Encoding]::UTF8.GetString([System.Text.Encoding]::UTF8.GetPreamble())
+        if ($xmlString.StartsWith($byteOrderMarkUtf8)) {
+            $xmlString = $xmlString.Remove(0, $byteOrderMarkUtf8.Length);
+        }
+
+        $xmlObject = New-Object -TypeName System.Xml.XmlDocument
+        $xmlObject.LoadXml($xmlString)
+        return $xmlObject
+    } catch {
+        throw "Unable to parse powerGateConfiguration from the Vault Options to a valid XML-Object! An administrator must import a new XML via the command 'powerGate->Save Configuration' in the Vault Client.`n $($_.Exception.Message)"
     }
     Log -End
 }
@@ -34,14 +47,13 @@ function GetSelectionList($section, $withBlank = $false) {
     $list = @()
     if (-not $vault) { return $list }
 
-    [xml]$cfg = GetConfigFromVault
-    if ($null -eq $cfg) {
-        [byte[]]$cfg = [System.IO.File]::ReadAllBytes("C:\ProgramData\coolOrange\powerGate\powerGateConfigurationTemplate.xml")
-        SetConfigFromVault -Content $cfg
-        [xml]$cfg = GetConfigFromVault
-    }
+    [xml]$cfg = Get-PowerGateConfigFromVault
 
-    $entries = Select-Xml -Xml $cfg -XPath "//$section"
+    try {
+        $entries = Select-Xml -Xml $cfg -XPath "//$section"
+    } catch {
+        throw "Failed to find XML node '$section' in the powerGateConfiguration! An administrator must edit and import the XML via the command 'powerGate->Save Configuration' in the Vault Client!"
+    }
     if ($entries) {
         foreach ($entry in $entries.Node.ChildNodes) {
             if ($entry.NodeType -eq "Comment") { continue }
@@ -75,7 +87,7 @@ function GetBOMStateList($withBlank = $false) {
 function GetCategoryList($withBlank = $false) {
     $list = @()
     $categories = Get-ERPObjects -EntitySet "Categories"
-    $categories = CheckResponse -entity $categories
+    $categories = Edit-ResponseWithErrorMessage -entity $categories
     if (-not $categories -or $false -eq $categories) {
         return $list
     }

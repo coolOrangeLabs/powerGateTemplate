@@ -21,7 +21,7 @@ namespace ErpServices.Metadata
             set => _ = value;
         }
 
-        public List<BomRow> BomRows { get; set;  }
+        public List<BomRow> BomRows { get; set; }
 
         public BomHeader()
         {
