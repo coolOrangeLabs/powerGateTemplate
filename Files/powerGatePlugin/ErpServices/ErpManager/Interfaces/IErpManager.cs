@@ -16,7 +16,7 @@ namespace ErpServices.ErpManager.Interfaces
         IEnumerable<Material> SearchMaterials(IEnumerable<ErpMaterialSearchSettings> query);
         Material CreateMaterial(Material material);
         Material UpdateMaterial(Material material);
-        
+
         // Documents functionality 
         Document GetDocumentMetadata(string number);
         Document CreateDocumentMetadata(Document documentMetadata);

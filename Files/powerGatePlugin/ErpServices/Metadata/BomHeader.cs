@@ -15,8 +15,13 @@ namespace ErpServices.Metadata
         public string State { get; set; }
         public string UnitOfMeasure { get; set; }
         public DateTime ModifiedDate { get; set; }
+        public string Link
+        {
+            get => "https://www.coolorange.com/en-us/connect.html";
+            set => _ = value;
+        }
 
-        public List<BomRow> BomRows { get; set;  }
+        public List<BomRow> BomRows { get; set; }
 
         public BomHeader()
         {

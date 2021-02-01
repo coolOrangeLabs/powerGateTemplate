@@ -91,7 +91,8 @@
         <Grid Grid.Row="0" Grid.Column="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="114" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
             <Label Margin="14,0,0,0" FontSize="14" FontWeight="Medium" VerticalAlignment="Center">
                 <Label.Style>
@@ -100,7 +101,8 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="CreateOrUpdateMaterialButton" Content="BOM Transfer..." Command="{Binding PsCmd[ShowBomWindow]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" HorizontalAlignment="Right" Margin="0,0,14,0" />
+            <Button Grid.Row="0" Grid.Column="1" x:Name="CreateOrUpdateMaterialButton" Content="BOM Transfer..." Command="{Binding PsCmd[ShowBomWindow]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
+            <Button Grid.Row="0" Grid.Column="2" x:Name="GoToBomButton" Content="Open BOM in ERP..." Command="{Binding PsCmd[GoToErpBom]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
         </Grid>
 
         <Rectangle Grid.Row="1">

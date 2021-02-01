@@ -18,21 +18,10 @@ function OnTabContextChanged_powerGate($xamlFile) {
 
 function GetSelectedObject {
 	$entity = $null
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster") {
-		$entity = Get-VaultFile -FileId $vaultContext.SelectedObject.Id
-	}
-	elseif ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster") {
-		$entity = Get-VaultItem -ItemId $vaultContext.SelectedObject.Id
-	}
-	return $entity
-}
 
-function GetEntityNumber($entity) {
-	if ($entity._EntityTypeID -eq "FILE") {
-		$number = $entity._PartNumber
-	}
-	else {
-		$number = $entity._Number
+	$selectedObject = $VaultContext.SelectedObject
+	if (-not $selectedObject) {
+		$selectedObject = $VaultContext.CurrentSelectionSet | Select-Object -First 1
 	}
 	return $number
 }
@@ -42,8 +31,154 @@ function RefreshView {
 	if ($null -eq $entity) {
 		return
 	}
+	elseif ($selectedObject.TypeId.SelectionContext -eq "ItemMaster") {
+		$entity = Get-VaultItem -ItemId $selectedObject.Id
+	}
+	return $entity
+}
 
-	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
+function InitBomTab {
+	$entity = GetSelectedObject
+	$number = GetEntityNumber -entity $entity
+	$bom = GetErpBomHeader -number $number
+	if (-not $bom -or $false -eq $bom) {
+		$goToEnabled = $false
+	}
+ else {
+		$goToEnabled = $true
+	}
+	$dswindow.FindName("DataGrid").DataContext = $bom
+	$dswindow.FindName("GoToBomButton").IsEnabled = $goToEnabled
+}
+
+function InitMaterialTab {
+	$entity = GetSelectedObject
+	$number = GetEntityNumber -entity $entity
+	$erpMaterial = GetErpMaterial -number $number
+	if (-not $erpMaterial -or $false -eq $erpMaterial) {
+		$erpMaterial = NewErpMaterial
+		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
+		$goToEnabled = $false
+	}
+ else {
+		$goToEnabled = $true
+	}
+	$dswindow.FindName("DataGrid").DataContext = $erpMaterial
+	$dsWindow.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
+	$dswindow.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
+}
+
+function IsEntityUnlocked {
+	$entity = GetSelectedObject
+	if ($entity._EntityTypeID -eq "ITEM") { 
+		$item = $vault.ItemService.GetLatestItemByItemMasterId($entity.MasterId)
+		$entityUnlocked = $item.Locked -ne $true
+	}
+ else {
+		$entityUnlocked = $entity._VaultStatus.Status.LockState -ne "Locked" -and $entity.IsCheckedOut -ne $true
+	}
+
+	return $entityUnlocked
+}
+
+function ValidateErpMaterialTab {
+	$erpMaterial = $dsWindow.FindName("DataGrid").DataContext
+	if ($erpMaterial.Number) {
+		$entityUnlocked = $true
+	}
+ else {
+		$entityUnlocked = IsEntityUnlocked
+	}
+
+	#TODO: Setup obligatory fields that need to be filled out to activate the 'Create' button
+	$enabled = $false
+	if ($null -ne $erpMaterial.Type -and $erpMaterial.Type -ne "") {
+		$type = $true
+	}
+	if ($null -ne $erpMaterial.Description -and $erpMaterial.Description -ne "") {
+		$description = $true
+	}
+	$enabled = $entityUnlocked -and $type -and $description
+	$dsWindow.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
+}
+
+function CreateOrUpdateErpMaterial {
+	$dsDiag.Trace(">>CreateOrUpdateMaterial")
+	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
+	if ($erpMaterial.IsUpdate) {
+		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
+		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
+			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
+		}
+		else { 
+			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
+		}
+		InitMaterialTab
+	}
+ else {
+		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
+		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
+			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
+		}
+		else { 
+			ShowMessageBox -Message "$($erpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"  | Out-Null
+			$vaultEntity = GetSelectedObject
+			SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
+		}
+
+		RefreshView
+	}
+	$dsDiag.Trace("<<CreateOrUpdateMaterial")
+}
+
+function GoToErpMaterial {
+	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
+	if ($erpMaterial.Link) {
+		Start-Process -FilePath $erpMaterial.Link
+	}
+}
+
+function LinkErpMaterial {
+	$erpMaterial = OpenErpSearchWindow
+	if (-not $erpMaterial) {
+		return
+	}
+
+	$vaultEntity = GetSelectedObject
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
+		$existingEntity = Get-VaultItem -Number $erpMaterial.Number
+		if ($existingEntity) {
+			if ($existingEntity.MasterId -ne $vaultEntity.MasterId) {
+				ShowMessageBox -Message "The ERP item $($erpMaterial.Number) cannot be assigned!`nAn item with an item number $($existingEntity._Number) already exists." -Button "Ok" -Icon "Warning" | Out-Null
+				return
+			}			
+		}
+	}
+ elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+		#TODO: Rename "Part Number" on a german system to "Teilenummer"
+		$existingEntities = Get-VaultFiles -Properties @{"Part Number" = $erpMaterial.Number }
+		if ($existingEntities) {
+			$existingEntities = $existingEntities | Where-Object { $_.MasterId -ne $vaultEntity.MasterId }
+			$message = ""
+			if ($existingEntities) {
+				$fileNames = $existingEntities._FullPath -join '`n'
+				$message = "The ERP item $($erpMaterial.Number) is already assigned to `n$($fileNames).`n"
+			}
+		}
+	}
+
+	$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($erpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
+	if ($answer -eq "Yes") {
+		SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
+		RefreshView
+	}
+}
+
+function RefreshView {
+	$entity = GetSelectedObject
+	if ($null -eq $entity) {
+		return
+	}
 
 	if ($entity._EntityTypeID -eq "FILE") {
 		$file = $vault.DocumentService.GetLatestFileByMasterId($entity.MasterId)
@@ -55,7 +190,8 @@ function RefreshView {
 
 		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cFileExplorerObject, $cDocFolder)
 		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cDocFolder)
-	} elseif ($entity._EntityTypeID -eq "ITEM") {
+	}
+ elseif ($entity._EntityTypeID -eq "ITEM") {
 		$item = $vault.ItemService.GetLatestItemByItemMasterId($entity.MasterId)
 		$cItemRev = New-Object Connectivity.Services.Item.ItemRevision($vaultConnection, $item)
 		$cItemRevExpObj = New-Object Connectivity.Explorer.Item.ItemRevisionExplorerObject($cItemRev)
@@ -63,95 +199,17 @@ function RefreshView {
 
 		$vwCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemRevExpObj)
 		$navCtx = New-Object Connectivity.Explorer.Framework.LocationContext($cItemMaster)
-	} else {
+	}
+ else {
 		return
 	}
+
+	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
 
 	$sc = New-Object Connectivity.Explorer.Framework.ShortcutMgr+Shortcut
 	$sc.NavigationContext = $navCtx
 	$sc.ViewContext = $vwCtx
 	$sc.Select($null)    
-}
-
-function InitBomTab {
-	$entity = GetSelectedObject
-	$number = GetEntityNumber -entity $entity
-	$bom = GetErpBomHeader -number $number
-	$dswindow.FindName("DataGrid").DataContext = $bom
-}
-
-function InitMaterialTab {
-	$entity = GetSelectedObject
-	$number = GetEntityNumber -entity $entity
-	$erpMaterial = GetErpMaterial -number $number
-	if (-not $erpMaterial) {
-		$erpMaterial = NewErpMaterial
-		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
-	}
-	$dswindow.FindName("DataGrid").DataContext = $erpMaterial
-}
-
-function ValidateErpMaterialTab {
-	$material = $dsWindow.FindName("DataGrid").DataContext
-	#TODO: Setup obligatory fields that need to be filled out to activate the 'Create' button
-	$enabled = $false
-	if ($null -ne $material.Type -and $material.Type -ne "") {
-		$type = $true
-	}
-	if ($null -ne $material.Description -and $material.Description -ne "") {
-		$description = $true
-	}
-	$enabled = $type -and $description
-	$dsWindow.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
-}
-
-function CreateOrUpdateErpMaterial {
-	$dsDiag.Trace(">>CreateOrUpdateMaterial")
-	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
-	if ($erpMaterial.IsUpdate) {
-		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
-		if ($erpMaterial) { 
-			Show-MessageBox -message "Update successful" -icon "Information"
-		} else { 
-			Show-MessageBox -message $erpMaterial._ErrorMessage -icon "Error" -title "ERP material update error"
-		}
-		InitMaterialTab
-	} else {
-		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
-		$vaultEntity = GetSelectedObject
-		SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
-		RefreshView
-	}
-	$dsDiag.Trace("<<CreateOrUpdateMaterial")
-}
-
-function LinkErpMaterial {
-	$erpMaterial = OpenErpSearchWindow
-
-	$vaultEntity = GetSelectedObject
-	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
-		$searchProperty = "Number"
-	} elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
-		#TODO: Rename "Part Number" on a german system to "Teilenummer"
-		$searchProperty = "Part Number"
-	}
-	$entitesWithSameErpMaterial = Search-EntitiesByPropertyValue -EntityClassId $vaultEntity._EntityTypeID -PropertyName $searchProperty -SearchValue $ErpMaterial.Number -SearchCondition "IsExactly"
-	if($entitesWithSameErpMaterial) {
-		$entityType = $entitesWithSameErpMaterial[0]._EntityTypeID
-		$filePaths = $entitesWithSameErpMaterial._FullPath
-		$itemNumbers = $entitesWithSameErpMaterial.Number
-		([System.Windows.Forms.MessageBox]::Show("The ERP item '$($erpMaterial.Number)' is already linked to other $($entityType)s: `n $($filePaths+$itemNumbers)", "ERP Item is already used in Vault", "Ok", "Warning")	) | Out-Null
-		return;
-	}
-
-    if ($erpMaterial) {
-        $answer = [System.Windows.Forms.MessageBox]::Show("Do you really want to link the item '$($erpMaterial.Number)'?", "Link ERP Item", "YesNo", "Question")	
-        if ($answer -eq "Yes") {
-            SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
-			RefreshView
-            #[System.Windows.Forms.MessageBox]::Show("The object has been linked")
-        }       
-    }
 }
 
 function SetEntityProperties($erpMaterial, $vaultEntity) {
@@ -163,9 +221,10 @@ function SetEntityProperties($erpMaterial, $vaultEntity) {
 			"_Description(Item,CO)" = $erpMaterial.Description
 		}
 		$vaultEntity._Number = $erpMaterial.Number
-	} elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+	}
+ elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
 		Update-VaultFile -File $vaultEntity._FullPath -Properties @{
-			"_PartNumber" = $erpMaterial.Number
+			"_PartNumber"  = $erpMaterial.Number
 			"_Description" = $erpMaterial.Description
 		}
 		$vaultEntity._PartNumber = $erpMaterial.Number
@@ -206,7 +265,7 @@ function CompareErpMaterial($erpMaterial, $vaultEntity) {
 		}
 	}
 
-	return $differences -join '\n'
+	return $differences -join '`n'
 }
 
 function PrepareErpBomHeader($erpBomHeader, $vaultEntity) {
@@ -232,10 +291,18 @@ function PrepareErpBomRow($erpBomRow, $parentNumber, $vaultEntity) {
 	$erpBomRow.Position = [int]$vaultEntity.'Bom_PositionNumber'
 	if ($vaultEntity.Children) {
 		$erpBomRow.Type = "Assembly"
-	} else {
+	}
+ else {
 		$erpBomRow.Type = "Part"
 	}
 	$erpBomRow.Quantity = [double]$vaultEntity.'Bom_Quantity'
 
 	return $erpBomRow
+}
+
+function GoToErpBom {
+	$bom = $dswindow.FindName("DataGrid").DataContext
+	if ($bom.Link) {
+		Start-Process -FilePath $bom.Link
+	}
 }

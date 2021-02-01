@@ -1,6 +1,6 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="powerGate ERP Search" Height="550" Width="800" WindowStartupLocation="CenterOwner" Topmost="True">
+        Title="powerGate ERP Search" Height="550" Width="800" WindowStartupLocation="CenterOwner" Topmost="True" x:Name="MainWindow">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
 
@@ -77,8 +77,26 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </Window.Resources>    
-    
+
+        <ContextMenu x:Key="CellMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+            <MenuItem x:Name="AddFilterMenuItem" Header="Add Column Filter" 
+                      CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget}">
+                <MenuItem.Icon>
+                    <Image Source="C:\ProgramData\coolOrange\powerGate\UI\Filter.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="RemoveFilterMenuItem" Header="Remove Column Filter" 
+                      CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget}" >
+                <MenuItem.Icon>
+                    <Image Source="C:\ProgramData\coolOrange\powerGate\UI\DeleteFilter.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+        <Style x:Key="DefaultCellStyle" TargetType="{x:Type DataGridCell}">
+            <Setter Property="ContextMenu" Value="{StaticResource CellMenu}" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -142,12 +160,12 @@
                         <Label Content="Blocked" Grid.Row="1"/>
                         <CheckBox Grid.Column="1" Grid.Row="1" IsChecked="{Binding IsBlocked, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <Label Content="Weight" Grid.Row="2"/>
-                        <TextBox Text="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
+                        <Label Content="Item Category Code" Grid.Row="2"/>
+                        <ComboBox Name="CategoryListSearch" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Category, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
                         <Label Content="Storage Area / Shelf" Grid.Column="3" Grid.Row="2"/>
                         <TextBox Text="{Binding Shelf, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Grid.Row="2"/>
-                        <Label Content="Dimensions" Grid.Row="3"/>
-                        <TextBox Text="{Binding Dimensions, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="3"/>
+                        <Label Content="Search Description" Grid.Row="3"/>
+                        <TextBox Text="{Binding SearchDescription, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="3"/>
                     </Grid>
                 </Expander>
             </Grid>
@@ -163,20 +181,20 @@
                 </Grid.ColumnDefinitions>
                 <Button Name="Search" Content="Search..." Grid.Column="0" Width="100" DataContext="{Binding DataContext}" HorizontalAlignment="Left"/>
                 <Button Name="Clear" Content="Clear" Grid.Column="1" Width="100" DataContext="{Binding DataContext}" />
-                <CheckBox Name="CaseSensitive" IsChecked="True" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">Case sensitive</CheckBox>
+                <CheckBox Name="CaseSensitive" IsChecked="False" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">Case sensitive</CheckBox>
                 <Label Content="Max records" Grid.Column="4" HorizontalAlignment="Right"/>
                 <ComboBox Name="NumberOfRecords" Grid.Column="5" Width="50"/>
             </Grid>
 
-            <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" x:Name="SearchResults" Background="White" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto">
+            <DataGrid CellStyle="{StaticResource DefaultCellStyle}" Grid.Row="2" Grid.Column="0" x:Name="SearchResults" Background="White" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
                     <DataGridTextColumn Binding="{Binding Description}" Header="Description"/>
                     <DataGridTextColumn Binding="{Binding IsBlocked}" Header="Blocked"/>
                     <DataGridTextColumn Binding="{Binding UnitOfMeasure}" Header="Base UOM"/>
                     <DataGridTextColumn Binding="{Binding Type}" Header="Type"/>
-                    <DataGridTextColumn Binding="{Binding Weight}" Header="Weight"/>
-                    <DataGridTextColumn Binding="{Binding Dimensions}" Header="Dimensions"/>
+                    <DataGridTextColumn Binding="{Binding Category}" Header="Category Code"/>
+                    <DataGridTextColumn Binding="{Binding SearchDescription}" Header="Search Description"/>
                     <DataGridTextColumn Binding="{Binding Shelf}" Header="Storage Area / Shelf"/>
                 </DataGrid.Columns>
             </DataGrid>

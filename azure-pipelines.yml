@@ -31,7 +31,7 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/property:Major=$(buildMajor);Minor=$(buildMinor);Build=$(Build.BuildNumber);Revision=$(buildRevision);RunWixToolsOutofProc=true'
+    msbuildArgs: '/property:Major=$(buildMajor);Minor=$(buildMinor);Build=$(Build.BuildNumber);Revision=$(buildRevision);RunWixToolsOutofProc=true;VersionAssembly=$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
 
 - task: CopyFiles@2
   inputs:

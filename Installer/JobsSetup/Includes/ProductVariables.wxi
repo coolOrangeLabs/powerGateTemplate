@@ -5,10 +5,10 @@
 	<?define IconName="..\Resources\coolOrange.ico"?>
 	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
   <?define VaultYear="Vault 2020"?>
-  <?define PName="coolOrange ErpService powerJobs Jobs"?>
+  <?define PName="ErpService powerJobs Jobs"?>
   <?define PShortVersion="$(var.Major).$(var.Minor)"?>
   <?define CompanyDirectory="coolOrange"?>
-	
+
 	<?if $(var.Platform) = x64 ?>
 	  <?define Win64 = "yes" ?>
 	  <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>

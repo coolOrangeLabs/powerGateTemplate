@@ -4,10 +4,10 @@
   <?define WikiLink="https://github.com/coolOrangeLabs/powerGateTemplate/wiki"?>
 	<?define IconName="..\Resources\coolOrange.ico"?>
 	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
-	<?define PName="coolOrange ErpService powerGate Plugin"?>
+	<?define PName="ErpService powerGate Plugin"?>
 	<?define PShortVersion="$(var.Major).$(var.Minor)"?>
   <?define CompanyDirectory="coolOrange"?>
-	
+
 	<?if $(var.Platform) = x64 ?>
 	  <?define Win64 = "yes" ?>
 	  <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>

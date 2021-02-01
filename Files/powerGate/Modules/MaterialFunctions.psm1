@@ -1,16 +1,26 @@
 ﻿$materialEntitySet = "Materials"
 $materialEntityType = "Material"
 
+function GetEntityNumber($entity) {
+	if ($entity._EntityTypeID -eq "FILE") {
+		$number = $entity._PartNumber
+	}
+	else {
+		$number = $entity._Number
+	}
+	return $number
+}
+
 function GetErpMaterial($number) {
 	Log -Begin
-	if ([string]::IsNullOrEmpty($number)) { 
+	if (-not $number) { 
 		$erpMaterial = $false
 		Add-Member -InputObject $erpMaterial -Name "_ErrorMessage" -Value "Number is empty!" -MemberType NoteProperty -Force
 		return $erpMaterial
 	}
 	$number = $number.ToUpper()
 	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Key @{ Number = $number }
-	$erpMaterial = CheckResponse -entity $erpMaterial
+	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial
 	
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $false -MemberType NoteProperty -Force
 	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $true -MemberType NoteProperty -Force	
@@ -24,7 +34,7 @@ function NewErpMaterial {
 
 	#TODO: Property default values for material creation
 	$erpMaterial.UnitOfMeasure = "PCS"
-	$erpMaterial.Type = "Service"
+	$erpMaterial.Type = "Inventory"
 
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $true -MemberType NoteProperty -Force
 	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $false -MemberType NoteProperty -Force
@@ -46,7 +56,7 @@ function CreateErpMaterial($erpMaterial) {
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Add-ErpObject -EntitySet $materialEntitySet -Properties $erpMaterial
-	$erpMaterial = CheckResponse -entity $erpMaterial
+	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
 	Log -End
 	return $erpMaterial
 }
@@ -58,7 +68,7 @@ function UpdateErpMaterial($erpMaterial) {
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Update-ERPObject -EntitySet $materialEntitySet -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
-	$erpMaterial = CheckResponse -entity $erpMaterial
+	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
 	Log -End
 	return $erpMaterial
 }

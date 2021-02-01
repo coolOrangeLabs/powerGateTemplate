@@ -3,7 +3,7 @@ $materialEntityType = "Material"
 
 function SearchErpMaterials ($filter, $top = 100) {
 	$erpMaterials = Get-ERPObjects -EntitySet $materialEntitySet -Filter $filter -Top $top
-	$erpMaterials = CheckResponse -entity $erpMaterials
+	$erpMaterials = Edit-ResponseWithErrorMessage -Entity $erpMaterials
 	return $erpMaterials
 }
 
@@ -21,6 +21,7 @@ function OpenErpSearchWindow {
     $searchWindow.FindName("NumberOfRecords").SelectedValue = "100"  
     $searchWindow.FindName("UomListSearch").ItemsSource = GetUnitOfMeasuresList -withBlank $true
     $searchWindow.FindName("MaterialTypeListSearch").ItemsSource = GetMaterialTypeList -withBlank $true
+    $searchWindow.FindName("CategoryListSearch").ItemsSource = GetCategoryList -withBlank $true
 
     $searchWindow.FindName("SearchCriteria").Add_KeyUp( {
         param ($sender, $e)
@@ -28,7 +29,8 @@ function OpenErpSearchWindow {
             ExecuteErpSearch 
         }
     })
-    
+
+    <#
     $searchWindow.FindName("SearchResults").Add_CopyingRowClipboardContent( {
         param ($sender, $e)
         $propName = $sender.CurrentCell.Column.SortMemberPath
@@ -38,34 +40,53 @@ function OpenErpSearchWindow {
         $e.ClipboardRowContent.Clear()
         $e.ClipboardRowContent.Add($clip);
     })
-    
-    $searchWindow.FindName("SearchResults").add_MouseDoubleClick( {
-        param ($sender, $args)
-        $dataGrid = $sender
-        $key = $dataGrid.CurrentColumn.SortMemberPath
-        $value = $dataGrid.SelectedItem.$key
-        $dataSource = $searchWindow.FindName("SearchCriteria").DataContext
-        $searchableFields = GetSearchableFieldsList
-
-        if ($value -ne "" -and $null -ne $value -and $key -in $searchableFields.Key) {
-            $dataSource.$key = $value;
-            $searchWindow.FindName("SearchCriteria").DataContext = $null
-            $searchWindow.FindName("SearchCriteria").DataContext = $dataSource
-            ExecuteErpSearch
-        }
-    })
+    #>
 
     $searchWindow.FindName("Search").add_click( {
+        param ($sender, $e)
+
         ExecuteErpSearch
     })
 
     $searchWindow.FindName("Clear").add_click( {
+        param ($sender, $e)
+
         $searchCriteria = New-ERPObject -EntityType $materialEntityType
         $searchWindow.FindName("SearchCriteria").DataContext = $searchCriteria
         $searchWindow.FindName("SearchResults").ItemsSource = $null
         $searchWindow.FindName("RecordsFound").Content = ""
     })
+
+    $searchWindow.FindName("AddFilterMenuItem").add_Click( {
+        param ($sender, $e)
+
+        $cell = $sender.CommandParameter
+        $column = $cell.Column
+        $field = $column.SortMemberPath
+        $cellContent = $cell.Content
+        $value = $cellContent.Text
+        
+        ApplyFilter -key $field -value $value
+    })
+
+    $searchWindow.FindName("RemoveFilterMenuItem").add_Click( {
+        param ($sender, $e)
+            
+        $cell = $sender.CommandParameter
+        $column = $cell.Column
+        $field = $column.SortMemberPath            
+
+        ApplyFilter -key $field -value $null
+    })
+
+    $searchWindow.FindName("SearchResults").add_MouseDoubleClick( {
+        param ($sender, $e)
+
+        CloseErpSearchWindow
+    })
+
     Log -End
+    
     if ($searchWindow.ShowDialog() -eq "OK") {
         $material = $searchWindow.FindName("SearchResults").SelectedItem
         return $material
@@ -81,30 +102,39 @@ function CloseErpSearchWindow {
         $searchWindow.DialogResult = "OK"
         $searchWindow.Close()        
     } else {
-        Show-MessageBox -message "An item needs to be selected to proceed!" -icon "Hand"
+        ShowMessageBox -Message "An item needs to be selected to proceed!" -Icon "Hand" -Title "powerGate ERP - Link Item"
     }
     Log -End
 }
 
+function ApplyFilter($key, $value) {
+    $dataSource = $searchWindow.FindName("SearchCriteria").DataContext
+    $dataSource.$key = $value;
+    $searchWindow.FindName("SearchCriteria").DataContext = $null
+    $searchWindow.FindName("SearchCriteria").DataContext = $dataSource
+    ExecuteErpSearch
+}
+
 function ExecuteErpSearch {
     Log -Begin
+    $dsWindow.Cursor = "Wait"
     $dsDiag.Clear()
     $searchCriteria = $searchWindow.FindName("SearchCriteria").DataContext
     $CaseSensitive = $searchWindow.FindName("CaseSensitive").IsChecked
     $topa = $searchWindow.FindName("NumberOfRecords").SelectedValue
     $filter = ConvertSearchCriteriaToFilter -SearchCriteria $searchCriteria -CaseSensitive $CaseSensitive
-    $dsDiag.Trace("flilter = $filter")
+    $dsDiag.Trace("filter = $filter")
     $results = SearchErpMaterials -filter $filter -top $topa
-    if ($results) {
-        $searchWindow.FindName("SearchResults").ItemsSource = @($results) #this is because PowerShell transforms one result into a single object instead of keeping it as a list of one element
-        $searchWindow.FindName("RecordsFound").Content = "Results found: $(@($results).Count)"
-    }
-    else {
+    $dsWindow.Cursor = "Arrow"
+    if (-not $results -or $false -eq $results) {
         $searchWindow.FindName("SearchResults").ItemsSource = $null
         $searchWindow.FindName("RecordsFound").Content = "Results found: 0"
         if ($results._ErrorMessage) {
-            #Show-MessageBox -message $results._ErrorMessage -icon "Error"
+            ShowMessageBox -Message $results._ErrorMessage -Icon "Error" -Title "powerGate ERP - Search"
         }
+    } else {
+        $searchWindow.FindName("SearchResults").ItemsSource = @($results) #this is because PowerShell transforms one result into a single object instead of keeping it as a list of one element
+        $searchWindow.FindName("RecordsFound").Content = "Results found: $(@($results).Count)"
     }
     Log -End
 }

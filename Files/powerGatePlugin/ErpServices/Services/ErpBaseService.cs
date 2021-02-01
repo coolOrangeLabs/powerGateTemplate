@@ -8,7 +8,7 @@ using powerGateServer.SDK.Helper;
 
 namespace ErpServices.Services
 {
-    public abstract class ErpBaseService<T> : ServiceMethod<T> 
+    public abstract class ErpBaseService<T> : ServiceMethod<T>
     {
         protected IErpManager ErpManager;
 
@@ -29,7 +29,7 @@ namespace ErpServices.Services
 
                 if (!Enum.TryParse(whereToken.PropertyName, out ErpSearchProperty searchProperty))
                 {
-                    Log.WarnFormat("Search query for property name '{0}' is not supported by ERP, therefore making bigger search in order to filter the values!", searchValue);
+                    Log.WarnFormat("Search query for property name '{0}' is not supported by ERP, therefore make a search with other properties in order to filter the values!", searchValue);
                     continue;
                 }
 

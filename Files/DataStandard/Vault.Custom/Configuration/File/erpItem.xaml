@@ -70,8 +70,9 @@
         <Grid Grid.Row="0" Grid.Column="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="114" />
-                <ColumnDefinition Width="114" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
             <Label Margin="14,0,0,0" FontSize="14" FontWeight="Medium" VerticalAlignment="Center">
                 <Label.Style>
@@ -86,20 +87,21 @@
                 </Label.Style>
             </Label>
 
-            <Button Grid.Row="0" Grid.Column="1" Content="Link..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" HorizontalAlignment="Right" Margin="0,0,14,0" />
+            <Button Grid.Row="0" Grid.Column="1" x:Name="LinkMaterialButton" Content="Link ERP Item..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
             <!-- Visibility="{Binding DataContext.IsCreate, ElementName=DataGrid, Converter={StaticResource BooleanToVisibility}}" -->
-            <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="100" HorizontalAlignment="Right" Margin="0,0,14,0" >
+            <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" >
                 <Button.Style>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                        <Setter Property="Content" Value="Create"/>
+                        <Setter Property="Content" Value="Create ERP Item"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding DataContext.IsUpdate, ElementName=DataGrid}" Value="True">
-                                <Setter Property="Button.Content" Value="Update" />
+                                <Setter Property="Button.Content" Value="Update ERP Item" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </Button.Style>            
+                </Button.Style>
             </Button>
+            <Button Grid.Row="0" Grid.Column="3" x:Name="GoToMaterialButton" Content="Open Item in ERP..." Command="{Binding PsCmd[GoToErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
         </Grid>
 
         <Rectangle Grid.Row="1">
@@ -182,37 +184,15 @@
                             <ColumnDefinition MinWidth="100" Width="*"/>
                         </Grid.ColumnDefinitions>
 
+                        <Label Content="Item Category Code" Grid.Column="0" Grid.Row="0" />
+                        <ComboBox Name="Category" SelectedValue="{Binding Category}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1" Grid.Row="0" 
+                                  ItemsSource="{Binding DataContext.PsList[GetCategoryList], ElementName=MainWindow}" />
 
-                        <Label Content="Weight" Grid.Column="0" Grid.Row="0" />
-                        <TextBox Text="{Binding Weight}" Grid.Column="1" Grid.Row="0" />
-                        <Label Content="Dimensions" Grid.Column="0" Grid.Row="1" />
-                        <TextBox Text="{Binding Dimensions}" Grid.Column="1" Grid.Row="1" />
+                        <Label Content="Search Description" Grid.Column="0" Grid.Row="1" />
+                        <TextBox Text="{Binding SearchDescription}" Grid.Column="1" Grid.Row="1" />
 
                         <Label Content="Storage Area / Shelf" Grid.Column="3" Grid.Row="0" />
                         <TextBox Text="{Binding Shelf}" Grid.Column="4" Grid.Row="0" />
-                    </Grid>
-                </GroupBox>
-                <GroupBox Header="Purchasing Data" Grid.Row="2" Visibility="{Binding IsVendorSpecified, Converter={StaticResource BooleanToVisibility}}">
-                    <Grid IsEnabled="False">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="125" />
-                            <ColumnDefinition MinWidth="100" Width="*"/>
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="125" />
-                            <ColumnDefinition MinWidth="100" Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Vendor Number" Grid.Column="0" Grid.Row="0" />
-                        <TextBox Text="{Binding VendorNumber}" Grid.Column="1" Grid.Row="0" />
-                        <Label Content="Vendor Name" Grid.Column="0" Grid.Row="1" />
-                        <TextBox Text="{Binding VendorName}" Grid.Column="1" Grid.Row="1" />
-                        <Label Content="Vendor Item Number" Grid.Column="3" Grid.Row="0" />
-                        <TextBox Text="{Binding VendorItemNumber}" Grid.Column="4" Grid.Row="0" />
-                        <Label Content="Cost" Grid.Column="3" Grid.Row="1" />
-                        <TextBox Text="{Binding Cost, StringFormat=C}" Grid.Column="4" Grid.Row="1" />
                     </Grid>
                 </GroupBox>
             </Grid>

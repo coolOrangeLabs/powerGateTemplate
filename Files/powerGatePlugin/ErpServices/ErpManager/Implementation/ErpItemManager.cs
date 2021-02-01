@@ -34,7 +34,7 @@ namespace ErpServices.ErpManager.Implementation
             Log.Info(">> GetNextNumber >>");
             var nextNumber = "500000";
 
-            return ExecuteOnDatabase(delegate(LiteDatabase database)
+            return ExecuteOnDatabase(delegate (LiteDatabase database)
             {
                 var collection = database.GetCollection<Material>();
 

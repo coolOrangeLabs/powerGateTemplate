@@ -19,7 +19,8 @@ namespace ErpServices.Metadata
         public double Weight { get; set; }
         public string Dimensions { get; set; }
         [BsonIgnore]
-        public bool IsVendorSpecified {
+        public bool IsVendorSpecified
+        {
             get => !string.IsNullOrEmpty(VendorNumber);
             set => _ = value;
         }
@@ -27,5 +28,11 @@ namespace ErpServices.Metadata
         public string VendorName { get; set; }
         public string VendorItemNumber { get; set; }
         public decimal Cost { get; set; }
+        public string SearchDescription { get; set; }
+        public string Link
+        {
+            get => "https://www.coolorange.com/en-us/connect.html";
+            set => _ = value;
+        }
     }
 }

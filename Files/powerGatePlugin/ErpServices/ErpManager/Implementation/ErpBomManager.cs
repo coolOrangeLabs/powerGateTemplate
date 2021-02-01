@@ -10,10 +10,10 @@ namespace ErpServices.ErpManager.Implementation
     {
         public BomHeader GetBomWithChildrenByNumber(string number)
         {
-            return ExecuteOnDatabase(delegate(LiteDatabase database)
+            return ExecuteOnDatabase(delegate (LiteDatabase database)
             {
                 var bomHeader = database.GetCollection<BomHeader>().Find(header => header.Number == number).FirstOrDefault();
-                if(bomHeader != null)
+                if (bomHeader != null)
                     bomHeader.BomRows = GetBomRowsByHeaderNumber(bomHeader.Number);
                 return bomHeader;
             });

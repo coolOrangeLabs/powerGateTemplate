@@ -21,3 +21,5 @@ Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf
 
 $document = Get-ERPObject -EntitySet "Documents" -Keys @{Number="0816"}
 Get-ERPMedia -EntitySet "Documents" -Keys @{Number="0816"} -File "C:\TEMP\Download.pdf"
+
+$categories = Get-ERPObjects -EntitySet "Categories"

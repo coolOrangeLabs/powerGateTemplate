@@ -12,6 +12,6 @@
 	<String Id="ResumeDlg_Title" >[ProductName] [ProductVersion] Setup</String>
 	<String Id="ProgressDlg_Title" >[ProductName] [ProductVersion] Setup</String>
 	<String Id="ProgressDlgTitleInstalling" >{\CoolOrange_Dialog_Title}Installing [ProductName].</String>
-	<String Id="WelcomeEulaDlgTitle" >{\CoolOrange_Dialog_Title}Please read the [ProductName] License Agreement.</String>
-	<String Id="WelcomeEulaDlg_Title" >[ProductName] [ProductVersion] Setup</String>
+  <String Id="WelcomeEulaDlgTitle" >{\CoolOrange_Dialog_Title}Please read the [ProductName] License Agreement.</String>
+  <String Id="WelcomeEulaDlg_Title" >[ProductName] [ProductVersion] Setup</String>
 </WixLocalization>

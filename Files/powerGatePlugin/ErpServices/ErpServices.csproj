@@ -59,9 +59,12 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Services" />
     <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Discovery" />
     <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Metadata\Category.cs" />
     <Compile Include="Metadata\Material.cs" />
     <Compile Include="Metadata\BomHeader.cs" />
     <Compile Include="Metadata\BomRow.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="ErpManager\Implementation\ErpItemManager.cs" />
     <Compile Include="ErpManager\Implementation\ErpManager.cs" />
     <Compile Include="ErpManager\Interfaces\IErpManager.cs" />
+    <Compile Include="Services\Categories.cs" />
     <Compile Include="Services\BomRows.cs" />
     <Compile Include="Services\BomHeaders.cs" />
     <Compile Include="Metadata\Document.cs" />
@@ -93,6 +97,7 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\Resources\BuildCommon.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
