@@ -32,17 +32,6 @@ function GetSelectedObject {
 	return $entity
 }
 
-function RefreshView {
-	$entity = GetSelectedObject
-	if ($null -eq $entity) {
-		return
-	}
-	elseif ($selectedObject.TypeId.SelectionContext -eq "ItemMaster") {
-		$entity = Get-VaultItem -ItemId $selectedObject.Id
-	}
-	return $entity
-}
-
 function InitBomTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
