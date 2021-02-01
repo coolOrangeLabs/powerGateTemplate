@@ -8,7 +8,7 @@ using powerGateServer.SDK.Helper;
 
 namespace ErpServices.Services
 {
-    public abstract class ErpBaseService<T> : ServiceMethod<T> 
+    public abstract class ErpBaseService<T> : ServiceMethod<T>
     {
         protected IErpManager ErpManager;
 

@@ -10,8 +10,10 @@ using powerGateServer.SDK.Helper;
 
 namespace ErpServices.Services
 {
-    public class BomRows :  ErpBaseService<BomRow>
+    public class BomRows : ErpBaseService<BomRow>
     {
+        static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public override string Name => "BomRows";
 
         public BomRows(IErpManager erpManager) : base(erpManager)
@@ -26,7 +28,7 @@ namespace ErpServices.Services
                 var childNumber = expression.GetWhereValuesAsString("ChildNumber");
                 Log.InfoFormat("Single query for bom row, header number {0} and child number", parentNumber, childNumber);
                 var bomRow = ErpManager.GetBomRowByNumber(parentNumber, childNumber);
-                if(bomRow != null)
+                if (bomRow != null)
                     return new[] { bomRow };
                 return Enumerable.Empty<BomRow>();
             }
