@@ -7,20 +7,18 @@ function CheckVaultBom($entity) {
     }
 }
 
-function Add-VaultRestrictionWhenErpItemNotExists {
-    param($ErpMaterial)
+function Verify-VaultRestrictionWhenErpItemNotExists {
+    param($ErpMaterial, $VaultEntity)
     if (-not $erpMaterial -or $false -eq $erpMaterial) {
-        $restrictMessage = "An item with the number '$($file._PartNumber)' does not exist in the ERP system."
-        Add-VaultRestriction -EntityName $file._Name -Message $restrictMessage
-        return $true
+        $entityNumber = GetEntityNumber -Entity $VaultEntity
+        throw "An item with the number '$($entityNumber)' does not exist in the ERP system."
     }
 }
 
-function Add-VaultRestrictionWhenErpBomIsNotSynced {
+function Verify-VaultRestrictionWhenErpBomIsNotSynced {
     param(
         $Entity # Can be a powerVault FILE or Vault object
-    )
-	
+    )	
     $bomRows = GetVaultBomRows -Entity $Entity
     if (-not $bomRows) { continue }
 
@@ -30,13 +28,11 @@ function Add-VaultRestrictionWhenErpBomIsNotSynced {
     else {
         $Entity.Children = $bomRows
     }
-	
     try {
         CheckVaultBom $Entity | Out-Null
     }
-    catch {
+    catch {        
         $restrictMessage = "$($_)! Please open the BOM dialog"
-        Add-VaultRestriction -EntityName $Entity._Name -Message $restrictMessage
-        return $true
+        throw $restrictMessage
     }
 }

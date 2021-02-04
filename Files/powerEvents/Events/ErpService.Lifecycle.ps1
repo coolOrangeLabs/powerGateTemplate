@@ -21,12 +21,20 @@ function RestrictFileRelease($files) {
 		foreach ($file in $filesToCheck) {	
 			$def = $defs | Where-Object { $_.DispName -eq $file._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $file._NewState }
-			if ($state.ReleasedState) {
-				$addedErpItemNotExistsRestriction = Add-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial
-				if ($addedErpItemNotExistsRestriction) {
-					continue
+			if ($state.ReleasedState) {				
+				$erpMaterial = GetErpMaterial -Number $item._PartNumber
+				try {
+					Verify-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial -VaultEntity $file
+					
+					# ToDO: When ProAlpha is used then enable this line
+					# Verify-VaultRestrictionWhenProAlphaStatusIsNotOk -ErpMaterial $erpMaterial
+					
+					Verify-VaultRestrictionWhenErpBomIsNotSynced -Entity $file
 				}
-				$addedErpBomNotSyncedRestriction = Add-VaultRestrictionWhenErpBomIsNotSynced -Entity $file
+				catch {
+					$restrictMessage = "$($_)! Please open the BOM dialog"
+					Add-VaultRestriction -EntityName $file._Name -Message $restrictMessage
+				}
 			}
 		}
 	}
@@ -49,12 +57,23 @@ function RestrictItemRelease($items) {
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $item._NewState }
 			if ($itemIncludesFilesToCheck -and $state.ReleasedState) {
 				$erpMaterial = GetErpMaterial -Number $item._Number
-				$addedErpItemNotExistsRestriction = Add-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial
-				if ($addedErpItemNotExistsRestriction) {
-					continue
+				try {
+					Verify-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial -VaultEntity $item
+					
+					# ToDO: When ProAlpha is used then enable this line
+					# Verify-VaultRestrictionWhenProAlphaStatusIsNotOk -ErpMaterial $erpMaterial
+					
+					# ToDO: When SAP is used then enable this line
+					# Verify-VaultRestrictionWhenSapChangeNumberIsNotOk -ErpMaterial $erpMaterial
+					
+
+					Verify-VaultRestrictionWhenErpBomIsNotSynced -Entity $item
 				}
-				$addedErpBomNotSyncedRestriction = Add-VaultRestrictionWhenErpBomIsNotSynced -Entity $item
-			}
+				catch {
+					$restrictMessage = "$($_)! Please open the BOM dialog"
+					Add-VaultRestriction -EntityName $item._Number -Message $restrictMessage
+				}
+   }
 		}		
 	}
  catch {
