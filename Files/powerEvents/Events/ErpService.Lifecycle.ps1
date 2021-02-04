@@ -12,15 +12,6 @@
 $supportedPdfExtensions = @("idw", "dwg")
 $requiresErpItemExtensions = @("iam", "ipn", "ipt")
 
-function CheckVaultBom($entity) {
-	$differences = CompareErpBom -EntityBom @($entity)
-	foreach ($diff in $differences) {
-		if ($diff.Status -ne "Identical" -and $diff.IsHeader) {
-			throw $diff.Message
-		}
-	}
-}
-
 Register-VaultEvent -EventName UpdateFileStates_Restrictions -Action 'RestrictFileRelease'
 function RestrictFileRelease($files) {
 	Log -Begin
@@ -31,30 +22,11 @@ function RestrictFileRelease($files) {
 			$def = $defs | Where-Object { $_.DispName -eq $file._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $file._NewState }
 			if ($state.ReleasedState) {
-				$erpMaterial = GetErpMaterial $file._PartNumber
-				if (-not $erpMaterial -or $false -eq $erpMaterial) {
-					$restrictMessage = "An item with the number '$($file._PartNumber)' does not exist in the ERP system."
-					Add-VaultRestriction -EntityName $file._Name -Message $restrictMessage
+				$addedErpItemNotExistsRestriction = Add-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial
+				if ($addedErpItemNotExistsRestriction) {
 					continue
 				}
-
-				$bomRows = GetVaultBomRows -Entity $file
-				if (-not $bomRows) { continue }
-
-				if (-not $file.Children) {
-					Add-Member -InputObject $file -Name "Children" -Value $bomRows -MemberType NoteProperty -Force
-				}
-				else {
-					$file.Children = $bomRows
-				}
-				
-				try {
-					CheckVaultBom $file | Out-Null
-				}
-				catch {
-					$restrictMessage = "$($_)! Please open the BOM dialog"
-					Add-VaultRestriction -EntityName $file._Name -Message $restrictMessage
-				}
+				$addedErpBomNotSyncedRestriction = Add-VaultRestrictionWhenErpBomIsNotSynced -Entity $file
 			}
 		}
 	}
@@ -77,29 +49,11 @@ function RestrictItemRelease($items) {
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $item._NewState }
 			if ($itemIncludesFilesToCheck -and $state.ReleasedState) {
 				$erpMaterial = GetErpMaterial -Number $item._Number
-				if (-not $erpMaterial -or $false -eq $erpMaterial) {
-					$restrictMessage = "An item with the number '$($item._Number)' does not exist in the ERP system."
-					Add-VaultRestriction -EntityName ($item._Name) -Message $restrictMessage
+				$addedErpItemNotExistsRestriction = Add-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial
+				if ($addedErpItemNotExistsRestriction) {
 					continue
 				}
-		
-				$bomRows = GetVaultBomRows -Entity $item
-				if (-not $bomRows) { continue }
-
-				if (-not $item.Children) {
-					Add-Member -InputObject $item -Name "Children" -Value $bomRows -MemberType NoteProperty -Force
-				}
-				else {
-					$item.Children = $bomRows
-				}
-				
-				try {
-					CheckVaultBom $item | Out-Null
-				}
-				catch {
-					$restrictMessage = "$($_)! Please open the BOM dialog"
-					Add-VaultRestriction -EntityName $item._Number -Message $restrictMessage
-				}
+				$addedErpBomNotSyncedRestriction = Add-VaultRestrictionWhenErpBomIsNotSynced -Entity $item
 			}
 		}		
 	}
