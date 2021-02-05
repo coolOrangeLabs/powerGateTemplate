@@ -12,6 +12,28 @@
 $supportedPdfExtensions = @("idw", "dwg")
 $requiresErpItemExtensions = @("iam", "ipn", "ipt")
 
+function Verify-ErpForFileOrItem {
+	param(
+		$Entity # Can be a powerVault FILE or Vault object
+	)	
+	Log -Begin
+	$entityNumber = GetEntityNumber -Entity $Entity		
+	$erpMaterial = GetErpMaterial -Number $entityNumber
+	try {
+		Verify-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial -VaultEntity $Entity
+		
+		# ToDO: When ProAlpha is used then enable this line
+		# Verify-VaultRestrictionWhenProAlphaStatusIsNotOk -ErpMaterial $erpMaterial
+		
+		Verify-VaultRestrictionWhenErpBomIsNotSynced -Entity $Entity
+	}
+	catch {
+		$restrictMessage = "$($_)"
+		Add-VaultRestriction -EntityName $entityNumber -Message $restrictMessage
+	}
+	Log -End
+}
+
 Register-VaultEvent -EventName UpdateFileStates_Restrictions -Action 'RestrictFileRelease'
 function RestrictFileRelease($files) {
 	Log -Begin
@@ -21,20 +43,8 @@ function RestrictFileRelease($files) {
 		foreach ($file in $filesToCheck) {	
 			$def = $defs | Where-Object { $_.DispName -eq $file._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $file._NewState }
-			if ($state.ReleasedState) {				
-				$erpMaterial = GetErpMaterial -Number $item._PartNumber
-				try {
-					Verify-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial -VaultEntity $file
-					
-					# ToDO: When ProAlpha is used then enable this line
-					# Verify-VaultRestrictionWhenProAlphaStatusIsNotOk -ErpMaterial $erpMaterial
-					
-					Verify-VaultRestrictionWhenErpBomIsNotSynced -Entity $file
-				}
-				catch {
-					$restrictMessage = "$($_)! Please open the BOM dialog"
-					Add-VaultRestriction -EntityName $file._Name -Message $restrictMessage
-				}
+			if ($state.ReleasedState) {
+				Verify-ErpForFileOrItem -Entity $file
 			}
 		}
 	}
@@ -56,30 +66,14 @@ function RestrictItemRelease($items) {
 			$def = $defs | Where-Object { $_.DispName -eq $item._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $item._NewState }
 			if ($itemIncludesFilesToCheck -and $state.ReleasedState) {
-				$erpMaterial = GetErpMaterial -Number $item._Number
-				try {
-					Verify-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial -VaultEntity $item
-					
-					# ToDO: When ProAlpha is used then enable this line
-					# Verify-VaultRestrictionWhenProAlphaStatusIsNotOk -ErpMaterial $erpMaterial
-					
-					# ToDO: When SAP is used then enable this line
-					# Verify-VaultRestrictionWhenSapChangeNumberIsNotOk -ErpMaterial $erpMaterial
-					
-
-					Verify-VaultRestrictionWhenErpBomIsNotSynced -Entity $item
-				}
-				catch {
-					$restrictMessage = "$($_)! Please open the BOM dialog"
-					Add-VaultRestriction -EntityName $item._Number -Message $restrictMessage
-				}
-   }
-		}		
+				Verify-ErpForFileOrItem -Entity $item		
+			}
+		}
+		catch {
+			Log -Message $_.Exception.Message -MessageBox -LogLevel "ERROR"
+		}
+		Log -End
 	}
- catch {
-		Log -Message $_.Exception.Message -MessageBox -LogLevel "ERROR"
-	}
-	Log -End
 }
 
 Register-VaultEvent -EventName UpdateFileStates_Post -Action 'AddPdfJob'
@@ -97,7 +91,7 @@ function AddPdfJob($files, $successful) {
 			}
 		}
 	}
- catch {
+	catch {
 		Log -Message $_.Exception.Message -MessageBox
 	}
 	Log -End

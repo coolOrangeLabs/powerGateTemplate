@@ -1,18 +1,10 @@
-function CheckVaultBom($entity) {
-    $differences = CompareErpBom -EntityBom @($entity)
-    foreach ($diff in $differences) {
-        if ($diff.Status -ne "Identical" -and $diff.IsHeader) {
-            throw $diff.Message
-        }
-    }
-}
-
 function Verify-VaultRestrictionWhenErpItemNotExists {
     param($ErpMaterial, $VaultEntity)
     if (-not $erpMaterial -or $false -eq $erpMaterial) {
         $entityNumber = GetEntityNumber -Entity $VaultEntity
         throw "An item with the number '$($entityNumber)' does not exist in the ERP system."
     }
+    Log -End
 }
 
 function Verify-VaultRestrictionWhenErpBomIsNotSynced {
@@ -28,11 +20,11 @@ function Verify-VaultRestrictionWhenErpBomIsNotSynced {
     else {
         $Entity.Children = $bomRows
     }
-    try {
-        CheckVaultBom $Entity | Out-Null
+
+    $differences = CompareErpBom -EntityBom @($Entity)
+    $anyHeaderIsDifferent = $differences | where { $_.Status -ne "Identical" -and $_.IsHeader }
+    if ($anyHeaderIsDifferent) {
+        throw "Open the BOM dialog, because the ERP BOM is different then in Vault!"
     }
-    catch {        
-        $restrictMessage = "$($_)! Please open the BOM dialog"
-        throw $restrictMessage
-    }
+    Log -End
 }
