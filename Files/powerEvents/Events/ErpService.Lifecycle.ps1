@@ -45,6 +45,9 @@ function RestrictFileRelease($files) {
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $file._NewState }
 			if ($state.ReleasedState) {
 				Verify-ErpForFileOrItem -Entity $file
+
+				# ToDO: When SAP is used with change numbers then enable the lines below, check in the function if DIR or Material is needed
+				# Verify-SapChangeNumbers -VaultEntity $Entity
 			}
 		}
 	}
