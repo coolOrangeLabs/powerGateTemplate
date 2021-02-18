@@ -1,4 +1,4 @@
-function Verify-VaultRestrictionWhenErpItemNotExists {
+function Test-ErpItemExists {
     param($ErpMaterial, $VaultEntity)
     if (-not $erpMaterial -or $false -eq $erpMaterial) {
         $entityNumber = GetEntityNumber -Entity $VaultEntity
@@ -7,7 +7,7 @@ function Verify-VaultRestrictionWhenErpItemNotExists {
     Log -End
 }
 
-function Verify-VaultRestrictionWhenErpBomIsNotSynced {
+function Test-ErpBomIsSynced {
     param(
         $Entity # Can be a powerVault FILE or Vault object
     )	

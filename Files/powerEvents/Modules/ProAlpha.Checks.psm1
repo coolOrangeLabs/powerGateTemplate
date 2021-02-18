@@ -1,5 +1,5 @@
 
-function Verify-VaultRestrictionWhenProAlphaStatusIsNotOk {
+function Test-ProAlphaStatusIsOk {
     param($ErpMaterial)
 
     Log -Begin
