@@ -72,12 +72,13 @@ function RestrictItemRelease($items) {
 				Test-ErpItemForVaultFileOrVaultItem -Entity $item		
 			}
 		}
-		catch {
-			Log -Message $_.Exception.Message -MessageBox -LogLevel "ERROR"
-		}
-		Log -End
 	}
+	catch {
+		Log -Message $_.Exception.Message -MessageBox -LogLevel "ERROR"
+	}
+	Log -End
 }
+
 
 Register-VaultEvent -EventName UpdateFileStates_Post -Action 'AddPdfJob'
 function AddPdfJob($files, $successful) {
