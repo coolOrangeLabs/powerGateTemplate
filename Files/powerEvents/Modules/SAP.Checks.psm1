@@ -1,4 +1,4 @@
-function Verify-SapChangeNumbers {
+function Test-SapChangeNumbers {
     param(
         $VaultEntity
     )

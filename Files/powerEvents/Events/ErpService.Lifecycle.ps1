@@ -12,7 +12,7 @@
 $supportedPdfExtensions = @("idw", "dwg")
 $requiresErpItemExtensions = @("iam", "ipn", "ipt")
 
-function Verify-ErpForFileOrItem {
+function Test-ErpItemForVaultFileOrVaultItem {
 	param(
 		$Entity # Can be a powerVault FILE or Vault object
 	)	
@@ -20,12 +20,12 @@ function Verify-ErpForFileOrItem {
 	$entityNumber = GetEntityNumber -Entity $Entity		
 	$erpMaterial = GetErpMaterial -Number $entityNumber
 	try {
-		Verify-VaultRestrictionWhenErpItemNotExists -ErpMaterial $erpMaterial -VaultEntity $Entity
+		Test-ErpItemExists -ErpMaterial $erpMaterial -VaultEntity $Entity
 		
 		# ToDO: When ProAlpha is used then enable this line
-		# Verify-VaultRestrictionWhenProAlphaStatusIsNotOk -ErpMaterial $erpMaterial
+		# Test-ProAlphaStatusIsOk -ErpMaterial $erpMaterial
 		
-		Verify-VaultRestrictionWhenErpBomIsNotSynced -Entity $Entity
+		Test-ErpBomIsSynced -Entity $Entity
 	}
 	catch {
 		$restrictMessage = "$($_)"
@@ -44,10 +44,10 @@ function RestrictFileRelease($files) {
 			$def = $defs | Where-Object { $_.DispName -eq $file._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $file._NewState }
 			if ($state.ReleasedState) {
-				Verify-ErpForFileOrItem -Entity $file
+				Test-ErpItemForVaultFileOrVaultItem -Entity $file
 
 				# ToDO: When SAP is used with change numbers then enable the lines below, check in the function if DIR or Material is needed
-				# Verify-SapChangeNumbers -VaultEntity $Entity
+				# Test-SapChangeNumbers -VaultEntity $Entity
 			}
 		}
 	}
@@ -69,7 +69,7 @@ function RestrictItemRelease($items) {
 			$def = $defs | Where-Object { $_.DispName -eq $item._NewLifeCycleDefinition }
 			$state = $def.StateArray | Where-Object { $_.DispName -eq $item._NewState }
 			if ($itemIncludesFilesToCheck -and $state.ReleasedState) {
-				Verify-ErpForFileOrItem -Entity $item		
+				Test-ErpItemForVaultFileOrVaultItem -Entity $item		
 			}
 		}
 		catch {
