@@ -1,23 +1,27 @@
 ﻿$global:ErrorActionPreference = "Stop"
 $commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
 $modules = Get-ChildItem -path $commonModulePath -Recurse -Filter *.ps*
-$modules | ForEach-Object { Import-Module -Name $_.FullName -Global }	
-$global:loggingSettings.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Inventor-powerGate.txt"
+$modules | ForEach-Object { Import-Module -Name $_.FullName -Global }
+
+$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Inventor-powerGate.log"
+Set-LogFilePath -Path $logPath
+
 
 ConnectToErpServerWithMessageBox
 
 function OpenErpInsertWindow {
 	#TODO: Show Search dialog to get item number
 	$erpMaterial = OpenErpSearchWindow
-    if ($erpMaterial) {
-        $number = $erpMaterial.Number
+	if ($erpMaterial) {
+		$number = $erpMaterial.Number
 		if ($prop["_FileExt"].Value -eq ".IAM") {
 			try {
 				$matrix = $Application.TransientGeometry.CreateMatrix()
 				$occur = $Document.ComponentDefinition.Occurrences
 				$occur.AddVirtual($number, $matrix)
 				ShowMessageBox -Message "Virtual Component '$number' successfully inserted." -Title "powerGate ERP - Virtual Component" -Icon "Information" | Out-Null
-			} catch {
+			}
+			catch {
 				ShowMessageBox -Message "'$number' already exists. Please choose another ERP item." -Title "powerGate ERP - Virtual Component" -Icon "Warning"  | Out-Null
 			}
 		}
@@ -26,17 +30,17 @@ function OpenErpInsertWindow {
 			$prop["Raw_Quantity"].Value = 1
 			ShowMessageBox -Message "Raw Material '$number' successfully inserted." -Title "powerGate ERP - Raw Material" -Icon "Information" | Out-Null
 		}     
-    }
+	}
 }
 
 function OpenErpMaterialWindow {
 	[xml]$windowXaml = Get-Content "C:\ProgramData\coolOrange\powerGate\UI\ContainerWindow.xaml"
-	$reader=(New-Object System.Xml.XmlNodeReader $windowXaml)
-	$global:window=[Windows.Markup.XamlReader]::Load($reader)	
+	$reader = (New-Object System.Xml.XmlNodeReader $windowXaml)
+	$global:window = [Windows.Markup.XamlReader]::Load($reader)	
 
 	[xml]$userControlXaml = Get-Content $PSScriptRoot.Replace('\CAD.Custom\addins', '\Vault.Custom\Configuration\File\erpItem.xaml')
-	$reader=(New-Object System.Xml.XmlNodeReader $userControlXaml)
-	$global:userControl=[Windows.Markup.XamlReader]::Load($reader)
+	$reader = (New-Object System.Xml.XmlNodeReader $userControlXaml)
+	$global:userControl = [Windows.Markup.XamlReader]::Load($reader)
 
 	$window.FindName("ContentControl").Children.Add($userControl)
 	$window.DataContext = $dsWindow.DataContext
@@ -61,7 +65,8 @@ function InitErpMaterialTab($number) {
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial
 		$goToEnabled = $false
-	} else {
+	}
+ else {
 		$goToEnabled = $true
 	}
 	$userControl.FindName("DataGrid").DataContext = $erpMaterial
@@ -82,7 +87,8 @@ function IsEntityUnlocked {
 	if (Test-Path -Path $fullFileName) {
 		$status = Get-ChildItem $fullFileName
 		return (-not $status.IsReadOnly)		
-	} else {
+	}
+ else {
 		return $true
 	}
 }
@@ -91,7 +97,8 @@ function ValidateErpMaterialTab {
 	$erpMaterial = $userControl.FindName("DataGrid").DataContext
 	if ($erpMaterial.Number) {
 		$entityUnlocked = $true
-	} else {
+	}
+ else {
 		$entityUnlocked = IsEntityUnlocked
 	}
 
@@ -113,14 +120,17 @@ function CreateOrUpdateErpMaterial {
 		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
 		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
 			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
-		} else { 
+		}
+		else { 
 			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
 		}
-	} else {
+	}
+ else {
 		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
 		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
 			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
-		} else { 
+		}
+		else { 
 			ShowMessageBox -Message "$($erpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"  | Out-Null
 			SetEntityProperties -erpMaterial $erpMaterial
 			#InitErpMaterialTab -number $erpMaterial.Number
@@ -140,7 +150,7 @@ function LinkErpMaterial {
 	$erpMaterial = OpenErpSearchWindow
 
 	#TODO: Rename "Part Number" on a german system to "Teilenummer"
-	$existingEntities = Get-VaultFiles -Properties @{"Part Number" = $erpMaterial.Number}
+	$existingEntities = Get-VaultFiles -Properties @{"Part Number" = $erpMaterial.Number }
 	if ($existingEntities) {
 		$message = ""
 		#$existingEntities = $existingEntities | Where-Object { $_.MasterId -ne $vaultEntity.MasterId }
