@@ -1,7 +1,6 @@
 ﻿# WIKI
 # https://github.com/PowershellFrameworkCollective/psframework
 
-# Install-Module PSFramework
 
 function Set-LogFilePath {
     param($Path)
@@ -83,8 +82,14 @@ function Log {
         $log += $Message
     }
     
-    Write-Host "$log"
+    Write-Host $log
 }
+
+# PSFramework Version 1.5.172
+$commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules\PSFramework"
+
+$modules = Get-ChildItem -path $commonModulePath -Recurse -Filter *.ps*
+$modules | ForEach-Object { Import-Module -Name $_.FullName -Global }
 
 $generalLogPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\coolOrange.log"
 Initialize-CoolOrangeLogging -LogPath $generalLogPath
