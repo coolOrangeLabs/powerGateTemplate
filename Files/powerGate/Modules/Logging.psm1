@@ -23,6 +23,7 @@ function Initialize-CoolOrangeLogging {
         InstanceName     = 'MyTask'
         FilePath         = $logPath
         LogRotatePath    = $logPath
+        #Encoding         = "UTF8"
 
         #FilePath         = "$logPath\Test-%Date%.log"
         #LogRotatePath    = "$logPath\Test-*.log"
@@ -79,17 +80,27 @@ function Log {
     }
 
     if ($Message) {
-        $log += $Message
+        $log += [string]$Message
     }
     
-    Write-Host $log
+    if($callStack -and $callStack.count -gt 1 ) {
+        $lastMethod = $callStack[1] 
+        $overrideLogArguments = @{
+            "Message" = ([string]$log)
+            "FunctionName" = $lastMethod.Command
+            "File" = $lastMethod.ScriptName
+            "Line" = $lastMethod.ScriptLineNumber
+            "ModuleName" = $lastMethod.FunctionName
+        }
+        Write-PSFMessage @overrideLogArguments
+    } else {
+        Write-Host [string]$log
+    }
 }
 
 # PSFramework Version 1.5.172
-$commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules\PSFramework"
-
-$modules = Get-ChildItem -path $commonModulePath -Recurse -Filter *.ps*
-$modules | ForEach-Object { Import-Module -Name $_.FullName -Global }
+$commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules\PSFramework\PSFramework"
+Import-Module -Name $commonModulePath -Global -Verbose
 
 $generalLogPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\coolOrange.log"
 Initialize-CoolOrangeLogging -LogPath $generalLogPath
