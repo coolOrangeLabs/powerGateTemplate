@@ -87,7 +87,7 @@ class TextReplacementMappingTable {
         return $vaultValues
     }
     [string] GetSapValue($vaultValue) {
-        Log -Message 'GetSapValue'
+        Write-Host 'GetSapValue'
 
         foreach($mapping in $this.Mappings) {
             if($mapping.VaultValue -ieq $vaultValue) {
@@ -98,7 +98,7 @@ class TextReplacementMappingTable {
         return $null
     }
     [string] GetVaultValue($sapValue) {
-        Log -Message 'GetVaultValue'
+        Write-Host 'GetVaultValue'
         foreach($mapping in $this.Mappings) {
             if($mapping.SapValue -ieq $sapValue) {
                 return $mapping.VaultValue
@@ -148,7 +148,7 @@ function Get-VaultValue {
 
     $vaultValue = $textReplacementMappings[$Table].GetVaultValue($SapValue)
     if(-not $vaultValue) {
-        Log -Message "Couln't find mapping for Vault value '$($SapValue)' in table '$($Table)'"
+        Write-Host "Couln't find mapping for Vault value '$($SapValue)' in table '$($Table)'"
         return $SapValue
     }
 
@@ -171,7 +171,7 @@ function Get-SapValue {
     $sapValue = $mappingTable.GetSapValue($VaultValue)
 
     if(-not $sapValue) {
-        Log -Message "Couldn't find mapping for Vault value '$($VaultValue)' in table '$($Table)'"
+        Write-Host "Couldn't find mapping for Vault value '$($VaultValue)' in table '$($Table)'"
         if($Table -eq [MappingTableNames]::LabOffice)
         {
             $VaultValue = $VaultValue.Trim()
@@ -180,7 +180,7 @@ function Get-SapValue {
         if($Table -eq [MappingTableNames]::StorageCategory)      # issue 154: Comment from 15.10.2020
         {
             $sapValue = "Z_HELSINKI"
-            Log -Message "The default value ""Z_HELSINKI"" is used, because: Couldn't find mapping for Vault value '$($VaultValue)' in table '$($Table) "  
+            Write-Host "The default value ""Z_HELSINKI"" is used, because: Couldn't find mapping for Vault value '$($VaultValue)' in table '$($Table) "  
             Log -End -Message $sapValue 
             return $sapValue
         }

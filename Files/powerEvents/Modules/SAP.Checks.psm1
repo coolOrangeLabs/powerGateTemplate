@@ -73,7 +73,7 @@ function Get-SapValidChangeNumber {
     $leadingZeros = Test-ChangeNumberStartsWithZero -VaultEntity $VaultEntity
     if ($leadingZeros) {
         $message = "SAP Change Number code with leading zeros is not supported by SAP"
-        Log -Message $message
+        Write-Error $message
         throw $message
     }
     
@@ -182,7 +182,7 @@ function GetErpBinaryKey {
         Documentpart    = '001'
         FileName        = $VaultEntity._Name
     }
-    ($key.GetEnumerator() | ForEach-Object { Log -Message "$($_.Key) = $($_.Value)" }) 
+    ($key.GetEnumerator() | ForEach-Object { Write-Host "$($_.Key) = $($_.Value)" }) 
     Log -End
 
     return $key
@@ -199,7 +199,7 @@ function GetErpBasicMaterialKey {
         Material = (Get-SapMaterialNumber -VaultEntity $VaultEntity)
     }
 
-    ($key.GetEnumerator() | ForEach-Object { Log -Message "$($_.Key) = $($_.Value)" }) 
+    ($key.GetEnumerator() | ForEach-Object { Write-Host "$($_.Key) = $($_.Value)" }) 
     Log -End
 
     return $key
@@ -219,7 +219,7 @@ function GetErpMaterialKey {
         ValuationType = ''
     }
 
-    ($key.GetEnumerator() | ForEach-Object { Log -Message "$($_.Key) = $($_.Value)" }) 
+    ($key.GetEnumerator() | ForEach-Object { Write-Host "$($_.Key) = $($_.Value)" }) 
     Log -End
 
     return $key
@@ -239,7 +239,7 @@ function GetErpDirKey {
         Documentpart    = '001'
     }
 
-    #($key.GetEnumerator() | ForEach-Object { Log -Message "$($_.Key) = $($_.Value)" }) 
+    #($key.GetEnumerator() | ForEach-Object { Write-Host "$($_.Key) = $($_.Value)" }) 
     Log -End
 
     return $key
@@ -350,7 +350,7 @@ function Get-SapValue {
     $sapValue = $mappingTable.GetSapValue($VaultValue)
 
     if (-not $sapValue) {
-        Log -Message "Couldn't find mapping for Vault value '$($VaultValue)' in table '$($Table)'"
+        Write-Host "Couldn't find mapping for Vault value '$($VaultValue)' in table '$($Table)'"
         if ($Table -eq [MappingTableNames]::LabOffice) {
             $VaultValue = $VaultValue.Trim()
             return ($VaultValue -split " ")[0] #number of lab/office
@@ -358,7 +358,7 @@ function Get-SapValue {
         if ($Table -eq [MappingTableNames]::StorageCategory) {
             # issue 154: Comment from 15.10.2020
             $sapValue = "Z_HELSINKI"
-            Log -Message "The default value ""Z_HELSINKI"" is used, because: Couldn't find mapping for Vault value '$($VaultValue)' in table '$($Table) "  
+            Write-Host "The default value ""Z_HELSINKI"" is used, because: Couldn't find mapping for Vault value '$($VaultValue)' in table '$($Table) "  
             Log -End -Message $sapValue 
             return $sapValue
         }

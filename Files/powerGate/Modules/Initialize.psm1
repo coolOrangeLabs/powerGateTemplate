@@ -12,7 +12,13 @@ function Import-CoolOrangeModules {
 
     $foldersForModules = Get-ChildItem -path $commonModulePath -Exclude $ignoreSubPath
     $modules = $foldersForModules | Get-ChildItem -Include $validModuleFiles -Recurse -Verbose
-    $modules | ForEach-Object { Import-Module -Name $_.FullName -Global -Verbose }
+    $modules | ForEach-Object { 
+        $moduleName = [io.path]::GetFileNameWithoutExtension($_.FullName)
+        if( (Get-Module -Name $moduleName ) ) {
+            Remove-Module -Name $moduleName
+        }
+        Import-Module -Name $_.FullName -Global -Verbose -Force 
+    }
 }
 
 function ShowMessageBox {

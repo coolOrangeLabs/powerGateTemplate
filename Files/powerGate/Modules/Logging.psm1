@@ -6,7 +6,6 @@ function Set-LogFilePath {
     param($Path)
     Write-Host "Start to change logging file to: $Path"
     Initialize-CoolOrangeLogging -LogPath $Path
-    Write-Host "Set new logging file: $Path"
 }
 
 function Initialize-CoolOrangeLogging {
@@ -64,6 +63,7 @@ function Log {
     )
     [string[]]$log = @()
 
+
     $callStack = Get-PSCallStack
 
     if ($Begin) {
@@ -85,10 +85,14 @@ function Log {
     
     if($callStack -and $callStack.count -gt 1 ) {
         $lastMethod = $callStack[1] 
+        $fileWhereFunctionIsExecuted = $lastMethod.ScriptName
+        if(-not $fileWhereFunctionIsExecuted) {            
+            $fileWhereFunctionIsExecuted = "<Executed in Runspace, no was File executed>"
+        }
         $overrideLogArguments = @{
             "Message" = ([string]$log)
             "FunctionName" = $lastMethod.Command
-            "File" = $lastMethod.ScriptName
+            "File" = $fileWhereFunctionIsExecuted
             "Line" = $lastMethod.ScriptLineNumber
             "ModuleName" = $lastMethod.FunctionName
         }
@@ -102,5 +106,5 @@ function Log {
 $commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules\PSFramework\PSFramework"
 Import-Module -Name $commonModulePath -Global -Verbose
 
-$generalLogPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\coolOrange.log"
+$generalLogPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\default.log"
 Initialize-CoolOrangeLogging -LogPath $generalLogPath

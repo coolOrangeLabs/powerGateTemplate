@@ -12,16 +12,18 @@ function ConnectToErpServerWithMessageBox {
 	Log -Begin
 	$connected = ConnectToErpServer
 	if (-not $connected) {
-		Log -Message "Connection to $powerGateServerErpPluginUrl could not be established!" -MessageBox -LogLevel "Error"
+		$connectionError = ("Error on connecting to powerGateServer service! Check if powerGateServer is running on following host: '{0}' or try to access following link via your browser: '{1}'" -f (([Uri]$powerGateServerErpPluginUrl).Authority), $powerGateServerErpPluginUrl)
+		Write-Error -Message $connectionError
+		ShowMessageBox -Message $connectionError -Icon Error
 	}
 	Log -End
 }
 
 function ConnectToErpServer {
 	Log -Begin
-	Log -Message "Connecting with URL: $powerGateServerErpPluginUrl"
+	Write-Host "Connecting with URL: $powerGateServerErpPluginUrl"
 	$connected = Connect-ERP -Service $powerGateServerErpPluginUrl -OnConnect $onConnect
-	Log -Message "Connection: $connected"
+	Write-Host "Connection: $connected"
 	Log -End
 	return $connected
 }
