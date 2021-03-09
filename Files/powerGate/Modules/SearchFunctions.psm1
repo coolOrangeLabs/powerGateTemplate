@@ -142,12 +142,17 @@ function ExecuteErpSearch {
 function ConvertSearchCriteriaToFilter ($SearchCriteria, $CaseSensitive) {
     Log -Begin
     $wildcardQuery = @()
-    foreach ($criterion in $SearchCriteria.PSObject.Properties) {
+
+	$criterions = @()
+	$criterions += $SearchCriteria._Keys.PSObject.Properties
+	$criterions += $SearchCriteria._Properties.PSObject.Properties
+	foreach ($criterion in $criterions) {
         $valueIsSet = CheckIfValueIsSet -value $criterion.Value -type $criterion.TypeNameOfValue
         $dsDiag.Trace("criterion [$valueIsSet]: $($criterion.Name),$($criterion.Value),$($criterion.TypeNameOfValue)")
         if ($valueIsSet -eq $false) { continue }
         $wildcardQuery += ConvertValueToFilter -WildcardValue $criterion.Value -Property $criterion.Name -Type $criterion.TypeNameOfValue -CaseSensitive $CaseSensitive -WildCard "*"
     }
+	
     $filter = $wildcardQuery -Join " and "
     Log -End
     return $filter
