@@ -53,9 +53,12 @@ function RestrictFileRelease($files) {
 	}
  catch {
 		#Show-Inspector
-		Log -Message $_.Exception.Message -MessageBox -LogLevel "ERROR"
+		Write-Error -Message $_.Exception.Message
+		ShowMessageBox -Message $_.Exception.Message -Icon Error
 	}
-	Log -End
+ finally {		
+		Log -End
+	}
 }
 
 Register-VaultEvent -EventName UpdateItemStates_Restrictions -Action 'RestrictItemRelease'
@@ -74,9 +77,12 @@ function RestrictItemRelease($items) {
 		}
 	}
 	catch {
-		Log -Message $_.Exception.Message -MessageBox -LogLevel "ERROR"
+		Write-Error -Message $_.Exception.Message
+		ShowMessageBox -Message $_.Exception.Message -Icon Error
 	}
-	Log -End
+ finally {		
+		Log -End
+	}
 }
 
 
@@ -85,18 +91,19 @@ function AddPdfJob($files, $successful) {
 	Log -Begin
 	try {
 		if (-not $successful) { return }
-		$releasedFiles = @($files | Where-Object { $supportedPdfExtensions -contains $_._Extension -and $_._ReleasedRevision -eq $true })
+		$releasedFiles = @($files | Where-Object { $_._Extension -in $supportedPdfExtensions -and $_._ReleasedRevision -eq $true })
+		Write-Host "Found '$($releasedFiles.Count)' files which are valid to add a PDF job for!"
 		foreach ($file in $releasedFiles) {
-			$material = GetErpMaterial -Number $file._PartNumber
-			if ($false -ne $material -and $material) {
-				$jobType = "ErpService.Create.PDF"
-				Log -Message "Adding job '$jobType' for file '$($file._Name)' to queue."
-				Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system"
-			}
+			$jobType = "ErpService.Create.PDF"
+			Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
+			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system"
 		}
 	}
 	catch {
-		Log -Message $_.Exception.Message -MessageBox
+		Write-Error -Message $_.Exception.Message
+		ShowMessageBox -Message $_.Exception.Message -Icon Error
 	}
-	Log -End
+ finally {		
+		Log -End
+	}
 }

@@ -1,7 +1,12 @@
-$global:ErrorActionPreference = "Stop"
-$commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
-$modules = Get-ChildItem -path $commonModulePath -Recurse -Filter *.ps* 
-$modules | ForEach-Object { Import-Module -Name $_.FullName -Global }
-$global:loggingSettings.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\powerEvents.txt"
+$initModulePath = "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1"
+$moduleName = [io.path]::GetFileNameWithoutExtension($initModulePath)
+if( (Get-Module -Name $moduleName) ) {
+    Remove-Module -Name $moduleName
+}
+Import-Module -Name $initModulePath -Global -Force
+Initialize-CoolOrange
+
+$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\powerEvents.log"
+Set-LogFilePath -Path $logPath
 
 ConnectToErpServer

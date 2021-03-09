@@ -1,8 +1,6 @@
-﻿$global:ErrorActionPreference = "Stop"
-try {  
-    $commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
-    $modules = Get-ChildItem -path $commonModulePath -Recurse -Filter *.ps*
-    $modules | ForEach-Object { Import-Module -Name $_.FullName -Global }
+﻿try {  
+    Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
+    Initialize-CoolOrange 
 
     $cfgPath = "c:\temp\powerGateCfg\powerGateConfiguration.xml"
     $testPath = Test-Path $cfgPath

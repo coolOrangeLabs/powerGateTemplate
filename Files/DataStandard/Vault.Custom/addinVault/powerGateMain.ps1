@@ -1,9 +1,10 @@
-﻿$global:ErrorActionPreference = "Stop"
-$global:addinPath = $PSScriptRoot
-$commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules"
-$modules = Get-ChildItem -path $commonModulePath -Recurse -Filter *.ps* 
-$modules | ForEach-Object { Import-Module -Name $_.FullName -Global }
-$global:loggingSettings.LogFile = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.txt"
+﻿$global:addinPath = $PSScriptRoot
+Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
+Initialize-CoolOrange 
+
+$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.log"
+Set-LogFilePath -Path $logPath
+
 
 ConnectToErpServerWithMessageBox
 

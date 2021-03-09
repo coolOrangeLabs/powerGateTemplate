@@ -6,8 +6,14 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="CommonAppDataFolder" Name="ProgramData">
         <Directory Id='coolOrange' Name='coolOrange'>
+
           <Directory Id='POWERJOBS_INSTALL' Name='powerJobs' />
-          <Directory Id='MODULES_INSTALL' Name='Modules' />
+
+          <Directory Id='POWERGATE_INSTALL' Name='powerGate' >
+            <Directory Id='MODULES_INSTALL' Name='Modules' />
+          </Directory>
+
+
         </Directory>
       </Directory>
     </Directory>
