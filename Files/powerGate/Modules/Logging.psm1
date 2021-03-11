@@ -83,27 +83,28 @@ function Log {
         $log += [string]$Message
     }
     
-    if($callStack -and $callStack.count -gt 1 ) {
+    if ($callStack -and $callStack.count -gt 1 ) {
         $lastMethod = $callStack[1] 
         $fileWhereFunctionIsExecuted = $lastMethod.ScriptName
-        if(-not $fileWhereFunctionIsExecuted) {            
+        if (-not $fileWhereFunctionIsExecuted) {            
             $fileWhereFunctionIsExecuted = "<Executed in Runspace, no was File executed>"
         }
         $overrideLogArguments = @{
-            "Message" = ([string]$log)
+            "Message"      = ([string]$log)
             "FunctionName" = $lastMethod.Command
-            "File" = $fileWhereFunctionIsExecuted
-            "Line" = $lastMethod.ScriptLineNumber
-            "ModuleName" = $lastMethod.FunctionName
+            "File"         = $fileWhereFunctionIsExecuted
+            "Line"         = $lastMethod.ScriptLineNumber
+            "ModuleName"   = $lastMethod.FunctionName
         }
         Write-PSFMessage @overrideLogArguments
-    } else {
+    }
+    else {
         Write-Host [string]$log
     }
 }
 
 # PSFramework Version 1.5.172
-$commonModulePath = "C:\ProgramData\coolOrange\powerGate\Modules\PSFramework\PSFramework"
+$commonModulePath = "C:\ProgramData\coolOrange\powerGate\PSFramework\PSFramework"
 Import-Module -Name $commonModulePath -Global -Verbose
 
 $generalLogPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\default.log"

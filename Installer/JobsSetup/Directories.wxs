@@ -11,6 +11,7 @@
 
           <Directory Id='POWERGATE_INSTALL' Name='powerGate' >
             <Directory Id='MODULES_INSTALL' Name='Modules' />
+            <Directory Id='PSFRAMEWORK_INSTALL' Name='PSFramework' />
           </Directory>
 
 

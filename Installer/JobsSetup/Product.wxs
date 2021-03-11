@@ -26,6 +26,7 @@
 	<ComponentGroupRef Id="SETUP_UI" />
       <ComponentGroupRef Id="HeatGenerated_PowerJobsFiles" />
       <ComponentGroupRef Id="HeatGenerated_Modules" />
+      <ComponentGroupRef Id="HeatGenerated_PSFramework" />
     </Feature>
 
     <Property Id="SAMEVERSIONINSTALLED" Admin="yes" />

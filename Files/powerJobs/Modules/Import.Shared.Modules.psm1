@@ -1,9 +1,10 @@
-
-Get-ChildItem -LiteralPath 'C:\ProgramData\coolOrange\powerGate\Modules\' -File -Recurse -Force -Filter '*.ps*' | `
-    ForEach-Object {
-    Write-Host "Import shared module $($_.FullName)"
-    Import-Module $_.FullName -Global -Force -DisableNameChecking
+$initModulePath = "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1"
+$moduleName = [io.path]::GetFileNameWithoutExtension($initModulePath)
+if ( (Get-Module -Name $moduleName) ) {
+    Remove-Module -Name $moduleName
 }
+Import-Module -Name $initModulePath -Global -Force
+Initialize-CoolOrange
 
 $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\powerJobs.log"
 Set-LogFilePath -Path $logPath
