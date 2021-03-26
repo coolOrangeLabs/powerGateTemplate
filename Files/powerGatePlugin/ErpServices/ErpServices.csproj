@@ -89,7 +89,8 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="powerGateServer.log4net" />
-    <None Include="Test.ps1" />
+    <None Include="Powershell_Tests\Plugin-Service-Tests.ps1" />
+    <None Include="Powershell_Tests\Plugin-Stress-Tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ErpServices.addin">
