@@ -19,7 +19,7 @@ function GetErpMaterial($number) {
 		return $erpMaterial
 	}
 	$number = $number.ToUpper()
-	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Key @{ Number = $number }
+	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Keys @{ Number = $number }
 	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial
 	
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $false -MemberType NoteProperty -Force
