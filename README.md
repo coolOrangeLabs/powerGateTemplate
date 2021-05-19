@@ -23,6 +23,8 @@ This sample demonstrates an ERP integration for Autodesk Vault Professional/Work
 
 It is highly customizable and at the same time it works out-of-the-box with a built-in mockup-ERP system. However, this sample can be extended to work with any ERP system.
 
+**NOTE: This template is not prepared and supported for Vault/Inventor 2022!**
+
 ## Screenshots
 
 ![Sample Inventor](Images/Readme_Inventor.png)
@@ -35,7 +37,7 @@ TBD!
 ## Prerequisites
 
 ### Autodesk Software
-Autodesk Vault 2020 Professional, Autodesk Inventor 2020 and Autodesk Vault DataStandard for Vault and Inventor needs to be installed.
+Autodesk Vault 2021 Professional, Autodesk Inventor 2021 and Autodesk Vault DataStandard for Vault and Inventor needs to be installed.
 
 ### coolOrange Software 
 coolOrange powerGate, coolOrange powerGate Server, coolOrange powerJobs and coolOrange powerEvents needs to be installed.  
@@ -73,7 +75,7 @@ Information on how to execute the script can be found when executing `Get-Help .
 
 [coolOrange powerGate](https://www.coolorange.com/wiki/doku.php?id=powergate)  
 [coolOrange powerGate Server](https://www.coolorange.com/wiki/doku.php?id=powergateserver)  
-[coolOrange powerJobs](https://www.coolorange.com/wiki/doku.php?id=powerjobs)  
+[coolOrange powerJobs Processor](https://www.coolorange.com/wiki/doku.php?id=powerjobs)  
 [coolOrange powerEvents](https://www.coolorange.com/wiki/doku.php?id=powerevents)
 
 
