@@ -13,6 +13,10 @@ function Initialize-CoolOrangeLogging {
         $LogPath,
         $DeleteLogFilesOlderThenDays = '4d' # Format example for 30 days: "30d"
     )
+    # PSFramework Version 1.5.172
+    $commonModulePath = "C:\ProgramData\coolOrange\powerGate\PSFramework\PSFramework"
+    Import-Module -Name $commonModulePath -Global -Verbose
+    
     $paramSetPSFLoggingProvider = @{
     
         # For all parameters of the "Logfile" provider read here: https://psframework.org/documentation/documents/psframework/logging/providers/logfile.html
@@ -103,9 +107,12 @@ function Log {
     }
 }
 
-# PSFramework Version 1.5.172
-$commonModulePath = "C:\ProgramData\coolOrange\powerGate\PSFramework\PSFramework"
-Import-Module -Name $commonModulePath -Global -Verbose
+function Remove-CoolOrangeLogging {
+    # Fixes https://github.com/coolOrangeLabs/powerGateTemplate/issues/179
+    Wait-PSFMessage
+    Get-PSFRunspace | Stop-PSFRunspace
+    [PSFramework.PSFCore.PSFCoreHost]::Uninitialize()
+}
 
 $generalLogPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\default.log"
 Initialize-CoolOrangeLogging -LogPath $generalLogPath

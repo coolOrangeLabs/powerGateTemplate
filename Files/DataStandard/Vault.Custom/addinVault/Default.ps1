@@ -16,3 +16,18 @@
 		$dsWindow.FindName("AssoicatedFiles").ItemsSource = $assocFiles
 	}
 }
+
+function OnLogOn {
+	#Executed when User logs on Vault
+	#$vaultUsername can be used to get the username, which is used in Vault on login
+
+	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
+	Initialize-CoolOrange
+
+	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.log"
+	Set-LogFilePath -Path $logPath
+}
+function OnLogOff {
+	#Executed when User logs off Vault
+	Remove-CoolOrangeLogging
+}
