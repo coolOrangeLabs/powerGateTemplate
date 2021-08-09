@@ -72,14 +72,29 @@
 	                    Name="Version"
 	                    Type="raw" />
 	  </Property>
+
+	  <!-- powerJobs -->
+	  <Property Id="POWERJOBSINSTALLEDVERSION">
+		<RegistrySearch Id="PowerJobsInstalledVersion"
+						Root="HKLM"
+						Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor"
+						Name="Version"
+						Type="raw" />
+	  </Property>
+
 	  <Condition
-	    Message="This application requires powerVault v19 or later. Please install the latest version of powerVault and then run again this installer.">
-	    <![CDATA[Installed OR POWERVAULTINSTALLEDVERSION > "19"]]>
+	    Message="This application requires powerVault v22 or later. Please install the latest version of powerVault and then run again this installer.">
+	    <![CDATA[Installed OR POWERVAULTINSTALLEDVERSION > "22"]]>
 	  </Condition>
 
 	  <Condition
-	    Message="This application requires powerGate v19 or later. Please install the latest version of powerGate and then run again this installer.">
-	    <![CDATA[Installed OR POWERGATEINSTALLEDVERSION > "19"]]>
+	    Message="This application requires powerGate v21 or later. Please install the latest version of powerGate and then run again this installer.">
+	    <![CDATA[Installed OR POWERGATEINSTALLEDVERSION > "21"]]>
+	  </Condition>
+
+	  <Condition
+	    Message="This application requires powerJobs v22 or later. Please install the latest version of powerJobs and then run again this installer.">
+		<![CDATA[Installed OR POWERJOBSINSTALLEDVERSION > "22"]]>
 	  </Condition>
 
 		<MajorUpgrade Schedule="afterInstallInitialize"

@@ -17,4 +17,13 @@
                     Type="raw" />
   </Property>
 
+  <Property Id="POWERJOBSINSTALLED">
+    <RegistrySearch Id="PowerJobsInstalled"
+                    Root="HKLM"
+                    Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor"
+                    Name="Installed"
+                    Type="raw" />
+  </Property>
+
+
 </Include>
