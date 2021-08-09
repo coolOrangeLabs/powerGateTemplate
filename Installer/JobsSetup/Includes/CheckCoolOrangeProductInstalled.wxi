@@ -18,14 +18,6 @@
   </Property>
 
   <Property Id="POWERJOBSINSTALLED">
-    <RegistrySearch Id="PowerJobsInstalled"
-                    Root="HKLM"
-                    Key="SOFTWARE\coolOrange s.r.l.\powerJobs"
-                    Name="Installed"
-                    Type="raw" />
-  </Property>
-
-  <Property Id="POWERJOBS21INSTALLED">
     <RegistrySearch Id="PowerJobs21Installed"
                     Root="HKLM"
                     Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor"
