@@ -75,7 +75,7 @@
 
 	  <!-- powerJobs -->
 	  <Property Id="POWERJOBSINSTALLEDVERSION">
-		<RegistrySearch Id="PowerGateInstalledVersion"
+		<RegistrySearch Id="PowerJobsInstalledVersion"
 						Root="HKLM"
 						Key="SOFTWARE\coolOrange s.r.l.\powerJobs"
 						Name="Version"
