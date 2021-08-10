@@ -54,8 +54,8 @@
 	                    Type="raw" />
 	  </Property>
 	  <Condition
-	    Message="This application requires powerGateServer v19 or later. Please install the latest version of powerGateServer and then run again this installer.">
-	    <![CDATA[Installed OR POWERGATESERVERINSTALLEDVERSION]]>
+	    Message="This application requires powerGateServer v21 or later. Please install the latest version of powerGateServer and then run again this installer.">
+	    <![CDATA[Installed OR POWERGATESERVERINSTALLEDVERSION > "21"]]>
 	  </Condition>
 
 		<MajorUpgrade Schedule="afterInstallInitialize"
