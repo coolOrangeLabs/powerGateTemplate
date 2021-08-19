@@ -89,6 +89,15 @@ function Transfer-Items($entities) {
 function Check-Boms($entityBoms) {
     [array]::Reverse($entityBoms)
     foreach ($entityBom in $entityBoms) {
+
+        if ($entityBom._Status -ne "Unknown") {
+            Update-BomWindowEntity -InputObject $entityBom -Status $entityBom._Status -Tooltip $entityBom.Message  
+			foreach ($entityBomRow in $entityBom.Children) {
+                Update-BomWindowEntity -InputObject $entityBomRow -Status $entityBomRow._Status -Tooltip $entityBomRow.Message  
+            }
+            continue
+        }
+        
         $differences = CompareErpBom -entityBom $entityBom
         foreach ($diff in $differences) {
             if ($diff.Status -eq "Remove" -and $diff.Parent) {
