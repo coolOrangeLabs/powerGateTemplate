@@ -16,6 +16,7 @@ variables:
   buildMinor: '$(Minor)'
   buildRevision: '$(Revision)'
   increment: $[counter(1,0)]
+  buildTimestamp: $((Get-Date).ToUniversalTime())
 
 steps:
 - task: NuGetToolInstaller@0
@@ -25,6 +26,11 @@ steps:
     feedsToUse: 'select'
     vstsFeed: 'AzureFeed_Projects'
     restoreSolution: '$(solution)'
+
+- task: PowerShell@2
+  inputs:
+    filePath: 'AzureDevops_AddCopyRight.ps1'
+    arguments: '-Major $(buildMajor) -Minor $(buildMinor) -Build $(Build.BuildNumber) -Revision $(buildRevision) -Timestamp $(buildTimestamp) -HashCodeFile $(Build.ArtifactStagingDirectory)'
 
 - task: VSBuild@1
   inputs:
