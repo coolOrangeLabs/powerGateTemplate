@@ -28,6 +28,7 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: PowerShell@2
+  displayName: Add Copyright, Buildnumber and build time to PowerShell files 
   inputs:
     filePath: 'AzureDevops_AddCopyRight.ps1'
     arguments: '-Major $(buildMajor) -Minor $(buildMinor) -Build $(Build.BuildNumber) -Revision $(buildRevision) -Timestamp $(buildTimestamp) -HashCodeFile $(Build.ArtifactStagingDirectory)'
