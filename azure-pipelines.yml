@@ -56,3 +56,19 @@ steps:
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)\Setups'
     artifactName: 'Setups_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
+
+- task: CopyFiles@2
+  displayName: Copy raw datastandard files to ArtifactStagingDirectory
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'Files\DataStandard\*' 
+    targetFolder: '$(Build.ArtifactStagingDirectory)\Datastandard'
+    cleanTargetFolder: true
+    overWrite: true
+    flattenFolders: true
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish datastandard files as artifacts
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)\Datastandard'
+    artifactName: 'Datastandard_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
