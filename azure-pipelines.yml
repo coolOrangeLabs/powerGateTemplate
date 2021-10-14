@@ -61,14 +61,32 @@ steps:
   displayName: Copy raw datastandard files to ArtifactStagingDirectory
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)'
-    contents: 'Files\DataStandard\*' 
-    targetFolder: '$(Build.ArtifactStagingDirectory)\Datastandard'
-    cleanTargetFolder: true
-    overWrite: true
-    flattenFolders: true
+    contents: 'Files\DataStandard\**' 
+    targetFolder: '$(Build.ArtifactStagingDirectory)\Source\Datastandard'
+
+- task: CopyFiles@2
+  displayName: Copy raw powerEvents files to ArtifactStagingDirectory
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'Files\powerEvents\**' 
+    targetFolder: '$(Build.ArtifactStagingDirectory)\Source\powerEvents'
+
+- task: CopyFiles@2
+  displayName: Copy raw powerGate files to ArtifactStagingDirectory
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'Files\powerGate\**' 
+    targetFolder: '$(Build.ArtifactStagingDirectory)\Source\powerGate'
+
+- task: CopyFiles@2
+  displayName: Copy raw powerJobs files to ArtifactStagingDirectory
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'Files\powerJobs\**' 
+    targetFolder: '$(Build.ArtifactStagingDirectory)\Source\powerJobs'
 
 - task: PublishBuildArtifacts@1
   displayName: Publish datastandard files as artifacts
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)\Datastandard'
-    artifactName: 'Datastandard_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)\Source'
+    artifactName: 'SourceFiles_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
