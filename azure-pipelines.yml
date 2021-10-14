@@ -60,33 +60,33 @@ steps:
 - task: CopyFiles@2
   displayName: Copy raw datastandard files to ArtifactStagingDirectory
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: 'Files\DataStandard\**' 
+    sourceFolder: '$(Build.SourcesDirectory)Files\DataStandard\'
+    contents: '**' 
     targetFolder: '$(Build.ArtifactStagingDirectory)\Source\Datastandard'
 
 - task: CopyFiles@2
-  displayName: Copy raw powerEvents files to ArtifactStagingDirectory
+  displayName: Copy powerEvents files to ArtifactStagingDirectory
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: 'Files\powerEvents\**' 
+    sourceFolder: '$(Build.SourcesDirectory)Files\powerEvents\'
+    contents: '**' 
     targetFolder: '$(Build.ArtifactStagingDirectory)\Source\powerEvents'
 
 - task: CopyFiles@2
-  displayName: Copy raw powerGate files to ArtifactStagingDirectory
+  displayName: Copy powerGate files to ArtifactStagingDirectory
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: 'Files\powerGate\**' 
+    sourceFolder: '$(Build.SourcesDirectory)Files\powerGate\'
+    contents: '**' 
     targetFolder: '$(Build.ArtifactStagingDirectory)\Source\powerGate'
 
 - task: CopyFiles@2
-  displayName: Copy raw powerJobs files to ArtifactStagingDirectory
+  displayName: Copy powerJobs files to ArtifactStagingDirectory
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: 'Files\powerJobs\**' 
+    sourceFolder: '$(Build.SourcesDirectory)Files\powerJobs\'
+    contents: '**' 
     targetFolder: '$(Build.ArtifactStagingDirectory)\Source\powerJobs'
 
 - task: PublishBuildArtifacts@1
-  displayName: Publish datastandard files as artifacts
+  displayName: Publish all source files as artifacts
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)\Source'
     artifactName: 'SourceFiles_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
