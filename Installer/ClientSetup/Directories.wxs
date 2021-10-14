@@ -9,13 +9,24 @@
           <Directory Id='Vault' Name='$(var.VaultYear)'>
             <Directory Id='Extensions' Name='Extensions'>
               <Directory Id='DATASTANDARD_INSTALL' Name='DataStandard'>
+                <Component Id="CMP_VDS_README" Guid="*">
+                  <File Id="FILE_VDS_README" KeyPath="yes" Source="..\Resources\README.txt" />
+                </Component>
               </Directory>
             </Directory>
           </Directory>
         </Directory>
         <Directory Id='coolOrange' Name='coolOrange'>
-          <Directory Id='POWEREVENTS_INSTALL' Name='powerEvents' />
-          <Directory Id='POWERGATE_INSTALL' Name='powerGate' />
+          <Directory Id='POWEREVENTS_INSTALL' Name='powerEvents' >
+            <Component Id="CMP_PE_README" Guid="*">
+              <File Id="FILE_PE_README" KeyPath="yes" Source="..\Resources\README.txt" />
+            </Component>
+          </Directory>
+          <Directory Id='POWERGATE_INSTALL' Name='powerGate' >
+            <Component Id="CMP_PG_README" Guid="*">
+              <File Id="FILE_PG_README" KeyPath="yes" Source="..\Resources\README.txt" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
     </Directory>

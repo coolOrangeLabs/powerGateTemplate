@@ -27,6 +27,8 @@
       <ComponentGroupRef Id="HeatGenerated_PowerJobsFiles" />
       <ComponentGroupRef Id="HeatGenerated_Modules" />
       <ComponentGroupRef Id="HeatGenerated_PSFramework" />
+      <ComponentRef Id="CMP_PG_README" />
+      <ComponentRef Id="CMP_PJ_README" />
     </Feature>
 
     <Property Id="SAMEVERSIONINSTALLED" Admin="yes" />
