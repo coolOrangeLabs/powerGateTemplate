@@ -55,7 +55,7 @@ steps:
   displayName: Publish installers (MSI) as artifacts
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)\Setups'
-    artifactName: 'Setups_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
+    artifactName: 'Setups_$(Build.DefinitionName)_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
 
 - task: CopyFiles@2
   displayName: Copy raw datastandard files to ArtifactStagingDirectory
@@ -89,4 +89,4 @@ steps:
   displayName: Publish all source files as artifacts
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)\Source'
-    artifactName: 'SourceFiles_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
+    artifactName: 'SourceFiles_$(Build.DefinitionName)_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
