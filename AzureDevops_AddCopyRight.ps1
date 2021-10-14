@@ -11,7 +11,7 @@ function Add-CopyRight($fileConent, $version, $buildTime) {
     $copyRight = @"
 #=============================================================================#
 # Copyright (c) coolOrange s.r.l. - All rights reserved.                      #
-# Verson: {0}                         Buildtime: {1}     #
+# Verson: {0}                        Buildtime (UTC): {1} #
 #=============================================================================#
 "@ -f @($version, $buildTime)
 
