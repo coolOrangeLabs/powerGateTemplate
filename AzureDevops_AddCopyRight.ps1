@@ -1,11 +1,13 @@
 param ($Major, $Minor, $Build, $Revision, $Timestamp, $HashCodeFile)
 
+<#
 $Major = "22"
 $Minor = "1"
 $Build = "0"
 $Revision = "1"
 $timestamp = (Get-Date).ToUniversalTime()
 $HashCodeFile = Split-Path $MyInvocation.MyCommand.Path
+#>
 
 function Add-CopyRight($fileConent, $version, $buildTime) {
     $copyRight = @"
