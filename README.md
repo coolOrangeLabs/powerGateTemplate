@@ -83,3 +83,5 @@ Information on how to execute the script can be found when executing `Get-Help .
 coolOrange s.r.l.  
 
 ![coolOrange](https://i.ibb.co/NmnmjDT/Logo-CO-Full-colore-RGB-short-Payoff.png)
+
+[Hier gehts zum Wiki](./wiki/_sidebar.md)
