@@ -1,3 +1,5 @@
+[To the Wiki](./wiki/_sidebar.md)
+
 # powergate-generic-sample
 
 [![Windows](https://img.shields.io/badge/Platform-Windows-lightgray.svg)](https://www.microsoft.com/en-us/windows/)
@@ -83,3 +85,5 @@ Information on how to execute the script can be found when executing `Get-Help .
 coolOrange s.r.l.  
 
 ![coolOrange](https://i.ibb.co/NmnmjDT/Logo-CO-Full-colore-RGB-short-Payoff.png)
+
+

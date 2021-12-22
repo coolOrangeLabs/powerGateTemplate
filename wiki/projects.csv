@@ -1,0 +1,8 @@
+[Menu](../README.md) [Home](./home.md)
+Name,Description
+XXXX - powerGate Initialisation, project for the preparation of the test environment / sample data and the ERP API/webservices
+XXXX - powerGate Configuration Phase, changing in the powerGate template the properties in the GUI and transfers to include all required ERP properties
+XXXX - powerGate Integration Phase, consume the ERP API and let the Vault&Inventor talk to the customers ERP system
+XXXX - powerGate Business-logic Phase, implementing custom workflows like validations and automations
+XXXX - powerGate After Go-Live Phase, requirments which are not relevant for the go-live
+
