@@ -1,4 +1,6 @@
-[To the Wiki](./wiki/_sidebar.md)
+# Offical Documentation
+
+[Access the Wiki](./wiki/_sidebar.md)
 
 # powergate-generic-sample
 
