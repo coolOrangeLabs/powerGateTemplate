@@ -4,10 +4,29 @@ Import-Module powerGate
 #TODO: configure the powerGate server url and port
 $powerGateServerName = $ENV:Computername
 $powerGateServerPort = "8080"
+$vaultDefinitions = @{
+	"TEST" = "TestVault";
+	"STD" = "StandartVault"
+}
+$ERPDefinitions = @{
+	"TEST" = "TestERP";
+	"STD" = "StandartERP"
+}
 $powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
 #$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/DynamicsNav"
 # Dynamics NAV 2017 Plugin available here: https://github.com/coolOrangeLabs/powergate-dynamics-nav-sample/releases
 
+function getRelatedERPName {
+	switch ($vaultConnection.Vault) {
+		$VaultDefinitions["TEST"] {
+			return $ERPDefinitions["TEST"]
+		}
+		$VaultDefinitions["STD"] {
+			return $ERPDefinitions["STD"]
+		}
+		Default { return $null}
+	}
+}
 function ConnectToErpServerWithMessageBox {
 	Log -Begin
 	$connected = ConnectToErpServer
