@@ -1,6 +1,6 @@
-﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:behaviours="clr-namespace:Common.Wpf;assembly=Common" behaviours:TabTitleBehavior.TabTitle="ERP Item" x:Name="MainWindow">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
@@ -45,7 +45,7 @@
             <Setter Property="Padding" Value="4" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" >
+            <Setter Property="BorderBrush">
                 <Setter.Value>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
                 </Setter.Value>
@@ -89,7 +89,7 @@
 
             <Button Grid.Row="0" Grid.Column="1" x:Name="LinkMaterialButton" Content="Link ERP Item..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
             <!-- Visibility="{Binding DataContext.IsCreate, ElementName=DataGrid, Converter={StaticResource BooleanToVisibility}}" -->
-            <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" >
+            <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Content" Value="Create ERP Item"/>
@@ -133,7 +133,7 @@
                             <ColumnDefinition MinWidth="100" Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Number" Grid.Row="0" Grid.Column="0" />
-                        <TextBox Text="{Binding Number}" Grid.Row="0" Grid.Column="1" IsEnabled="False" />
+                        <TextBox Text="{Binding Number}" Grid.Row="0" Grid.Column="1" IsReadOnly="True" />
                         <Label Content="Description" Grid.Column="0" Grid.Row="1" />
                         <TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1">
                             <i:Interaction.Triggers>
@@ -150,8 +150,7 @@
                         <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding IsBlocked}" IsEnabled="False" Visibility="{Binding IsUpdate, Converter={StaticResource BooleanToVisibility}}" />
 
                         <Label Content="Type" Grid.Column="3" Grid.Row="1"/>
-                        <ComboBox Name="MaterialTypeList" SelectedValue="{Binding Type}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="1" IsEnabled="{Binding IsCreate}"
-                                  ItemsSource="{Binding DataContext.PsList[GetMaterialTypeList], ElementName=MainWindow}" >
+                        <ComboBox Name="MaterialTypeList" SelectedValue="{Binding Type}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="1" IsEnabled="{Binding IsCreate}" ItemsSource="{Binding DataContext.PsList[GetMaterialTypeList], ElementName=MainWindow}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding DataContext.PsCmd[ValidateErpMaterialTab], ElementName=MainWindow}" />
@@ -163,8 +162,7 @@
                         </ComboBox>
 
                         <Label Content="Base Unit of Measure" Grid.Column="3" Grid.Row="0" />
-                        <ComboBox Name="UomList" SelectedValue="{Binding UnitOfMeasure}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="0" IsEnabled="{Binding IsCreate}" 
-                                  ItemsSource="{Binding DataContext.PsList[GetUnitOfMeasuresList], ElementName=MainWindow}" />
+                        <ComboBox Name="UomList" SelectedValue="{Binding UnitOfMeasure}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="0" IsEnabled="{Binding IsCreate}" ItemsSource="{Binding DataContext.PsList[GetUnitOfMeasuresList], ElementName=MainWindow}" />
 
                         <Label Content="Last Modified Date" Grid.Column="3" Grid.Row="2" Visibility="{Binding IsUpdate, Converter={StaticResource BooleanToVisibility}}"/>
                         <TextBox Text="{Binding ModifiedDate}" Grid.Column="4" Grid.Row="2" IsEnabled="False" Visibility="{Binding IsUpdate, Converter={StaticResource BooleanToVisibility}}"/>
@@ -185,8 +183,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Content="Item Category Code" Grid.Column="0" Grid.Row="0" />
-                        <ComboBox Name="Category" SelectedValue="{Binding Category}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1" Grid.Row="0" 
-                                  ItemsSource="{Binding DataContext.PsList[GetCategoryList], ElementName=MainWindow}" />
+                        <ComboBox Name="Category" SelectedValue="{Binding Category}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding DataContext.PsList[GetCategoryList], ElementName=MainWindow}" />
 
                         <Label Content="Search Description" Grid.Column="0" Grid.Row="1" />
                         <TextBox Text="{Binding SearchDescription}" Grid.Column="1" Grid.Row="1" />
