@@ -4,10 +4,19 @@ Import-Module powerGate
 #TODO: configure the powerGate server url and port
 $powerGateServerName = getRelatedPGServerName
 $powerGateServerPort = "8080"
-$vaultDefinitions = @{
-	"TEST" = "TestVault";
-	"PROD" = "ProductiveVault"
-}
+# define here witch Vault is used for test and witch one for production
+$testVaults = @(
+	"TestVault1",
+	"TestVault2"
+	# ,...
+)
+$productiveVaults = @(
+	"ProdVault1",
+	"ProdVault2"
+	# ,...
+)
+
+# define here witch Powergate Server is used for test and witch one for production
 $PGServerDefinitions = @{
 	"TEST" = "TestERP";
 	"PROD" = "ProductiveERP"
@@ -17,15 +26,16 @@ $powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServe
 # Dynamics NAV 2017 Plugin available here: https://github.com/coolOrangeLabs/powergate-dynamics-nav-sample/releases
 
 function getRelatedPGServerName {
-	switch ($vaultConnection.Vault) {
-		$VaultDefinitions["TEST"] {
-			return $PGServerDefinitions["TEST"]
-		}
-		$VaultDefinitions["PROD"] {
-			return $PGServerDefinitions["PROD"]
-		}
-		Default { return $null}
+	$connectedVault = $vaultConnection.Vault
+	if ($connectedVault -in $testVaults)
+		return $PGServerDefinitions["TEST"]
+	elseif ($connectedVault -in $productiveVaults)
+		return $PGServerDefinitions["PROD"]
+	else {
+		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error
+		return $env:COMPUTERNAME
 	}
+	
 }
 function ConnectToErpServerWithMessageBox {
 	Log -Begin
