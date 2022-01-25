@@ -8,13 +8,10 @@
         ShowMessageBox -Message "No config file found in '$cfgPath' `n Please download/edit the config file first and then save it back to the Vault server!" -Button  "OK" -Icon "Warning" | Out-Null
         return
     }
-    if (checkEncoding -path $cfgPath -encoding "UTF-8-BOM") {
         [byte[]]$cfg = [System.IO.File]::ReadAllBytes($cfgPath)
         Set-PowerGateConfigFromVault -Content $cfg
         ShowMessageBox -Message "Config file saved to Vault server" -Button "OK" -Icon "Information" | Out-Null
-    }else{
-        throw "The Encoding of the XML must be 'UTF-8-BOM', please change the encoding and import it again!"
-    }
+  
 
     Remove-Item $cfgPath -Force
 }
