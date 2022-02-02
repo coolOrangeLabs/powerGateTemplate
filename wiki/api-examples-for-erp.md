@@ -3,8 +3,8 @@
 
 If you are the ERP Developer and ready for implementing the ERP API for coolOrange then:
 1. Select first the API type what you can deliver us:
-   1. [Webservice via REST](https://github.com/coolOrangeLabs/powerGateTemplate/wiki/Webservice-API-Example)
-   1. [.NET DLL which is consumable in C#](https://github.com/coolOrangeLabs/powerGateTemplate/wiki/C%23-SDK-API-Example)
+   1. [Webservice via REST](./webservice-api-example.md)
+   1. [.NET DLL which is consumable in C#](./c%23-sdk-api-example.md)
 1. Read the section on that technology carefully.
    1. For any doubts ask the responsible coolOrange developer
 1. Change the properties in the example with real properties from the customer ERPs
