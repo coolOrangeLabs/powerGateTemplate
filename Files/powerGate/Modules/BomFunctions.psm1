@@ -148,16 +148,20 @@ function CompareErpBom {
     $number = GetEntityNumber -entity $entityBom
     $erpBomHeader = GetErpBomHeader -number $number
     if (-not $erpBomHeader -or $false -eq $erpBomHeader) {
-        $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "New"; Message = "BOM does not exist in ERP"; IsHeader = $true } 
-        foreach ($entityBomRow in $entityBom.Children) {
-            $childNumber = GetEntityNumber -entity $entityBomRow
-            $erpMaterial = GetErpMaterial -number $childNumber
-            if (-not $erpMaterial -or $false -eq $erpMaterial) {
-                $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "Position doesn't exist as Item in ERP"; IsHeader = $false } 
-                $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "BOM contains positions that do not exist as Items in ERP"; IsHeader = $true } 
-            }
-            else {
-                $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "New"; Message = "Position will be added to ERP"; IsHeader = $false } 
+        if ($erpBomHeader._ErrorMessage){
+            $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "failed to import BOM Header from ERP"; IsHeader = $true }
+        } else {
+            $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "New"; Message = "BOM does not exist in ERP"; IsHeader = $true } 
+            foreach ($entityBomRow in $entityBom.Children) {
+                $childNumber = GetEntityNumber -entity $entityBomRow
+                $erpMaterial = GetErpMaterial -number $childNumber
+                if (-not $erpMaterial -or $false -eq $erpMaterial) {
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "Position doesn't exist as Item in ERP"; IsHeader = $false } 
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "BOM contains positions that do not exist as Items in ERP"; IsHeader = $true } 
+                }
+                else {
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "New"; Message = "Position will be added to ERP"; IsHeader = $false } 
+                }
             }
         }
     }
