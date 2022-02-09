@@ -29,22 +29,23 @@ function ConnectToErpServer {
 }
 
 function GetPowerGateError {
-	Log -Begin
-	$powerGateErrMsg = $null
-	$powerGateLastResponse = [AppDomain]::CurrentDomain.GetData("powerGate_lastResponse")
-	if ($powerGateLastResponse) {
-		if ($powerGateLastResponse.Code -eq "500") {
-			$powerGateErrMsg = [string]$powerGateLastResponse.Body.error.message.innertext
-			if ($powerGateLastResponse.Body.error.innererror) {
-				$powerGateErrMsg = [string]$powerGateLastResponse.Body.error.innererror.message
-			}
-			if ($powerGateLastResponse.Body.error.innererror.internalexception) {
-				$powerGateErrMsg = [string]$powerGateLastResponse.Body.error.innererror.internalexception.message
-			}
-		}
-	}
-	Log -End
-	return $powerGateErrMsg
+    Log -Begin
+    $powerGateErrMsg = $null
+    $powerGateLastResponse = [AppDomain]::CurrentDomain.GetData("powerGate_lastResponse")
+    if ($powerGateLastResponse) {
+        $integerStatusCode = ($powerGateLastResponse.Code) -as [int]
+        if ($integerStatusCode -ge 500 -and $integerStatusCode -lt 600) {
+            $powerGateErrMsg = [string]$powerGateLastResponse.Body.error.message.innertext
+            if ($powerGateLastResponse.Body.error.innererror) {
+                $powerGateErrMsg = [string]$powerGateLastResponse.Body.error.innererror.message
+            }
+            if ($powerGateLastResponse.Body.error.innererror.internalexception) {
+                $powerGateErrMsg = [string]$powerGateLastResponse.Body.error.innererror.internalexception.message
+            }
+        }
+    }
+    Log -End
+    return $powerGateErrMsg
 }
 
 function Edit-ResponseWithErrorMessage {
