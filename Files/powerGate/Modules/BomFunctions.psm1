@@ -147,11 +147,21 @@ function CompareErpBom {
     $differences = @()
     $number = GetEntityNumber -entity $entityBom
     $erpBomHeader = GetErpBomHeader -number $number
-    if (-not $erpBomHeader -or $false -eq $erpBomHeader) {
-        if ($erpBomHeader._ErrorMessage){
-            $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "failed to import BOM Header from ERP"; IsHeader = $true }
-        } else {
-            $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "New"; Message = "BOM does not exist in ERP"; IsHeader = $true } 
+    if ($false -eq $erpBomHeader -and $erpBomHeader._ErrorMessage){
+        $differences += New-Object -Type PsObject -Property @{
+            AffectedObject = $entityBom;
+            Status = "Error";
+            Message = "failed to import BOM Header from ERP Server";
+            IsHeader = $true 
+        }
+    }
+    elseif (-not $erpBomHeader) {
+            $differences += New-Object -Type PsObject -Property @{
+                AffectedObject = $entityBom;
+                Status = "New";
+                Message = "BOM does not exist in ERP";
+                IsHeader = $true
+            } 
             foreach ($entityBomRow in $entityBom.Children) {
                 $childNumber = GetEntityNumber -entity $entityBomRow
                 $erpMaterial = GetErpMaterial -number $childNumber
@@ -163,7 +173,6 @@ function CompareErpBom {
                     $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "New"; Message = "Position will be added to ERP"; IsHeader = $false } 
                 }
             }
-        }
     }
     else {
         $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Identical"; Message = "BOM is identical between Vault and ERP"; IsHeader = $true } 
