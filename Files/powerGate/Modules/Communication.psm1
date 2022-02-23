@@ -20,8 +20,6 @@ $PGServerDefinitions = @{
 	"TEST" = $env:COMPUTERNAME;
 	"PROD" = "ProductiveERP"
 }
-
-
 function getRelatedPGServerName {
 	$connectedVault = $vaultConnection.Vault
 	if ($connectedVault -in $testVaults){
@@ -34,30 +32,36 @@ function getRelatedPGServerName {
 		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
 	}
 }
+
 function ConnectToErpServerWithMessageBox {
 	Log -Begin
-	$connected = ConnectToErpServer
-	if (-not $connected) {
-		$connectionError = ("Error on connecting to powerGateServer service! Check if powerGateServer is running on following host: '{0}' or try to access following link via your browser: '{1}'" -f (([Uri]$powerGateServerErpPluginUrl).Authority), $powerGateServerErpPluginUrl)
-		Write-Error -Message $connectionError
-		ShowMessageBox -Message $connectionError -Icon Error
+	$powerGateServerName = getRelatedPGServerName
+	$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
+	#$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/DynamicsNav"
+	# Dynamics NAV 2017 Plugin available here: https://github.com/coolOrangeLabs/powergate-dynamics-nav-sample/releases
+
+	if (-not $powerGateServerName){
+		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
+	}
+	else {
+		$connected = ConnectToErpServer
+		if (-not $connected) {
+			$connectionError = ("Error on connecting to powerGateServer service! Check if powerGateServer is running on following host: '{0}' or try to access following link via your browser: '{1}'" -f (([Uri]$powerGateServerErpPluginUrl).Authority), $powerGateServerErpPluginUrl)
+			Write-Error -Message $connectionError
+			ShowMessageBox -Message $connectionError -Icon Error
+		}
 	}
 	Log -End
 }
 
 function ConnectToErpServer {
 	Log -Begin
-	$powerGateServerName = getRelatedPGServerName
 	if ($powerGateServerName){
-		$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
-		#$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/DynamicsNav"
-		# Dynamics NAV 2017 Plugin available here: https://github.com/coolOrangeLabs/powergate-dynamics-nav-sample/releases
 		Write-Host "Connecting with URL: $powerGateServerErpPluginUrl"
 		$connected = Connect-ERP -Service $powerGateServerErpPluginUrl -OnConnect $onConnect
 		Write-Host "Connection: $connected"
 		return $connected
 	}else{
-		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
 	}
 	Log -End
 }
