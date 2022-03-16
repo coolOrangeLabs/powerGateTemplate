@@ -54,21 +54,24 @@ function Edit-ResponseWithErrorMessage {
 		[Switch]$WriteOperation = $false
 	)
 	Log -Begin
+	$result = @{
+		Entity = $entity
+		ErrorMessage = $null
+	}
 	if ($null -eq $entity) {
-		$entity = $false
 		if($WriteOperation) {
 			# In case NO error message from the ERP returned and this means that no request at all was sent out by powerGate, therefore its required to look for a internal error in the powerGate Logs file.
 			$logFileLocation = "$($env:LocalAppdata)\coolOrange\powerGate\Logs\powerGate.log"
-			Add-Member -InputObject $entity -Name "_ErrorMessage" -Value "Unexpected error:`n Failed bacause probably some passed values for the create/update operation are not valid, for example 'the input was a text but should be a number'. Therefore check the last error message in the log file, then change your inputs and re-execute the operation: $logFileLocation" -MemberType NoteProperty -Force
+			$result.ErrorMessage = "Unexpected error:`n Failed bacause probably some passed values for the create/update operation are not valid, for example 'the input was a text but should be a number'. Therefore check the last error message in the log file, then change your inputs and re-execute the operation: $logFileLocation"
 		}
 		$pGError = GetPowerGateError
 		if ($pGError) {
 			$message = "Direct error message from the ERP:`n '$pGError'"
-			Add-Member -InputObject $entity -Name "_ErrorMessage" -Value $message -MemberType NoteProperty -Force
+			$result.ErrorMessage = $message
 		}
 	}
 	Log -End
-	return $entity
+	return $result
 }
 
 $collectResponse = {
