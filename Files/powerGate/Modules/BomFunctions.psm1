@@ -10,12 +10,12 @@ $rawMaterialNumberProperty = "Raw Number"
 $rawMaterialQuantityProperty = "Raw Quantity"
 
 #region BOM Header
-function GetErpBomHeader($number) {
+function GetErpBomHeaderWithPGError($number) {
     Log -Begin
     $erpBomHeader = Get-ERPObject -EntitySet $bomHeaderEntitySet -Keys @{Number = $number } -Expand "BomRows"
-    $erpBomHeader = Edit-ResponseWithErrorMessage -Entity $erpBomHeader
+    $erpBomHeaderHashTable = Edit-ResponseWithErrorMessage -Entity $erpBomHeader
     Log -End
-    return $erpBomHeader
+    return $erpBomHeaderHashTable
 }
 
 function NewErpBomHeader {
@@ -25,36 +25,36 @@ function NewErpBomHeader {
     return $erpBomHeader
 }
 
-function CreateErpBomHeader($erpBomHeader) {
+function CreateErpBomHeaderWithPGError($erpBomHeader) {
     Log -Begin
     #TODO: Property manipulation for bom header create
     $erpBomHeader.ModifiedDate = [DateTime]::Now
 
     $erpBomHeader = Add-ERPObject -EntitySet $bomHeaderEntitySet -Properties $erpBomHeader
-    $erpBomHeader = Edit-ResponseWithErrorMessage -Entity $erpBomHeader -WriteOperation
+    $erpBomHeaderHashTable = Edit-ResponseWithErrorMessage -Entity $erpBomHeader -WriteOperation
     Log -End
-    return $erpBomHeader
+    return $erpBomHeaderHashTable
 }
 
-function UpdateErpBomHeader($erpBomHeader) {
+function UpdateErpBomHeaderWithPGError($erpBomHeader) {
     Log -Begin
     #TODO: Property manipulation for bom header update
     $erpBomHeader.ModifiedDate = [DateTime]::Now
 
     $erpBomHeader = Update-ERPObject -EntitySet $bomHeaderEntitySet -keys $erpBomHeader._Keys -Properties $erpBomHeader._Properties
-    $erpBomHeader = Edit-ResponseWithErrorMessage -Entity $erpBomHeader -WriteOperation
+    $erpBomHeaderHashTable = Edit-ResponseWithErrorMessage -Entity $erpBomHeader -WriteOperation
     Log -End
-    return $erpBomHeader
+    return $erpBomHeaderHashTable
 }
 #endregion
 
 #region BOM Row
-function GetErpBomRow($parentNumber, $childNumber, $position) {
+function GetErpBomRowWithPGError($parentNumber, $childNumber, $position) {
     Log -Begin
     $erpBomRow = Get-ERPObject -EntitySet $bomRowEntitySet -Keys @{ParentNumber = $parentNumber; ChildNumber = $childNumber; Position = $position }
-    $erpBomRow = Edit-ResponseWithErrorMessage -Entity $erpBomRow
+    $erpBomRowHashTable = Edit-ResponseWithErrorMessage -Entity $erpBomRow
     Log -End
-    return $erpBomRow
+    return $erpBomRowHashTable
 }
 
 function NewErpBomRow {
@@ -64,34 +64,34 @@ function NewErpBomRow {
     return $erpBomRow
 }
 
-function CreateErpBomRow($erpBomRow) {
+function CreateErpBomRowPGError($erpBomRow) {
     Log -Begin
     #TODO: Property manipulation for bom row create
     $erpBomRow.ModifiedDate = [DateTime]::Now
 
     $erpBomRow = Add-ERPObject -EntitySet $bomRowEntitySet -Properties $erpBomRow
-    $erpBomRow = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
+    $erpBomRowHashTable = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
     Log -End
-    return $erpBomRow
+    return $erpBomRowHashTable
 }
 
-function UpdateErpBomRow($erpBomRow) {
+function UpdateErpBomRowPGError($erpBomRow) {
     Log -Begin
     #TODO: Property manipulation for bom row update
     $erpBomRow.ModifiedDate = [DateTime]::Now
 
     $erpBomRow = Update-ERPObject -EntitySet $bomRowEntitySet -Keys $erpBomRow._Keys -Properties @{Quantity = $erpBomRow.Quantity }
-    $erpBomRow = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
+    $erpBomRowHashTable = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
     Log -End
-    return $erpBomRow
+    return $erpBomRowHashTable
 }
 
-function RemoveErpBomRow($parentNumber, $childNumber, $position) {
+function RemoveErpBomRowPGError($parentNumber, $childNumber, $position) {
     Log -Begin
     $erpBomRow = Remove-ERPObject -EntitySet $bomRowEntitySet -Keys @{ParentNumber = $parentNumber; ChildNumber = $childNumber; Position = $position }
-    $erpBomRow = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
+    $erpBomRowHashTable = Edit-ResponseWithErrorMessage -Entity $erpBomRow -WriteOperation
     Log -End
-    return $erpBomRow
+    return $erpBomRowHashTable
 }
 #endregion
 
@@ -146,8 +146,8 @@ function CompareErpBom {
 
     $differences = @()
     $number = GetEntityNumber -entity $entityBom
-    $erpBomHeader = GetErpBomHeader -number $number
-    if ($false -eq $erpBomHeader -and $erpBomHeader._ErrorMessage){
+    $erpBomHeaderHashtable = GetErpBomHeaderWithPGError -number $number
+    if ($erpBomHeaderHashtable.ErrorMessage){
         $differences += New-Object -Type PsObject -Property @{
             AffectedObject = $entityBom;
             Status = "Error";
@@ -155,7 +155,7 @@ function CompareErpBom {
             IsHeader = $true 
         }
     }
-    elseif (-not $erpBomHeader) {
+    elseif (-not $erpBomHeaderHashtable.Entity) {
             $differences += New-Object -Type PsObject -Property @{
                 AffectedObject = $entityBom;
                 Status = "New";
@@ -164,13 +164,17 @@ function CompareErpBom {
             } 
             foreach ($entityBomRow in $entityBom.Children) {
                 $childNumber = GetEntityNumber -entity $entityBomRow
-                $erpMaterial = GetErpMaterial -number $childNumber
-                if (-not $erpMaterial -or $false -eq $erpMaterial) {
-                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "Position doesn't exist as Item in ERP"; IsHeader = $false } 
-                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "BOM contains positions that do not exist as Items in ERP"; IsHeader = $true } 
+                $erpMaterialHashtable = GetErpMaterialWithPGError -number $childNumber
+                if ($erpMaterialHashtable.Entity) {
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "New"; Message = "Position will be added to ERP"; IsHeader = $false } 
+                }
+                elseif ($erpMaterialHashtable.ErrorMessage) {
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "failed to import postition from ERP Server"; IsHeader = $false } 
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "failed to import BOM postiton from ERP Server"; IsHeader = $true }
                 }
                 else {
-                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "New"; Message = "Position will be added to ERP"; IsHeader = $false } 
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "Position doesn't exist as Item in ERP"; IsHeader = $false } 
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "BOM contains positions that do not exist as Items in ERP"; IsHeader = $true } 
                 }
             }
     }
@@ -178,7 +182,7 @@ function CompareErpBom {
         $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Identical"; Message = "BOM is identical between Vault and ERP"; IsHeader = $true } 
         foreach ($entityBomRow in $entityBom.Children) {
             $childNumber = GetEntityNumber -entity $entityBomRow
-            $erpBomRow = $erpBomHeader.BomRows | Where-Object { $_.ChildNumber -eq $childNumber -and $_.Position -eq $entityBomRow.Bom_PositionNumber }
+            $erpBomRow = $erpBomHeaderHashtable.Entity.BomRows | Where-Object { $_.ChildNumber -eq $childNumber -and $_.Position -eq $entityBomRow.Bom_PositionNumber }
             if ($null -ne $erpBomRow) {
                 if ($entityBomRow.Bom_Quantity -eq $erpBomRow.Quantity) {
                     $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Identical"; Message = "Position is identical"; IsHeader = $false } 
@@ -190,18 +194,22 @@ function CompareErpBom {
             }
             else {
                 $childNumber = GetEntityNumber -entity $entityBomRow
-                $erpMaterial = GetErpMaterial -number $childNumber
-                if (-not $erpMaterial -or $false -eq $erpMaterial) {
-                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "Position doesn't exist as Item in ERP"; IsHeader = $false } 
-                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "BOM contains positions that do not exist as Items in ERP"; IsHeader = $true } 
-                }
-                else {
+                $erpMaterialHashtable = GetErpMaterialWithPGError -number $childNumber
+                if ($erpMaterialHashtable.Entity) {
                     $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "New"; Message = "Position will be added to ERP"; IsHeader = $false } 
                     $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Different"; Message = "BOMs are different between Vault and ERP!"; IsHeader = $true } 
                 }
+                elseif ($erpMaterialHashtable.ErrorMessage) {
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "failed to import postition from ERP Server"; IsHeader = $false } 
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "failed to import postition from ERP Server"; IsHeader = $true } 
+                }
+                else {
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBomRow; Status = "Error"; Message = "Position doesn't exist as Item in ERP"; IsHeader = $false } 
+                    $differences += New-Object -Type PsObject -Property @{AffectedObject = $entityBom; Status = "Error"; Message = "BOM contains positions that do not exist as Items in ERP"; IsHeader = $true } 
+                }
             }
         }
-        foreach ($erpBomRow in $erpBomHeader.BomRows) {
+        foreach ($erpBomRow in $erpBomHeaderHashtable.Entity.BomRows) {
             $entityBomRow = $entityBom.Children | Where-Object { (GetEntityNumber -entity $_) -eq $erpBomRow.ChildNumber -and $_.Bom_PositionNumber -eq $erpBomRow.Position }
             if ($null -eq $entityBomRow) {
                 $remove = @{

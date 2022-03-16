@@ -267,7 +267,7 @@ function Get-ErpKey {
     if ($Type -ieq 'Binary') { return GetErpBinaryKey -VaultEntity $VaultEntity }
 
     if ($BomHead -and $BomRow) {
-        if ($Type -ieq 'BomRow') { return GetErpBomRowKey -BomHead $BomHead -BomRow $BomRow }
+        if ($Type -ieq 'BomRow') { return GetErpBomRowWithPGErrorKey -BomHead $BomHead -BomRow $BomRow }
     }
 }
 

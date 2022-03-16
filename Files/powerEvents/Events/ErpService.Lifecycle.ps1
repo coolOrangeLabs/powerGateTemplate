@@ -18,9 +18,9 @@ function Test-ErpItemForVaultFileOrVaultItem {
 	)	
 	Log -Begin
 	$entityNumber = GetEntityNumber -Entity $Entity		
-	$erpMaterial = GetErpMaterial -Number $entityNumber
+	$erpMaterialHashtable = GetErpMaterialWithPGError -Number $entityNumber
 	try {
-		Test-ErpItemExists -ErpMaterial $erpMaterial -VaultEntity $Entity
+		Test-ErpItemExists -ErpMaterial $erpMaterialHashtable.Entity -VaultEntity $Entity
 		
 		# ToDO: When ProAlpha is used then enable this line
 		# Test-ProAlphaStatusIsOk -ErpMaterial $erpMaterial

@@ -1,10 +1,10 @@
 ﻿$materialEntitySet = "Materials"
 $materialEntityType = "Material"
 
-function SearchErpMaterials ($filter, $top = 100) {
+function SearchErpMaterialsWithPGError ($filter, $top = 100) {
 	$erpMaterials = Get-ERPObjects -EntitySet $materialEntitySet -Filter $filter -Top $top
-	$erpMaterials = Edit-ResponseWithErrorMessage -Entity $erpMaterials
-	return $erpMaterials
+	$erpMaterialsHashtable = Edit-ResponseWithErrorMessage -Entity $erpMaterials
+	return $erpMaterialsHashtable
 }
 
 function OpenErpSearchWindow {
@@ -124,7 +124,7 @@ function ExecuteErpSearch {
     $topa = $searchWindow.FindName("NumberOfRecords").SelectedValue
     $filter = ConvertSearchCriteriaToFilter -SearchCriteria $searchCriteria -CaseSensitive $CaseSensitive
     $dsDiag.Trace("filter = $filter")
-    $results = SearchErpMaterials -filter $filter -top $topa
+    $results = SearchErpMaterialsWithPGError -filter $filter -top $topa
     $dsWindow.Cursor = "Arrow"
     if (-not $results -or $false -eq $results) {
         $searchWindow.FindName("SearchResults").ItemsSource = $null

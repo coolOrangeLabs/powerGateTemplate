@@ -11,21 +11,25 @@ function GetEntityNumber($entity) {
 	return $number
 }
 
-function GetErpMaterial($number) {
+function GetErpMaterialWithPGError($number) {
 	Log -Begin
+	$erpMaterialHashtable = @{
+		Entity = $null;
+		ErrorMessage = $null
+	}
 	if (-not $number) { 
-		$erpMaterial = $false
-		Add-Member -InputObject $erpMaterial -Name "_ErrorMessage" -Value "Number is empty!" -MemberType NoteProperty -Force
-		return $erpMaterial
+		$erpMaterialHashtable.Entity = $null
+		erpMaterialHashtable.ErrorMessage = "Number is empty!"
+		return $erpMaterialHashtable
 	}
 	$number = $number.ToUpper()
 	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Keys @{ Number = $number }
-	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial
+	$erpMaterialHashtable = Edit-ResponseWithErrorMessage -Entity $erpMaterial
 	
-	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $false -MemberType NoteProperty -Force
-	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $true -MemberType NoteProperty -Force	
+	Add-Member -InputObject $erpMaterialHashtable.Entity -Name "IsCreate" -Value $false -MemberType NoteProperty -Force
+	Add-Member -InputObject $erpMaterialHashtable.Entity -Name "IsUpdate" -Value $true -MemberType NoteProperty -Force	
 	Log -End
-	return $erpMaterial
+	return $erpMaterialHashtable
 }
 
 function NewErpMaterial {
@@ -42,7 +46,7 @@ function NewErpMaterial {
 	return $erpMaterial
 }
 
-function CreateErpMaterial($erpMaterial) {
+function CreateErpMaterialWithPGError($erpMaterial) {
 	Log -Begin
 	#TODO: Numbering generation for material creation (only if needed)
 	if ($null -eq $erpMaterial.Number -or $erpMaterial.Number -eq "") {
@@ -56,21 +60,21 @@ function CreateErpMaterial($erpMaterial) {
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Add-ErpObject -EntitySet $materialEntitySet -Properties $erpMaterial
-	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
+	$erpMaterialHashtable = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
 	Log -End
-	return $erpMaterial
+	return $erpMaterialHashtable
 }
 
-function UpdateErpMaterial($erpMaterial) {
+function UpdateErpMaterialWithPGError($erpMaterial) {
 	Log -Begin
 	#TODO: Properties that need to be set on update
 	$erpMaterial.ModifiedDate = [DateTime]::Now
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Update-ERPObject -EntitySet $materialEntitySet -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
-	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
+	$erpMaterialHashtable = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
 	Log -End
-	return $erpMaterial
+	return $erpMaterialHashtable
 }
 
 function TransformErpMaterial($erpMaterial) {

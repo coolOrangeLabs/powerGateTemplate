@@ -58,16 +58,16 @@ function CloseErpMaterialWindow {
 }
 
 function InitErpMaterialTab($number) {
-	$erpMaterial = GetErpMaterial -number $number
-	if (-not $erpMaterial -or $false -eq $erpMaterial) {
-		$erpMaterial = NewErpMaterial
-		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial
+	$erpMaterial = GetErpMaterialWithPGError -number $number
+	if (-not $erpMaterialHashtable.Entity) {
+		$newErpMaterial = NewErpMaterial
+		$erpMaterial.Entity = PrepareErpMaterial -erpMaterial $newErpMaterial
 		$goToEnabled = $false
 	}
  else {
 		$goToEnabled = $true
 	}
-	$userControl.FindName("DataGrid").DataContext = $erpMaterial
+	$userControl.FindName("DataGrid").DataContext = $erpMaterial.Entity
 	$userControl.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
 	$userControl.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
 }
@@ -115,23 +115,23 @@ function ValidateErpMaterialTab {
 function CreateOrUpdateErpMaterial {
 	$erpMaterial = $userControl.FindName("DataGrid").DataContext
 	if ($erpMaterial.IsUpdate) {
-		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
-		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
-			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
+		$erpMaterial = UpdateErpMaterialWithPGError -erpMaterial $erpMaterial
+		if ($erpMaterial.ErrorMessage) { 	
+			ShowMessageBox -Message $erpMaterial.ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
 		}
 		else { 
-			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
+			ShowMessageBox -Message "$($erpMaterial.Entity.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
 		}
 	}
  else {
-		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
-		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
-			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
+		$erpMaterial = CreateErpMaterialWithPGError -erpMaterial $erpMaterial
+		if ($erpMaterial.ErrorMessage) { 	
+			ShowMessageBox -Message $erpMaterial.ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
 		}
 		else { 
-			ShowMessageBox -Message "$($erpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"  | Out-Null
-			SetEntityProperties -erpMaterial $erpMaterial
-			#InitErpMaterialTab -number $erpMaterial.Number
+			ShowMessageBox -Message "$($erpMaterial.Entity.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"  | Out-Null
+			SetEntityProperties -erpMaterial $erpMaterial.Entity
+			#InitErpMaterialTab -number $erpMaterial.Entity.Number
 		}
 	}
 	RefreshView
