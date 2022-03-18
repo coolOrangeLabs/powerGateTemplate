@@ -1,13 +1,4 @@
-﻿Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
-Initialize-CoolOrange 
-
-$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Inventor-powerGate.log"
-Set-LogFilePath -Path $logPath
-
-
-ConnectToErpServerWithMessageBox
-
-function OpenErpInsertWindow {
+﻿function OpenErpInsertWindow {
 	#TODO: Show Search dialog to get item number
 	$erpMaterial = OpenErpSearchWindow
 	if ($erpMaterial) {
@@ -182,6 +173,12 @@ function SetEntityProperties($erpMaterial) {
 
 function InitializeWindow
 {
+	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
+	Initialize-CoolOrange 
+	Disconnect-ERP
+	ConnectToErpServerWithMessageBox
+	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Inventor-powerGate.log"
+	Set-LogFilePath -Path $logPath
 	#begin rules applying commonly
     $dsWindow.Title = SetWindowTitle		
     InitializeCategory
@@ -201,7 +198,7 @@ function InitializeWindow
 			#rules applying for AutoCAD
 		}
 	}
-	$global:expandBreadCrumb = $true	
+	$global:expandBreadCrumb = $true
 }
 
 function AddinLoaded
