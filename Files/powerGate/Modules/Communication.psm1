@@ -28,9 +28,6 @@ function getRelatedPGServerName {
 	elseif ($connectedVault -in $productiveVaults){
 		return $PGServerDefinitions["PROD"]
 	}
-	else {
-		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
-	}
 }
 
 function ConnectToErpServerWithMessageBox {
