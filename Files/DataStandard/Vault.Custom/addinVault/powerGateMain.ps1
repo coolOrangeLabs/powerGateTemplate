@@ -47,15 +47,23 @@ function InitMaterialTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
 	$erpMaterial = GetErpMaterial -number $number
+
+	$materialTabContext = New-Object -Type PsObject -Property @{
+		Entity = $erpMaterial
+		IsCreate = $false
+	}
+
 	if (-not $erpMaterial -or $false -eq $erpMaterial) {
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
+		$materialTabContext.IsCreate = $true
+		$materialTabContext.Entity = $erpMaterial
 		$goToEnabled = $false
 	}
- else {
+ 	else {
 		$goToEnabled = $true
 	}
-	$dswindow.FindName("DataGrid").DataContext = $erpMaterial
+	$dswindow.FindName("DataGrid").DataContext = $materialTabContext
 	$dsWindow.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
 	$dswindow.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
 }
@@ -74,11 +82,13 @@ function IsEntityUnlocked {
 }
 
 function ValidateErpMaterialTab {
-	$erpMaterial = $dsWindow.FindName("DataGrid").DataContext
+	$materialTabContext = $dsWindow.FindName("DataGrid").DataContext
+	$erpMaterial = $materialTabContext.Entity
+	
 	if ($erpMaterial.Number) {
 		$entityUnlocked = $true
 	}
- else {
+ 	else {
 		$entityUnlocked = IsEntityUnlocked
 	}
 
@@ -91,24 +101,17 @@ function ValidateErpMaterialTab {
 		$description = $true
 	}
 	$enabled = $entityUnlocked -and $type -and $description
+	
 	$dsWindow.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
 }
 
 function CreateOrUpdateErpMaterial {
 	$dsDiag.Trace(">>CreateOrUpdateMaterial")
-	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
-	if ($erpMaterial.IsUpdate) {
-		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
-		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
-			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
-		}
-		else { 
-			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
-		}
-		InitMaterialTab
-	}
- else {
-		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
+
+	$materialTabContext = $dswindow.FindName("DataGrid").DataContext
+
+	if($materialTabContext.IsCreate) {
+		$erpMaterial = CreateErpMaterial -erpMaterial $materialTabContext.Entity
 		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
 			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
 		}
@@ -120,11 +123,23 @@ function CreateOrUpdateErpMaterial {
 
 		RefreshView
 	}
+	else {
+		$erpMaterial = UpdateErpMaterial -erpMaterial $materialTabContext.Entity
+		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
+			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
+		}
+		else { 
+			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
+		}
+		InitMaterialTab
+	}
+
 	$dsDiag.Trace("<<CreateOrUpdateMaterial")
 }
 
 function GoToErpMaterial {
-	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
+	$materialTabContext = $dswindow.FindName("DataGrid").DataContext
+	$erpMaterial = $materialTabContext.Entity
 	if ($erpMaterial.Link) {
 		Start-Process -FilePath $erpMaterial.Link
 	}

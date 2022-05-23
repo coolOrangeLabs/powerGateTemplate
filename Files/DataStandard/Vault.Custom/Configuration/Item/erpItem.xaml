@@ -79,7 +79,7 @@
                     <Style TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type Label}}">
                         <Setter Property="Content" Value="ERP: Create Material"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding DataContext.IsUpdate, ElementName=DataGrid}" Value="True">
+                            <DataTrigger Binding="{Binding DataContext.IsCreate, ElementName=DataGrid}" Value="False">
                                 <Setter Property="Label.Content" Value="ERP: View/Update Material" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -88,13 +88,12 @@
             </Label>
 
             <Button Grid.Row="0" Grid.Column="1" x:Name="LinkMaterialButton" Content="Link ERP Item..." Command="{Binding PsCmd[LinkErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
-            <!-- Visibility="{Binding DataContext.IsCreate, ElementName=DataGrid, Converter={StaticResource BooleanToVisibility}}" -->
             <Button Grid.Row="0" Grid.Column="2" x:Name="CreateOrUpdateMaterialButton" IsEnabled="False" Command="{Binding PsCmd[CreateOrUpdateErpMaterial]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Content" Value="Create ERP Item"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding DataContext.IsUpdate, ElementName=DataGrid}" Value="True">
+                            <DataTrigger Binding="{Binding DataContext.IsCreate, ElementName=DataGrid}" Value="False">
                                 <Setter Property="Button.Content" Value="Update ERP Item" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -133,9 +132,9 @@
                             <ColumnDefinition MinWidth="100" Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Number" Grid.Row="0" Grid.Column="0" />
-                        <TextBox Text="{Binding Number}" Grid.Row="0" Grid.Column="1" IsReadOnly="True" />
+                        <TextBox Text="{Binding Entity.Number}" Grid.Row="0" Grid.Column="1" IsReadOnly="True" />
                         <Label Content="Description" Grid.Column="0" Grid.Row="1" />
-                        <TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1">
+                        <TextBox Text="{Binding Entity.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TextChanged">
                                     <i:InvokeCommandAction Command="{Binding DataContext.PsCmd[ValidateErpMaterialTab], ElementName=MainWindow}" />
@@ -146,11 +145,33 @@
                             </i:Interaction.Triggers>
                         </TextBox>
 
-                        <Label Content="Blocked" Grid.Column="0" Grid.Row="2" Visibility="{Binding IsUpdate, Converter={StaticResource BooleanToVisibility}}" />
-                        <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding IsBlocked}" IsEnabled="False" Visibility="{Binding IsUpdate, Converter={StaticResource BooleanToVisibility}}" />
+                        <Label Content="Blocked" Grid.Column="0" Grid.Row="2" >
+							<Label.Style>
+								<Style TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type Label}}">
+									<Setter Property="Visibility" Value="Visible"/>
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding DataContext.IsCreate, ElementName=DataGrid}" Value="False">
+											<Setter Property="Label.Visibility" Value="Collapsed" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</Label.Style>
+						</Label>
+                        <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding Entity.IsBlocked}" IsEnabled="False" >
+							<CheckBox.Style>
+								<Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+									<Setter Property="Visibility" Value="Visible"/>
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding DataContext.IsCreate, ElementName=DataGrid}" Value="False">
+											<Setter Property="CheckBox.Visibility" Value="Collapsed" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</CheckBox.Style>
+						</CheckBox>
 
                         <Label Content="Type" Grid.Column="3" Grid.Row="1"/>
-                        <ComboBox Name="MaterialTypeList" SelectedValue="{Binding Type}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="1" IsEnabled="{Binding IsCreate}" ItemsSource="{Binding DataContext.PsList[GetMaterialTypeList], ElementName=MainWindow}">
+                        <ComboBox Name="MaterialTypeList" SelectedValue="{Binding Entity.Type}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="1" IsEnabled="{Binding IsCreate}" ItemsSource="{Binding DataContext.PsList[GetMaterialTypeList], ElementName=MainWindow}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding DataContext.PsCmd[ValidateErpMaterialTab], ElementName=MainWindow}" />
@@ -162,11 +183,33 @@
                         </ComboBox>
 
                         <Label Content="Base Unit of Measure" Grid.Column="3" Grid.Row="0" />
-                        <ComboBox Name="UomList" SelectedValue="{Binding UnitOfMeasure}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="0" IsEnabled="{Binding IsCreate}" ItemsSource="{Binding DataContext.PsList[GetUnitOfMeasuresList], ElementName=MainWindow}" />
+                        <ComboBox Name="UomList" SelectedValue="{Binding Entity.UnitOfMeasure}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="0" IsEnabled="{Binding IsCreate}" ItemsSource="{Binding DataContext.PsList[GetUnitOfMeasuresList], ElementName=MainWindow}" />
 
-                        <Label Content="Last Modified Date" Grid.Column="3" Grid.Row="2" Visibility="{Binding IsUpdate, Converter={StaticResource BooleanToVisibility}}"/>
-                        <TextBox Text="{Binding ModifiedDate}" Grid.Column="4" Grid.Row="2" IsEnabled="False" Visibility="{Binding IsUpdate, Converter={StaticResource BooleanToVisibility}}"/>
-                    </Grid>
+						<Label Content="Last Modified Date" Grid.Column="3" Grid.Row="2" >
+							<Label.Style>
+								<Style TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type Label}}">
+									<Setter Property="Visibility" Value="Visible"/>
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding DataContext.IsCreate, ElementName=DataGrid}" Value="False">
+											<Setter Property="Label.Visibility" Value="Collapsed" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</Label.Style>
+						</Label>
+						<TextBox Text="{Binding Entity.ModifiedDate}" Grid.Column="4" Grid.Row="2" IsEnabled="False" >
+							<TextBox.Style>
+								<Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+									<Setter Property="Visibility" Value="Visible"/>
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding DataContext.IsCreate, ElementName=DataGrid}" Value="False">
+											<Setter Property="TextBox.Visibility" Value="Collapsed" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
+					</Grid>
                 </GroupBox>
                 <GroupBox Header="Inventory Data" Grid.Row="1">
                     <Grid>
@@ -183,13 +226,13 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Content="Item Category Code" Grid.Column="0" Grid.Row="0" />
-                        <ComboBox Name="Category" SelectedValue="{Binding Category}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding DataContext.PsList[GetCategoryList], ElementName=MainWindow}" />
+                        <ComboBox Name="Category" SelectedValue="{Binding Entity.Category}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding DataContext.PsList[GetCategoryList], ElementName=MainWindow}" />
 
                         <Label Content="Search Description" Grid.Column="0" Grid.Row="1" />
-                        <TextBox Text="{Binding SearchDescription}" Grid.Column="1" Grid.Row="1" />
+                        <TextBox Text="{Binding Entity.SearchDescription}" Grid.Column="1" Grid.Row="1" />
 
                         <Label Content="Storage Area / Shelf" Grid.Column="3" Grid.Row="0" />
-                        <TextBox Text="{Binding Shelf}" Grid.Column="4" Grid.Row="0" />
+                        <TextBox Text="{Binding Entity.Shelf}" Grid.Column="4" Grid.Row="0" />
                     </Grid>
                 </GroupBox>
             </Grid>

@@ -22,8 +22,6 @@ function GetErpMaterial($number) {
 	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Keys @{ Number = $number }
 	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial
 	
-	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $false -MemberType NoteProperty -Force
-	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $true -MemberType NoteProperty -Force	
 	Log -End
 	return $erpMaterial
 }
@@ -36,8 +34,6 @@ function NewErpMaterial {
 	$erpMaterial.UnitOfMeasure = "PCS"
 	$erpMaterial.Type = "Inventory"
 
-	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $true -MemberType NoteProperty -Force
-	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $false -MemberType NoteProperty -Force
 	Log -End
 	return $erpMaterial
 }
@@ -50,9 +46,6 @@ function CreateErpMaterial($erpMaterial) {
 	}
 	#TODO: Properties that need to be set on create
 	$erpMaterial.ModifiedDate = [DateTime]::Now
-
-	$erpMaterial.PSObject.Properties.Remove('IsCreate')
-	$erpMaterial.PSObject.Properties.Remove('IsUpdate')
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Add-ErpObject -EntitySet $materialEntitySet -Properties $erpMaterial
