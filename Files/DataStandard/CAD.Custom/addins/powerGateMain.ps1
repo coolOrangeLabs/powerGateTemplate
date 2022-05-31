@@ -33,6 +33,7 @@ function OpenErpMaterialWindow {
 
 	$window.FindName("ContentControl").Children.Add($userControl)
 	$window.DataContext = $dsWindow.DataContext
+	
 	$userControl.DataContext = $dsWindow.DataContext
 	
 	InitErpMaterialTab -number $prop["Part Number"].Value
@@ -53,7 +54,7 @@ function InitErpMaterialTab($number) {
 	$erpMaterial = GetErpMaterial -number $number
 
 	$materialTabContext = New-Object -Type PsObject -Property @{
-		Entity = $getErpMaterialResult.Entity
+		Entity = $erpMaterial
 		IsCreate = $false
 	}
 
