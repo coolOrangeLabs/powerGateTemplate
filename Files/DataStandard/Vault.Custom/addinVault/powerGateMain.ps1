@@ -2,8 +2,6 @@
 Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 Initialize-CoolOrange
 
-ConnectToErpServerWithMessageBox
-
 function OnTabContextChanged_powerGate($xamlFile) {
 	if ($xamlFile -eq "erpItem.xaml") {
 		InitMaterialTab
