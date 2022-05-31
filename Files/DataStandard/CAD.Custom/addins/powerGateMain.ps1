@@ -27,7 +27,7 @@ function OpenErpMaterialWindow {
 	$reader = (New-Object System.Xml.XmlNodeReader $windowXaml)
 	$global:window = [Windows.Markup.XamlReader]::Load($reader)	
 
-	[xml]$userControlXaml = Get-Content $PSScriptRoot.Replace('\CAD.Custom\addins', '\Vault.Custom\Configuration\File\erpItem.xaml')
+	[xml]$userControlXaml = Get-Content $PSScriptRoot.Replace('\CAD.Custom\addins', '\Vault.Custom\Configuration\File\ERP Item.xaml')
 	$reader = (New-Object System.Xml.XmlNodeReader $userControlXaml)
 	$global:userControl = [Windows.Markup.XamlReader]::Load($reader)
 

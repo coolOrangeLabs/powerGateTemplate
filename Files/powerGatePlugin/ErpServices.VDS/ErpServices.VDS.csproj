@@ -132,8 +132,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\File\erpItem.xaml">
-      <Link>Vault.Custom\Configuration\File\erpItem.xaml</Link>
+    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\File\ERP Item.xaml">
+      <Link>Vault.Custom\Configuration\File\ERP Item.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -142,8 +142,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\Item\erpItem.xaml">
-      <Link>Vault.Custom\Configuration\Item\erpItem.xaml</Link>
+    <Page Include="..\..\DataStandard\Vault.Custom\Configuration\Item\ERP Item.xaml">
+      <Link>Vault.Custom\Configuration\Item\ERP Item.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
