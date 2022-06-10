@@ -3,8 +3,8 @@ $materialEntityType = "Material"
 
 function SearchErpMaterials ($filter, $top = 100) {
 	$erpMaterials = Get-ERPObjects -EntitySet $materialEntitySet -Filter $filter -Top $top
-	$erpMaterials = Edit-ResponseWithErrorMessage -Entity $erpMaterials
-	return $erpMaterials
+	$result = Get-PgsErrorForLastResponse -Entity $erpMaterials
+	return $result
 }
 
 function OpenErpSearchWindow {
@@ -124,17 +124,19 @@ function ExecuteErpSearch {
     $topa = $searchWindow.FindName("NumberOfRecords").SelectedValue
     $filter = ConvertSearchCriteriaToFilter -SearchCriteria $searchCriteria -CaseSensitive $CaseSensitive
     $dsDiag.Trace("filter = $filter")
-    $results = SearchErpMaterials -filter $filter -top $topa
+
+	$searchErpMaterialsResult = SearchErpMaterials -filter $filter -top $topa
     $dsWindow.Cursor = "Arrow"
-    if (-not $results -or $false -eq $results) {
+	if ($searchErpMaterialsResult.ErrorMessage) {
+		ShowMessageBox -Message $searchErpMaterialsResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Search"
+	}
+    if (-not $searchErpMaterialsResult.Entity) {
         $searchWindow.FindName("SearchResults").ItemsSource = $null
         $searchWindow.FindName("RecordsFound").Content = "Results found: 0"
-        if ($results._ErrorMessage) {
-            ShowMessageBox -Message $results._ErrorMessage -Icon "Error" -Title "powerGate ERP - Search"
-        }
-    } else {
-        $searchWindow.FindName("SearchResults").ItemsSource = @($results) #this is because PowerShell transforms one result into a single object instead of keeping it as a list of one element
-        $searchWindow.FindName("RecordsFound").Content = "Results found: $(@($results).Count)"
+    }
+	else {
+        $searchWindow.FindName("SearchResults").ItemsSource = @($searchErpMaterialsResult.Entity) #this is because PowerShell transforms one result into a single object instead of keeping it as a list of one element
+        $searchWindow.FindName("RecordsFound").Content = "Results found: $(@($searchErpMaterialsResult.Entity).Count)"
     }
     Log -End
 }

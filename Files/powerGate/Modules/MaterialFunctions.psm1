@@ -13,17 +13,19 @@ function GetEntityNumber($entity) {
 
 function GetErpMaterial($number) {
 	Log -Begin
-	if (-not $number) { 
-		$erpMaterial = $false
-		Add-Member -InputObject $erpMaterial -Name "_ErrorMessage" -Value "Number is empty!" -MemberType NoteProperty -Force
-		return $erpMaterial
+	if (-not $number) {
+		return @{
+			Entity = $null
+			ErrorMessage = "Number is empty!"
+		}
 	}
+
 	$number = $number.ToUpper()
 	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Keys @{ Number = $number }
-	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial
+	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial
 	
 	Log -End
-	return $erpMaterial
+	return $result
 }
 
 function NewErpMaterial {
@@ -49,9 +51,9 @@ function CreateErpMaterial($erpMaterial) {
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Add-ErpObject -EntitySet $materialEntitySet -Properties $erpMaterial
-	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
+	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial -WriteOperation
 	Log -End
-	return $erpMaterial
+	return $result
 }
 
 function UpdateErpMaterial($erpMaterial) {
@@ -61,9 +63,9 @@ function UpdateErpMaterial($erpMaterial) {
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Update-ERPObject -EntitySet $materialEntitySet -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
-	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
+	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial -WriteOperation
 	Log -End
-	return $erpMaterial
+	return $result
 }
 
 function TransformErpMaterial($erpMaterial) {

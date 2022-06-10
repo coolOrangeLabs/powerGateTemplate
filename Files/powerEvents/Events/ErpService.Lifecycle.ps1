@@ -15,15 +15,16 @@ $requiresErpItemExtensions = @("iam", "ipn", "ipt")
 function Test-ErpItemForVaultFileOrVaultItem {
 	param(
 		$Entity # Can be a powerVault FILE or Vault object
-	)	
+	)
 	Log -Begin
-	$entityNumber = GetEntityNumber -Entity $Entity		
-	$erpMaterial = GetErpMaterial -Number $entityNumber
+	$entityNumber = GetEntityNumber -Entity $Entity
+
+	$getErpMaterialResult = GetErpMaterial -Number $entityNumber
 	try {
-		Test-ErpItemExists -ErpMaterial $erpMaterial -VaultEntity $Entity
+		Test-ErpItemExists -ErpMaterial $getErpMaterialResult.Entity -VaultEntity $Entity
 		
 		# ToDO: When ProAlpha is used then enable this line
-		# Test-ProAlphaStatusIsOk -ErpMaterial $erpMaterial
+		# Test-ProAlphaStatusIsOk -ErpMaterial $getErpMaterialResult.Entity
 		
 		Test-ErpBomIsSynced -Entity $Entity
 	}

@@ -81,28 +81,36 @@ function GetPowerGateError {
 	Log -End
 	return $powerGateErrMsg
 }
-
-function Edit-ResponseWithErrorMessage {
+function Get-PgsErrorForLastResponse {
 	param(
 		$Entity,
-		[Switch]$WriteOperation = $false
+		[Switch]$WriteOperation
 	)
-	Log -Begin
-	if ($null -eq $entity) {
-		$entity = $false
+	if($? -eq $false) { #Condition must be evaluated first as every other command like logging would change $?
+		$message = $null
+		$powerGateLastResponse = [AppDomain]::CurrentDomain.GetData("powerGate_lastResponse")
 		if($WriteOperation) {
 			# In case NO error message from the ERP returned and this means that no request at all was sent out by powerGate, therefore its required to look for a internal error in the powerGate Logs file.
 			$logFileLocation = "$($env:LocalAppdata)\coolOrange\powerGate\Logs\powerGate.log"
-			Add-Member -InputObject $entity -Name "_ErrorMessage" -Value "Unexpected error:`n Failed bacause probably some passed values for the create/update operation are not valid, for example 'the input was a text but should be a number'. Therefore check the last error message in the log file, then change your inputs and re-execute the operation: $logFileLocation" -MemberType NoteProperty -Force
+			$message = "Unexpected error:`n Failed bacause probably some passed values for the create/update operation are not valid, for example 'the input was a text but should be a number'. Therefore check the last error message in the log file, then change your inputs and re-execute the operation: $logFileLocation"
 		}
-		$pGError = GetPowerGateError
-		if ($pGError) {
-			$message = "Direct error message from the ERP:`n '$pGError'"
-			Add-Member -InputObject $entity -Name "_ErrorMessage" -Value $message -MemberType NoteProperty -Force
+		elseif($powerGateLastResponse.Status -as [int] -gt 500) {
+			$pGError = GetPowerGateError
+			$message = "{1} - Status: {0}; Message: {2}" -f `
+				$powerGateLastResponse.Code, `
+				$powerGateLastResponse.Status, `
+				$pGError
 		}
 	}
+	else { $message = $null }
+
+	Log -Begin
+	$result = @{
+		Entity = $Entity
+		ErrorMessage = $message
+	}
 	Log -End
-	return $entity
+	return $result
 }
 
 $collectResponse = {
