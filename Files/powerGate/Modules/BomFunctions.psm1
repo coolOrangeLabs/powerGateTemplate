@@ -109,16 +109,16 @@ function GetVaultBomRows {
             if ($entity.$rawMaterialQuantityProperty -gt 0 -and $entity.$rawMaterialNumberProperty -ne "") {
                 # Raw Material
                 $rawMaterial = New-Object PsObject -Property @{
-                    'Part Number'        = $entity.$rawMaterialNumberProperty; 
-                    '_PartNumber'        = $entity.$rawMaterialNumberProperty; 
-                    'Name'               = $entity.$rawMaterialNumberProperty; 
-                    '_Name'              = $entity.$rawMaterialNumberProperty; 
-                    'Number'             = $entity.$rawMaterialNumberProperty; 
-                    '_Number'            = $entity.$rawMaterialNumberProperty; 
-                    'Bom_Number'         = $entity.$rawMaterialNumberProperty; 
-                    'Bom_Quantity'       = $entity.$rawMaterialQuantityProperty; 
-                    'Bom_Position'       = '1'; 
-                    'Bom_PositionNumber' = '1' 
+                    'Part Number'        = $entity.$rawMaterialNumberProperty
+                    '_PartNumber'        = $entity.$rawMaterialNumberProperty
+                    'Name'               = $entity.$rawMaterialNumberProperty
+                    '_Name'              = $entity.$rawMaterialNumberProperty
+                    'Number'             = $entity.$rawMaterialNumberProperty
+                    '_Number'            = $entity.$rawMaterialNumberProperty
+                    'Bom_Number'         = $entity.$rawMaterialNumberProperty
+                    'Bom_Quantity'       = $entity.$rawMaterialQuantityProperty
+                    'Bom_Position'       = '1'
+                    'Bom_PositionNumber' = '1'
                 }
                 return @($rawMaterial)
             }
@@ -129,7 +129,7 @@ function GetVaultBomRows {
     }
     else {
         #if ($entity._Category -eq 'Part') { return @() }
-        $bomRows = @(Get-VaultItemBom -Number $entity._Number)
+        $bomRows = Get-VaultItemBom -Number $entity._Number
     }
     
     foreach ($vaultBomRow in $bomRows) {
@@ -239,16 +239,16 @@ function CompareErpBom {
 		$vaultBomRow = $VaultBom.Children | Where-Object { (GetEntityNumber -entity $_) -eq $erpBomRow.ChildNumber -and $_.Bom_PositionNumber -eq $erpBomRow.Position }
 		if ($null -eq $vaultBomRow) {
 			$remove = @{
-				'Part Number'        = $erpBomRow.ChildNumber; 
-				'_PartNumber'        = $erpBomRow.ChildNumber; 
-				'Name'               = $erpBomRow.ChildNumber; 
-				'_Name'              = $erpBomRow.ChildNumber; 
-				'Number'             = $erpBomRow.ChildNumber; 
-				'_Number'            = $erpBomRow.ChildNumber; 
-				'Bom_Number'         = $erpBomRow.ChildNumber; 
-				'Bom_Name'           = $erpBomRow.ChildNumber; 
-				'Bom_Quantity'       = $erpBomRow.Quantity; 
-				'Bom_Position'       = $erpBomRow.Position;
+				'Part Number'        = $erpBomRow.ChildNumber
+				'_PartNumber'        = $erpBomRow.ChildNumber
+				'Name'               = $erpBomRow.ChildNumber
+				'_Name'              = $erpBomRow.ChildNumber
+				'Number'             = $erpBomRow.ChildNumber
+				'_Number'            = $erpBomRow.ChildNumber
+				'Bom_Number'         = $erpBomRow.ChildNumber
+				'Bom_Name'           = $erpBomRow.ChildNumber
+				'Bom_Quantity'       = $erpBomRow.Quantity
+				'Bom_Position'       = $erpBomRow.Position
 				'Bom_PositionNumber' = $erpBomRow.Position
 			}
 
