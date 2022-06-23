@@ -75,3 +75,37 @@ function TransformErpMaterial($erpMaterial) {
 	Log -End
 	return $erpMaterial
 }
+function Update-VaultFileWithErrorHandling {
+	param (
+		$File,
+		[Hashtable]$Properties
+	)
+	$fehler = $false
+	$updatedfile = Update-VaultFile -File $File -Properties $Properties
+	foreach($prop in $Properties.GetEnumerator()){
+		if($updatedfile.($prop.Key) -ne ($prop.Value)){
+			$fehler = $true
+		}
+	}
+	if($fehler)
+	{
+		throw("Vault-File couldn't be updated!")
+	}
+}
+function Update-VaultItemWithErrorHandling {
+	param (
+		$Number,
+		[Hashtable]$Properties
+	)
+	$fehler = $false
+	$updateditem = Update-VaultItem -Number $Number -Properties $Properties
+	foreach($prop in $Properties.GetEnumerator()){
+		if($updateditem.($prop.Key) -ne ($prop.Value)){
+			$fehler = $true
+		}
+	}
+	if($fehler)
+	{
+		throw("Vault-File couldn't be updated!")
+	}
+}
