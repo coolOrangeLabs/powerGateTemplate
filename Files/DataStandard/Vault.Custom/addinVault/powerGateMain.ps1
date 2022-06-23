@@ -222,20 +222,28 @@ function RefreshView {
 
 function SetEntityProperties($erpMaterial, $vaultEntity) {
 	#TODO: Update Entity UDPs with values from ERP
-	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
-		$vaultEntity = Update-VaultItem -Number $vaultEntity._Number -NewNumber $erpMaterial.Number
-		Update-VaultItem -Number $vaultEntity._Number -Properties @{
-			#the item description cannot be updated, since "Description (Item,CO)" is a system property!
-			"_Description(Item,CO)" = $erpMaterial.Description
+	if ($vaultEntity._EntityTypeID -eq "ITEM") {
+		try {
+				$vaultEntity = Update-VaultItemWithErrorHandling -Number $vaultEntity._Number -NewNumber $erpMaterial.Number
+				Update-VaultItemWithErrorHandling -Number $vaultEntity._Number -Properties @{
+				#the item description cannot be updated, since "Description (Item,CO)" is a system property!
+				"_Description(Item,CO)" = $erpMaterial.Description
+				$vaultEntity._Number = $erpMaterial.Number
+			}
+		}catch {
+			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
 		}
-		$vaultEntity._Number = $erpMaterial.Number
 	}
  elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
-		Update-VaultFile -File $vaultEntity._FullPath -Properties @{
+	try {
+		Update-VaultFileWithErrorHandling -File $vaultEntity._FullPath -Properties @{
 			"_PartNumber"  = $erpMaterial.Number
 			"_Description" = $erpMaterial.Description
 		}
 		$vaultEntity._PartNumber = $erpMaterial.Number
+		} catch {
+			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
+		}
 	}
 }
 
