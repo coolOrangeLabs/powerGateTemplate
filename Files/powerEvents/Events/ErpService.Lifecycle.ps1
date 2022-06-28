@@ -112,13 +112,10 @@ Register-VaultEvent -EventName UpdateItemStates_Post -Action 'AddItemPdfJob'
 function AddItemPdfJob($items) {
 	Log -Begin
 	try {
-		[System.Windows.MessageBox]::Show("event triggered")
 			$releasedItems = @($items | Where-Object { $_._ReleasedRevision -eq $true})
 			foreach ($item in $releasedItems) {
-				[System.Windows.MessageBox]::Show("event triggered for item $($item._Name)")
-				$jobType = "ErpService.CreatePDFFromItem"
+				$jobType = "Erp.Service.CreatePDFFromItem"
 				Write-Host "Adding job '$jobType' for item '$($item._Name)' to queue."
-				[System.Windows.MessageBox]::Show("Adding job '$jobType' for item '$($item._Name)' to queue.")
 				Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $item.Id; "EntityClassId" = "ITEM" } -Description "Create PDF for item '$($item._Name)' and upload to ERP system" -Priority 101
 			}
 		}
