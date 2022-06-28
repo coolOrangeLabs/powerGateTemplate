@@ -97,7 +97,9 @@ function AddPdfJob($files, $successful) {
 		foreach ($file in $releasedFiles) {
 			Import-Module "C:\ProgramData\coolOrange\powerEvents\Modules\coolOrange.Queue.ADSKJobs.psm1"
 			Write-Host "Adding job 'Synchronize Properties' for file '$($file._Name)' to queue."
-			QueuePropSyncJob -File $file -Priority 100 | Out-Null
+			Add-VaultJob -Name "autodesk.vault.syncproperties" -Parameters @{
+                "FileVersionIds"=$file.Id;
+                "QueueCreateDwfJobOnCompletion"=$true} -Description "Synchronize properties of file: '$($file._Name)'"
 			$jobType = "ErpService.Create.PDF"
 			Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
 			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
