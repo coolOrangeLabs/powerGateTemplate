@@ -1,9 +1,6 @@
 ﻿$global:addinPath = $PSScriptRoot
 Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 Initialize-CoolOrange
-
-ConnectToErpServerWithMessageBox
-
 function OnTabContextChanged_powerGate($xamlFile) {
 	Open-VaultConnection
 	if ($xamlFile -eq "ERP Item.xaml") {
