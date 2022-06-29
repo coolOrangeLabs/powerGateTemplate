@@ -95,9 +95,14 @@ function AddPdfJob($files, $successful) {
 		$releasedFiles = @($files | Where-Object { $_._Extension -in $supportedPdfExtensions -and $_._ReleasedRevision -eq $true })
 		Write-Host "Found '$($releasedFiles.Count)' files which are valid to add a PDF job for!"
 		foreach ($file in $releasedFiles) {
+			# since Synchronize Properties gets triggered already by powerEvents, disable it in the Vault configuration!
+			Write-Host "Adding job 'Synchronize Properties' for file '$($file._Name)' to queue."
+			Add-VaultJob -Name "autodesk.vault.syncproperties" -Parameters @{
+                "FileVersionIds"=$file.Id;
+                "QueueCreateDwfJobOnCompletion"=$true} -Description "Synchronize properties of file: '$($file._Name)'"
 			$jobType = "ErpService.Create.PDF"
 			Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
-			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system"
+			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
 		}
 	}
 	catch {
