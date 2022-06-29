@@ -1,6 +1,7 @@
 ﻿# JobEntityType = ITEM
 $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.log"
 Set-LogFilePath -Path $logPath
+Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Communication.psm1"
 Write-Host "Starting job 'Create PDF as attachment' for item '$($item._Name)' ..."
 $attachedDrawings = Get-VaultItemAssociations -Number $item._Number
 foreach ($drawing in $attachedDrawings) {
@@ -29,19 +30,19 @@ foreach ($drawing in $attachedDrawings) {
         $exportResult = Export-Document -Format 'PDF' -To $localPDFfileLocation -Options $configFile
         if ($exportResult) {       
             $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
-            $drawing = Update-VaultItem -Number $item._Number -AddAttachments @($PDFfile._FullPath)
+            $item = Update-VaultItem -Number $item._Number -AddAttachments @($PDFfile.'Full Path')
             Log -Message "Connecting to powerGate..."
-            $connected = ConnectToErpServer
-            if (-not $connected) {
-                throw "Connection to powerGateServer could not be established!"
-            }
+            # $connected = ConnectToErpServer
+            # if (-not $connected) {
+            #     throw "Connection to powerGateServer could not be established!"
+            # }
 
-            Log -Message "Uploading PDF file $($PDFfile._Name) to ERP system..."
-            $d = New-ERPObject -EntityType "Document"
-            $d.FileName = $PDFfile._Name
-            $d.Number = $drawing._PartNumber
-            $d.Description = $drawing._Description
-            Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf" -File $localPDFfileLocation
+            # Log -Message "Uploading PDF file $($PDFfile._Name) to ERP system..."
+            # $d = New-ERPObject -EntityType "Document"
+            # $d.FileName = $PDFfile._Name
+            # $d.Number = $drawing._PartNumber
+            # $d.Description = $drawing._Description
+            # Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf" -File $localPDFfileLocation
         }
         $closeResult = Close-Document
     }
