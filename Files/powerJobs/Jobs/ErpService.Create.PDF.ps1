@@ -42,7 +42,7 @@ if ($openResult) {
         $file = Update-VaultFile -File $file._FullPath -AddAttachments @($PDFfile._FullPath)
 
         Log -Message "Connecting to powerGate..."
-        $connected = ConnectToErpServer
+        $connected = ConnectToConfiguredErpServer
         if (-not $connected) {
             throw "Connection to powerGateServer could not be established!"
         }

@@ -50,6 +50,28 @@ function ConnectToErpServerWithMessageBox {
 	}
 	Log -End
 }
+# Use this function in Jobs
+function ConnectToConfiguredErpServer {
+	Log -Begin
+	$powerGateServerName = getRelatedPGServerName
+	$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
+	#$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/DynamicsNav"
+	# Dynamics NAV 2017 Plugin available here: https://github.com/coolOrangeLabs/powergate-dynamics-nav-sample/releases
+	if (-not $powerGateServerName){
+		Write-Error -Message "no ERP Server URL specified!"
+		return
+	}
+	else {
+		$connected = ConnectToErpServer -PowerGateServerErpPluginUrl $powerGateServerErpPluginUrl
+		if (-not $connected) {
+			$connectionError = ("Error on connecting to powerGateServer service! Check if powerGateServer is running on following host: '{0}' or try to access following link via your browser: '{1}'" -f (([Uri]$powerGateServerErpPluginUrl).Authority), $powerGateServerErpPluginUrl)
+			Write-Error -Message $connectionError
+		}
+		return $connected
+	}
+	Log -End
+}
+
 
 function ConnectToErpServer($PowerGateServerErpPluginUrl) {
 	Log -Begin
