@@ -1,0 +1,5 @@
+<project outputDir=".\Obfuscated" baseDir=".\bin\Release" seed="" xmlns="http://confuser.codeplex.com">
+  <module path="CryptoService.dll">
+    <rule pattern="true" preset="maximum" inherit="false" />
+  </module>
+</project>

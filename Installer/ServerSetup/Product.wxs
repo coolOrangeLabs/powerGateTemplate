@@ -27,6 +27,7 @@
 			<ComponentGroupRef Id="HeatGenerated_PowerGateServerPlugins" />
 			<ComponentRef Id="CMP_PGS_LOG4NET" />
 			<ComponentRef Id="CMP_PGS_README" />
+			<ComponentRef Id="CMP_PGS_EXECONFIG" />
 			<ComponentGroupRef Id="SETUP_UI" />
 		</Feature>
 

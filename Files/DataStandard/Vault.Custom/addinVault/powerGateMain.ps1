@@ -5,8 +5,7 @@ Initialize-CoolOrange
 ConnectToErpServerWithMessageBox
 
 function OnTabContextChanged_powerGate($xamlFile) {
-	Open-VaultConnection
-	if ($xamlFile -eq "ERP Item.xaml") {
+	if ($xamlFile -eq "erpItem.xaml") {
 		InitMaterialTab
 	}
 	elseif ($xamlFile -eq "erpBom.xaml") {
@@ -33,38 +32,30 @@ function GetSelectedObject {
 function InitBomTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
-	$getErpBomHeaderResult = GetErpBomHeader -number $number
-	if(-not $getErpBomHeaderResult.Entity) {
+	$bom = GetErpBomHeader -number $number
+	if (-not $bom -or $false -eq $bom) {
 		$goToEnabled = $false
 	}
-	else {
+ else {
 		$goToEnabled = $true
 	}
-	$dswindow.FindName("DataGrid").DataContext = $getErpBomHeaderResult.Entity
+	$dswindow.FindName("DataGrid").DataContext = $bom
 	$dswindow.FindName("GoToBomButton").IsEnabled = $goToEnabled
 }
 
 function InitMaterialTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
-
-	$getErpMaterialResult = GetErpMaterial -number $number
-	$materialTabContext = New-Object -Type PsObject -Property @{
-		Entity = $getErpMaterialResult.Entity
-		IsCreate = $false
-	}
-
-	if (-not $getErpMaterialResult.Entity) {
+	$erpMaterial = GetErpMaterial -number $number
+	if (-not $erpMaterial -or $false -eq $erpMaterial) {
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
-		$materialTabContext.IsCreate = $true
-		$materialTabContext.Entity = $erpMaterial
 		$goToEnabled = $false
 	}
- 	else {
+ else {
 		$goToEnabled = $true
 	}
-	$dswindow.FindName("DataGrid").DataContext = $materialTabContext
+	$dswindow.FindName("DataGrid").DataContext = $erpMaterial
 	$dsWindow.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
 	$dswindow.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
 }
@@ -83,13 +74,11 @@ function IsEntityUnlocked {
 }
 
 function ValidateErpMaterialTab {
-	$materialTabContext = $dsWindow.FindName("DataGrid").DataContext
-	$erpMaterial = $materialTabContext.Entity
-	
+	$erpMaterial = $dsWindow.FindName("DataGrid").DataContext
 	if ($erpMaterial.Number) {
 		$entityUnlocked = $true
 	}
- 	else {
+ else {
 		$entityUnlocked = IsEntityUnlocked
 	}
 
@@ -102,45 +91,40 @@ function ValidateErpMaterialTab {
 		$description = $true
 	}
 	$enabled = $entityUnlocked -and $type -and $description
-	
 	$dsWindow.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
 }
 
 function CreateOrUpdateErpMaterial {
 	$dsDiag.Trace(">>CreateOrUpdateMaterial")
-
-	$materialTabContext = $dswindow.FindName("DataGrid").DataContext
-
-	if($materialTabContext.IsCreate) {
-		$createErpMaterialResult = CreateErpMaterial -erpMaterial $materialTabContext.Entity
-		if($createErpMaterialResult.ErrorMessage) {
-			ShowMessageBox -Message $createErpMaterialResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
+	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
+	if ($erpMaterial.IsUpdate) {
+		$erpMaterial = UpdateErpMaterial -erpMaterial $erpMaterial
+		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
+			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
 		}
 		else { 
-			ShowMessageBox -Message "$($createErpMaterialResult.Entity.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
+			ShowMessageBox -Message "$($erpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
+		}
+		InitMaterialTab
+	}
+ else {
+		$erpMaterial = CreateErpMaterial -erpMaterial $erpMaterial
+		if (-not $erpMaterial -or $false -eq $erpMaterial) { 	
+			ShowMessageBox -Message $erpMaterial._ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
+		}
+		else { 
+			ShowMessageBox -Message "$($erpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"  | Out-Null
 			$vaultEntity = GetSelectedObject
-			SetEntityProperties -erpMaterial $createErpMaterialResult.Entity -vaultEntity $vaultEntity
+			SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
 		}
 
 		RefreshView
 	}
-	else {
-		$updateErpMaterialResult = UpdateErpMaterial -erpMaterial $materialTabContext.Entity
-		if($updateErpMaterialResult.ErrorMessage) {
-			ShowMessageBox -Message $updateErpMaterialResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
-		}
-		else { 
-			ShowMessageBox -Message "$($updateErpMaterialResult.Entity.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information" | Out-Null
-		}
-		InitMaterialTab
-	}
-
 	$dsDiag.Trace("<<CreateOrUpdateMaterial")
 }
 
 function GoToErpMaterial {
-	$materialTabContext = $dswindow.FindName("DataGrid").DataContext
-	$erpMaterial = $materialTabContext.Entity
+	$erpMaterial = $dswindow.FindName("DataGrid").DataContext
 	if ($erpMaterial.Link) {
 		Start-Process -FilePath $erpMaterial.Link
 	}
@@ -222,26 +206,20 @@ function RefreshView {
 
 function SetEntityProperties($erpMaterial, $vaultEntity) {
 	#TODO: Update Entity UDPs with values from ERP
-	if ($vaultEntity._EntityTypeID -eq "ITEM") {
-		try {
-			Update-VaultItemWithErrorHandling -Number $vaultEntity._Number -Properties @{
-				#the item description cannot be updated, since "Description (Item,CO)" is a system property!
-				"_Description(Item,CO)" = $erpMaterial.Description
-				$vaultEntity._Number = $erpMaterial.Number
-			}
-		}catch {
-			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
+		$vaultEntity = Update-VaultItem -Number $vaultEntity._Number -NewNumber $erpMaterial.Number
+		Update-VaultItem -Number $vaultEntity._Number -Properties @{
+			#the item description cannot be updated, since "Description (Item,CO)" is a system property!
+			"_Description(Item,CO)" = $erpMaterial.Description
 		}
+		$vaultEntity._Number = $erpMaterial.Number
 	}
  elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
-	try {
-		Update-VaultFileWithErrorHandling -File $vaultEntity._FullPath -Properties @{
+		Update-VaultFile -File $vaultEntity._FullPath -Properties @{
 			"_PartNumber"  = $erpMaterial.Number
 			"_Description" = $erpMaterial.Description
 		}
-		} catch {
-			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
-		}
+		$vaultEntity._PartNumber = $erpMaterial.Number
 	}
 }
 
@@ -306,7 +284,7 @@ function PrepareErpBomRow($erpBomRow, $parentNumber, $vaultEntity) {
 	if ($vaultEntity.Children) {
 		$erpBomRow.Type = "Assembly"
 	}
-	else {
+ else {
 		$erpBomRow.Type = "Part"
 	}
 	$erpBomRow.Quantity = [double]$vaultEntity.'Bom_Quantity'

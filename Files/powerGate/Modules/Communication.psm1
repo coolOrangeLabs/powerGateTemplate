@@ -15,6 +15,9 @@ $productiveVaults = @(
 	# ,...
 )
 
+$global:VaultOptionerpUserNameKey = "VaultOptionerpUserNameKey"
+$global:VaultOptionerpEncryptedPasswordKey = "VaultOptionerpEncryptedPasswordKey"
+
 # define here witch Powergate Server is used for test and witch one for production
 $PGServerDefinitions = @{
 	"TEST" = $env:COMPUTERNAME;
@@ -22,11 +25,14 @@ $PGServerDefinitions = @{
 }
 function getRelatedPGServerName {
 	$connectedVault = $vaultConnection.Vault
-	if ($connectedVault -in $testVaults){
+	if ($connectedVault -in $testVaults) {
 		return $PGServerDefinitions["TEST"]
 	}
-	elseif ($connectedVault -in $productiveVaults){
+	elseif ($connectedVault -in $productiveVaults) {
 		return $PGServerDefinitions["PROD"]
+	}
+	else {
+		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
 	}
 }
 
@@ -37,11 +43,8 @@ function ConnectToErpServerWithMessageBox {
 	#$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/DynamicsNav"
 	# Dynamics NAV 2017 Plugin available here: https://github.com/coolOrangeLabs/powergate-dynamics-nav-sample/releases
 
-	if (-not $powerGateServerName){
-		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
-	}
-	else {
-		$connected = ConnectToErpServer -PowerGateServerErpPluginUrl $powerGateServerErpPluginUrl
+	if ($powerGateServerName) {
+		$connected = ConnectToErpServer
 		if (-not $connected) {
 			$connectionError = ("Error on connecting to powerGateServer service! Check if powerGateServer is running on following host: '{0}' or try to access following link via your browser: '{1}'" -f (([Uri]$powerGateServerErpPluginUrl).Authority), $powerGateServerErpPluginUrl)
 			Write-Error -Message $connectionError
@@ -51,47 +54,30 @@ function ConnectToErpServerWithMessageBox {
 	Log -End
 }
 
-function ConnectToErpServer($PowerGateServerErpPluginUrl) {
+[Reflection.Assembly]::LoadFrom("$($env:ProgramData)\coolOrange\powerGate\Modules\CryptoService.dll")
+function ConnectToErpServer {
 	Log -Begin
+	if ($powerGateServerName) {
+		Write-Host "Connecting with URL: $powerGateServerErpPluginUrl"
 
-	if (-not $PowerGateServerErpPluginUrl) { 
-		return 
+		$userName = $vault.KnowledgeVaultService.GetVaultOption($global:VaultOptionerpUserNameKey)
+		$encryptedPassword = $vault.KnowledgeVaultService.GetVaultOption($global:VaultOptionerpEncryptedPasswordKey)
+		
+		$onConnect = {
+			param ($Settings)
+			#$global:sapConnect.Invoke($Settings)
+		}
+		$ErpConnector = new-object CryptoService.ErpConnector -ArgumentList $userName, $encryptedPassword, $onConnect
+		$initializeConnection = {
+			param ($Settings)
+			$ErpConnector.OnConnect($Settings)
+		}
+		$connected = Connect-ERP -Service $powerGateServerErpPluginUrl -User "ThisValueIsNOTused" -Password "ThisValueIsNOTused" -OnConnect $initializeConnection
+		Write-Host "Connection: $connected"
+		return $connected
 	}
-
-	$collectResponse = {
-		param($settings)
-		$settings.AfterResponse = [System.Delegate]::Combine([Action[System.Net.Http.HttpResponseMessage]] {
-			param($response)
-			$global:powerGate_lastResponse = New-Object PSObject @{
-				'RequestUri' = $response.RequestMessage.RequestUri
-				'Code'       = [int]$response.StatusCode
-				'Status'     = $response.StatusCode.ToString()
-				'Protocol'   = 'HTTP/' + $response.Version
-				'Headers'    = @{ }
-				'Body'       = $null
-			} 
-			$response.Headers | ForEach-Object { $powerGate_lastResponse.Headers[$_.Key] = $_.Value }
-			if ($null -ne $response.Content) {
-				$body = $response.Content.ReadAsStringAsync().Result
-				try {
-					$powerGate_lastResponse.Body = $body | ConvertFrom-Json
-				}
-				catch {
-					$powerGate_lastResponse.Body = [xml]$body
-				}
-				$response.Content.Headers | ForEach-Object { $powerGate_lastResponse.Headers[$_.Key] = $_.Value }
-			}
-			$currentDomain = [AppDomain]::CurrentDomain
-			$currentDomain.SetData("powerGate_lastResponse", $global:powerGate_lastResponse)
-		}, $settings.AfterResponse)
+	else {
 	}
-
-	Write-Host "Connecting with URL: $PowerGateServerErpPluginUrl"
-	$connected = Connect-ERP -Service $PowerGateServerErpPluginUrl -OnConnect $collectResponse
-	Write-Host "Connection: $connected"
-	return $connected
-
-
 	Log -End
 }
 
@@ -100,7 +86,7 @@ function GetPowerGateError {
 	$powerGateErrMsg = $null
 	$powerGateLastResponse = [AppDomain]::CurrentDomain.GetData("powerGate_lastResponse")
 	if ($powerGateLastResponse) {
-		if ($powerGateLastResponse.Code -as [int] -gt 500) {
+		if ($powerGateLastResponse.Code -eq "500") {
 			$powerGateErrMsg = [string]$powerGateLastResponse.Body.error.message.innertext
 			if ($powerGateLastResponse.Body.error.innererror) {
 				$powerGateErrMsg = [string]$powerGateLastResponse.Body.error.innererror.message
@@ -113,34 +99,59 @@ function GetPowerGateError {
 	Log -End
 	return $powerGateErrMsg
 }
-function Get-PgsErrorForLastResponse {
+
+function Edit-ResponseWithErrorMessage {
 	param(
 		$Entity,
-		[Switch]$WriteOperation
+		[Switch]$WriteOperation = $false
 	)
-	if($? -eq $false) { #Condition must be evaluated first as every other command like logging would change $?
-		$message = $null
-		$powerGateLastResponse = [AppDomain]::CurrentDomain.GetData("powerGate_lastResponse")
-		if($WriteOperation) {
+	Log -Begin
+	if ($null -eq $entity) {
+		$entity = $false
+		if ($WriteOperation) {
 			# In case NO error message from the ERP returned and this means that no request at all was sent out by powerGate, therefore its required to look for a internal error in the powerGate Logs file.
 			$logFileLocation = "$($env:LocalAppdata)\coolOrange\powerGate\Logs\powerGate.log"
-			$message = "Unexpected error:`n Failed bacause probably some passed values for the create/update operation are not valid, for example 'the input was a text but should be a number'. Therefore check the last error message in the log file, then change your inputs and re-execute the operation: $logFileLocation"
+			Add-Member -InputObject $entity -Name "_ErrorMessage" -Value "Unexpected error:`n Failed bacause probably some passed values for the create/update operation are not valid, for example 'the input was a text but should be a number'. Therefore check the last error message in the log file, then change your inputs and re-execute the operation: $logFileLocation" -MemberType NoteProperty -Force
 		}
-		elseif($powerGateLastResponse.Status -as [int] -gt 500) {
-			$pGError = GetPowerGateError
-			$message = "{1} - Status: {0}; Message: {2}" -f `
-				$powerGateLastResponse.Code, `
-				$powerGateLastResponse.Status, `
-				$pGError
+		$pGError = GetPowerGateError
+		if ($pGError) {
+			$message = "Direct error message from the ERP:`n '$pGError'"
+			Add-Member -InputObject $entity -Name "_ErrorMessage" -Value $message -MemberType NoteProperty -Force
 		}
-	}
-	else { $message = $null }
-
-	Log -Begin
-	$result = @{
-		Entity = $Entity
-		ErrorMessage = $message
 	}
 	Log -End
-	return $result
+	return $entity
+}
+
+$collectResponse = {
+	param($settings)
+	$settings.AfterResponse = [System.Delegate]::Combine([Action[System.Net.Http.HttpResponseMessage]] {
+			param($response)
+			$global:powerGate_lastResponse = New-Object PSObject @{
+				'RequestUri' = $response.RequestMessage.RequestUri
+				'Code'       = [int]$response.StatusCode
+				'Status'     = $response.StatusCode.ToString()
+				'Protocol'   = 'HTTP/' + $response.Version
+				'Headers'    = @{ }
+				'Body'       = $null
+			} 
+			$response.Headers | ForEach-Object { $powerGate_lastResponse.Headers[$_.Key] = $_.Value }
+			if ($response.Content -ne $null) {
+				$body = $response.Content.ReadAsStringAsync().Result
+				try {
+					$powerGate_lastResponse.Body = $body | ConvertFrom-Json
+				}
+				catch {
+					$powerGate_lastResponse.Body = [xml]$body
+				}
+				$response.Content.Headers | ForEach-Object { $powerGate_lastResponse.Headers[$_.Key] = $_.Value }
+			}
+			$currentDomain = [AppDomain]::CurrentDomain
+			$currentDomain.SetData("powerGate_lastResponse", $global:powerGate_lastResponse)
+		}, $settings.AfterResponse)
+}
+
+$onConnect = {
+	param($settings)
+	$collectResponse.Invoke($settings);
 }

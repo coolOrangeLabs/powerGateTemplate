@@ -21,7 +21,7 @@ function Test-ErpBomIsSynced {
         $Entity.Children = $bomRows
     }
 
-    $differences = CompareErpBom -VaultBom @($Entity)
+    $differences = CompareErpBom -EntityBom @($Entity)
     $anyHeaderIsDifferent = $differences | where { $_.Status -ne "Identical" -and $_.IsHeader }
     if ($anyHeaderIsDifferent) {
         throw "Open the BOM dialog, because the ERP BOM is different then in Vault!"

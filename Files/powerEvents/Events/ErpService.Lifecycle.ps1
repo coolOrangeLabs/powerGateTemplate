@@ -15,16 +15,15 @@ $requiresErpItemExtensions = @("iam", "ipn", "ipt")
 function Test-ErpItemForVaultFileOrVaultItem {
 	param(
 		$Entity # Can be a powerVault FILE or Vault object
-	)
+	)	
 	Log -Begin
-	$entityNumber = GetEntityNumber -Entity $Entity
-
-	$getErpMaterialResult = GetErpMaterial -Number $entityNumber
+	$entityNumber = GetEntityNumber -Entity $Entity		
+	$erpMaterial = GetErpMaterial -Number $entityNumber
 	try {
-		Test-ErpItemExists -ErpMaterial $getErpMaterialResult.Entity -VaultEntity $Entity
+		Test-ErpItemExists -ErpMaterial $erpMaterial -VaultEntity $Entity
 		
 		# ToDO: When ProAlpha is used then enable this line
-		# Test-ProAlphaStatusIsOk -ErpMaterial $getErpMaterialResult.Entity
+		# Test-ProAlphaStatusIsOk -ErpMaterial $erpMaterial
 		
 		Test-ErpBomIsSynced -Entity $Entity
 	}
@@ -95,14 +94,9 @@ function AddPdfJob($files, $successful) {
 		$releasedFiles = @($files | Where-Object { $_._Extension -in $supportedPdfExtensions -and $_._ReleasedRevision -eq $true })
 		Write-Host "Found '$($releasedFiles.Count)' files which are valid to add a PDF job for!"
 		foreach ($file in $releasedFiles) {
-			# since Synchronize Properties gets triggered already by powerEvents, disable it in the Vault configuration!
-			Write-Host "Adding job 'Synchronize Properties' for file '$($file._Name)' to queue."
-			Add-VaultJob -Name "autodesk.vault.syncproperties" -Parameters @{
-                "FileVersionIds"=$file.Id;
-                "QueueCreateDwfJobOnCompletion"=$true} -Description "Synchronize properties of file: '$($file._Name)'"
 			$jobType = "ErpService.Create.PDF"
 			Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
-			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
+			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system"
 		}
 	}
 	catch {

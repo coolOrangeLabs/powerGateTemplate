@@ -21,9 +21,12 @@
       <Directory Id="ProgramFiles64Folder" >
         <Directory Id='coolOrange_ProgramFiles' Name='coolOrange'>
           <Directory Id='powerGateServer_ProgramFiles' Name='powerGateServer'>
-            <Component Id="CMP_PGS_LOG4NET" Guid="{44DDCE8A-F0DE-4ADC-91BD-0A9B78EE9B82}">
-              <File Id="FILE_pgs_Log4net" KeyPath="yes" Source="..\..\Files\powerGatePlugin\ErpServices\powerGateServer.log4net" />
-            </Component>
+			  <Component Id="CMP_PGS_LOG4NET" Guid="{44DDCE8A-F0DE-4ADC-91BD-0A9B78EE9B82}">
+				  <File Id="FILE_pgs_Log4net" KeyPath="yes" Source="..\..\Files\powerGatePlugin\ErpServices\powerGateServer.log4net" />
+			  </Component>
+			  <Component Id="CMP_PGS_EXECONFIG" Guid="{3DEE6270-EFE7-475A-A36D-CA5C159A8677}">
+				  <File Id="FILE_pgs_EXECONFIG" KeyPath="yes" Source="..\..\Files\powerGatePlugin\ErpServices\powerGateServer.exe.config" />
+			  </Component>
           </Directory>
         </Directory>
       </Directory>

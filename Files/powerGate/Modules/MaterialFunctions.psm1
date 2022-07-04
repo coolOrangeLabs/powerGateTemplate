@@ -13,19 +13,19 @@ function GetEntityNumber($entity) {
 
 function GetErpMaterial($number) {
 	Log -Begin
-	if (-not $number) {
-		return @{
-			Entity = $null
-			ErrorMessage = "Number is empty!"
-		}
+	if (-not $number) { 
+		$erpMaterial = $false
+		Add-Member -InputObject $erpMaterial -Name "_ErrorMessage" -Value "Number is empty!" -MemberType NoteProperty -Force
+		return $erpMaterial
 	}
-
 	$number = $number.ToUpper()
 	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Keys @{ Number = $number }
-	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial
+	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial
 	
+	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $false -MemberType NoteProperty -Force
+	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $true -MemberType NoteProperty -Force	
 	Log -End
-	return $result
+	return $erpMaterial
 }
 
 function NewErpMaterial {
@@ -36,6 +36,8 @@ function NewErpMaterial {
 	$erpMaterial.UnitOfMeasure = "PCS"
 	$erpMaterial.Type = "Inventory"
 
+	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $true -MemberType NoteProperty -Force
+	Add-Member -InputObject $erpMaterial -Name "IsUpdate" -Value $false -MemberType NoteProperty -Force
 	Log -End
 	return $erpMaterial
 }
@@ -49,11 +51,14 @@ function CreateErpMaterial($erpMaterial) {
 	#TODO: Properties that need to be set on create
 	$erpMaterial.ModifiedDate = [DateTime]::Now
 
+	$erpMaterial.PSObject.Properties.Remove('IsCreate')
+	$erpMaterial.PSObject.Properties.Remove('IsUpdate')
+
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Add-ErpObject -EntitySet $materialEntitySet -Properties $erpMaterial
-	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial -WriteOperation
+	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
 	Log -End
-	return $result
+	return $erpMaterial
 }
 
 function UpdateErpMaterial($erpMaterial) {
@@ -63,9 +68,9 @@ function UpdateErpMaterial($erpMaterial) {
 
 	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
 	$erpMaterial = Update-ERPObject -EntitySet $materialEntitySet -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
-	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial -WriteOperation
+	$erpMaterial = Edit-ResponseWithErrorMessage -Entity $erpMaterial -WriteOperation
 	Log -End
-	return $result
+	return $erpMaterial
 }
 
 function TransformErpMaterial($erpMaterial) {
@@ -74,38 +79,4 @@ function TransformErpMaterial($erpMaterial) {
 	$erpMaterial.Number = $erpMaterial.Number.ToUpper()
 	Log -End
 	return $erpMaterial
-}
-function Update-VaultFileWithErrorHandling {
-	param (
-		$File,
-		[Hashtable]$Properties
-	)
-	$fehler = $false
-	$updatedfile = Update-VaultFile -File $File -Properties $Properties
-	foreach($prop in $Properties.GetEnumerator()){
-		if($updatedfile.($prop.Key) -ne ($prop.Value)){
-			$fehler = $true
-		}
-	}
-	if($fehler)
-	{
-		throw("Vault-File couldn't be updated!")
-	}
-}
-function Update-VaultItemWithErrorHandling {
-	param (
-		$Number,
-		[Hashtable]$Properties
-	)
-	$fehler = $false
-	$updateditem = Update-VaultItem -Number $Number -Properties $Properties
-	foreach($prop in $Properties.GetEnumerator()){
-		if($updateditem.($prop.Key) -ne ($prop.Value)){
-			$fehler = $true
-		}
-	}
-	if($fehler)
-	{
-		throw("Vault-File couldn't be updated!")
-	}
 }
