@@ -28,7 +28,7 @@ MultiSelectEnabled: If true, command is active for multiple selections, can be t
     <ToolsMenu Label="powerGate" DeployAsPullDown="True" Location="ToolsMenu">
       <Item Name="pgsEditCfg"></Item>
       <Item Name="pgsSaveCfg"></Item>
-      <Item Name="ShowSapConnectionMenu"></Item>
+      <Item Name="ShowErpConnectionMenu"></Item>
     </ToolsMenu>
     <FileContext Label="myMenu" DeployAsPullDown="False" Location="FileContextMenu">
       <Item Name="NewFile"></Item>

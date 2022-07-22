@@ -18,7 +18,6 @@ function Test-IsAdmin {
 	return $true
 }
 
-
 function Set-ButtonEvents() {
 	param(
 		$Window, 
@@ -42,9 +41,6 @@ function Set-ButtonEvents() {
 				try {
 					$crypter = new-object CryptoService.CryptoService
 					$encryptedPassword = $crypter.Encrypt($newPassword)
-	
-					$global:_vault_.KnowledgeVaultService.SetVaultOption("10001_FxParameters", "afdsda=123;2123=lfs")
-					$global:_vault_.KnowledgeVaultService.GetVaultOption("10001_FxParameters")
 
 					$global:_vault_.KnowledgeVaultService.SetVaultOption($global:VaultOptionerpUserNameKey, $newUserName)
 					$global:_vault_.KnowledgeVaultService.SetVaultOption($global:VaultOptionerpEncryptedPasswordKey, $encryptedPassword)
@@ -59,18 +55,26 @@ function Set-ButtonEvents() {
 		})
 }
 
+try {
+	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
+	Initialize-CoolOrange 
 
-if (-not (Test-IsAdmin)) {
-	Log -Message "Only Administrator users can edit the ERP connection settings" -MessageBox
-	return
+	if (-not (Test-IsAdmin)) {
+		Show-Inspector
+		throw "Only Administrator users can edit the ERP connection settings"
+	}	
+	
+	Show-Inspector
+	[xml]$xamlContent = Get-Content "C:\ProgramData\Autodesk\Vault 2022\Extensions\DataStandard\Vault.Custom\addinVault\Menus\ErpConnectionDialog.xaml"
+	$erpConnectionDialogWindow = [Windows.Markup.XamlReader]::Load((New-Object System.Xml.XmlNodeReader -ArgumentList @($xamlContent)))
+	
+	$existingUserName = $vault.KnowledgeVaultService.GetVaultOption($global:VaultOptionerpUserNameKey)
+	$erpConnectionDialogWindow.FindName("UserNameBox").Text = $existingUserName
+	
+	Set-ButtonEvents -Window $erpConnectionDialogWindow -Vault $vault
+	$erpConnectionDialogWindow.ShowDialog() | Out-Null
+	
 }
-
-
-[xml]$xamlContent = Get-Content "C:\ProgramData\Autodesk\Vault 2020\Extensions\DataStandard\Vault.Custom\addinVault\Menus\ErpConnectionDialog.xaml"
-$erpConnectionDialogWindow = [Windows.Markup.XamlReader]::Load((New-Object System.Xml.XmlNodeReader -ArgumentList @($xamlContent)))
-
-$existingUserName = $vault.KnowledgeVaultService.GetVaultOption($global:VaultOptionerpUserNameKey)
-$erpConnectionDialogWindow.FindName("UserNameBox").Text = $existingUserName
-
-Set-ButtonEvents -Window $erpConnectionDialogWindow -Vault $vault
-$erpConnectionDialogWindow.ShowDialog() | Out-Null
+catch {
+    (ShowMessageBox -Message $_.Exception.Message -Button  "OK" -Icon "Error") | Out-Null
+}

@@ -4,14 +4,14 @@ Import-Module powerGate
 $powerGateServerPort = "8080"
 # define here witch Vault is used for test and witch one for production
 $testVaults = @(
-	"Vault",
-	"TestVault",
-	"TestVault2"
+	"Vault".ToLower(),
+	"TestVault".ToLower(),
+	"TestVault2".ToLower()
 	# ,...
 )
 $productiveVaults = @(
-	"Vault1",
-	"ProdVault2"
+	"Vault1".ToLower(),
+	"ProdVault2".ToLower()
 	# ,...
 )
 
@@ -23,8 +23,9 @@ $PGServerDefinitions = @{
 	"TEST" = $env:COMPUTERNAME;
 	"PROD" = "ProductiveERP"
 }
+
 function getRelatedPGServerName {
-	$connectedVault = $vaultConnection.Vault
+	$connectedVault = $vaultConnection.Vault.ToLower()
 	if ($connectedVault -in $testVaults) {
 		return $PGServerDefinitions["TEST"]
 	}
