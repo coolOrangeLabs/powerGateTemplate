@@ -57,6 +57,6 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>if "$(ConfigurationName)" == "Release" ("$(SolutionDir)DevelopmentDependencies\ConfuserEx\Confuser.CLI.exe" "$(ProjectDir)ConfuserExProject.crproj")
-if "$(ConfigurationName)" == "Release" xcopy /y $(ProjectDir)$(OutDir)Obfuscated\$(TargetFileName) $(SolutionDir)..\coolOrange\Modules\SAP\</PostBuildEvent>
+if "$(ConfigurationName)" == "Release" xcopy /y $(ProjectDir)$(OutDir)Obfuscated\$(TargetFileName) $(SolutionDir)..\powerGate\Modules\</PostBuildEvent>
   </PropertyGroup>
 </Project>
