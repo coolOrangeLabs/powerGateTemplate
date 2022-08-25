@@ -32,7 +32,7 @@ function getRelatedPGServerName {
 function CreateUrlFromPGServerName {
 	Log -Begin
 	$powerGateServerName = getRelatedPGServerName
-	if (not $powerGateServerName) {
+	if (-not $powerGateServerName) {
 		return;
 	}
 	$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
