@@ -11,5 +11,5 @@ if ($allowedProcesses -contains $processName) {
     $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\powerEvents.log"
     Set-LogFilePath -Path $logPath
 
-    ConnectToErpServer
+    ConnectToConfiguredErpServer
 }
