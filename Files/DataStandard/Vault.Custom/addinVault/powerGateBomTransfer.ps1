@@ -93,6 +93,12 @@ function Check-Boms($VaultBoms) {
     [array]::Reverse($VaultBoms)
     foreach ($vaultBom in $VaultBoms) {
 
+        foreach ($vaultBomRow in $vaultBom.Children) {
+            if ($vaultBomRow._Status -eq "Remove") {
+                Remove-BomWindowEntity -InputObject $vaultBomRow
+            }
+        }  
+
         if ($vaultBom._Status -ne "Unknown") {
             Update-BomWindowEntity -InputObject $vaultBom -Status $vaultBom._Status -StatusDetails $vaultBom.Message
 			foreach ($vaultBomRow in $vaultBom.Children) {
