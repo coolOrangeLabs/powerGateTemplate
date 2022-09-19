@@ -27,13 +27,21 @@ function Check-Items($entities) {
             continue
         }
 
-        $getErpMaterialResult = GetErpMaterial -number $number
-		if ($getErpMaterialResult.ErrorMessage) {
-			Update-BomWindowEntity $entity -Status "Error" -StatusDetails "Couldn't read material from server! ErrorMessage: '$($getErpMaterialResult.ErrorMessage)'"
-			continue
-		}
+     
+            if (-not $number) {
+                Update-BomWindowEntity $entity -Status "Error" -StatusDetails "Number is empty!"
+			    continue
+            }
+        
+            $number = $number.ToUpper()
+            $erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Keys @{ Number = $number }
+            if($? -eq $false) {
+                continue
+            }
+    
+         
 
-		if (-not $getErpMaterialResult.Entity) {
+		if (-not $erpMaterial) {
             #TODO: check if obligatory fields are filled!
 			if ($number.Length -gt 20) {
                 $statusDetails = "The number '$($number)' is longer than 20 characters. The ERP item cannot be created"
@@ -46,7 +54,7 @@ function Check-Items($entities) {
                 Update-BomWindowEntity $entity -Status "Identical" -StatusDetails "Virtual Component or Raw Material where no file in Vault is present"
             }
             else {
-                $differences = CompareErpMaterial -erpMaterial $getErpMaterialResult.Entity -vaultEntity $entity
+                $differences = CompareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
                 if ($differences) {
                     Update-BomWindowEntity $entity -Status "Different" -StatusDetails $differences
                 }

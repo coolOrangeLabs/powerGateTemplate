@@ -22,10 +22,15 @@ function GetErpMaterial($number) {
 
 	$number = $number.ToUpper()
 	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Keys @{ Number = $number }
-	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial
-	
+	if($? -eq $false) {
+		$message = $Error[0]#.Exception.Message
+	}
 	Log -End
-	return $result
+	return @{
+		Entity = $Entity
+		ErrorMessage = $message
+	}
+	
 }
 
 function NewErpMaterial {

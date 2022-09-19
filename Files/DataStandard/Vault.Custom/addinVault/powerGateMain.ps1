@@ -3,6 +3,11 @@ Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Glo
 Initialize-CoolOrange
 function OnTabContextChanged_powerGate($xamlFile) {
 	Open-VaultConnection
+	$services= Get-ERPServices -Available
+	if (-not $services) {
+		$dsWindow.IsEnabled = $false
+		return
+	}
 	if ($xamlFile -eq "ERP Item.xaml") {
 		InitMaterialTab
 	}
