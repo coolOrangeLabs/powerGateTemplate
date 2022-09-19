@@ -27,7 +27,7 @@ function GetErpMaterial($number) {
 	}
 	Log -End
 	return @{
-		Entity = $Entity
+		Entity = $erpMaterial
 		ErrorMessage = $message
 	}
 	
