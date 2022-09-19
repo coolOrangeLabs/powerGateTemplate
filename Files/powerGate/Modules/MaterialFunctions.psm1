@@ -11,28 +11,6 @@ function GetEntityNumber($entity) {
 	return $number
 }
 
-function GetErpMaterial($number) {
-	Log -Begin
-	if (-not $number) {
-		return @{
-			Entity = $null
-			ErrorMessage = "Number is empty!"
-		}
-	}
-
-	$number = $number.ToUpper()
-	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Keys @{ Number = $number }
-	if($? -eq $false) {
-		$message = $Error[0]#.Exception.Message
-	}
-	Log -End
-	return @{
-		Entity = $erpMaterial
-		ErrorMessage = $message
-	}
-	
-}
-
 function NewErpMaterial {
 	Log -Begin
 	$erpMaterial = New-ERPObject -EntityType $materialEntityType
@@ -45,41 +23,43 @@ function NewErpMaterial {
 	return $erpMaterial
 }
 
-function CreateErpMaterial($erpMaterial) {
+function PrepareErpMaterialForCreate($erpMaterial, $vaultEntity) {
 	Log -Begin
+	$number = GetEntityNumber -entity $vaultEntity
+	
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
+
+	#TODO: Property mapping for material creation
+	$erpMaterial.Number = $number
+	$erpMaterial.Description = $vaultEntity.$descriptionProp
 	#TODO: Numbering generation for material creation (only if needed)
-	if ($null -eq $erpMaterial.Number -or $erpMaterial.Number -eq "") {
+	if (-not $erpMaterial.Number) {
 		$erpMaterial.Number = "*"
 	}
-	#TODO: Properties that need to be set on create
-	$erpMaterial.ModifiedDate = [DateTime]::Now
 
-	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
-	$erpMaterial = Add-ErpObject -EntitySet $materialEntitySet -Properties $erpMaterial
-	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial -WriteOperation
-	Log -End
-	return $result
-}
-
-function UpdateErpMaterial($erpMaterial) {
-	Log -Begin
-	#TODO: Properties that need to be set on update
-	$erpMaterial.ModifiedDate = [DateTime]::Now
-
-	$erpMaterial = TransformErpMaterial -erpMaterial $erpMaterial
-	$erpMaterial = Update-ERPObject -EntitySet $materialEntitySet -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
-	$result = Get-PgsErrorForLastResponse -Entity $erpMaterial -WriteOperation
-	Log -End
-	return $result
-}
-
-function TransformErpMaterial($erpMaterial) {
-	Log -Begin
-	#TODO: Property transformations on create and update
 	$erpMaterial.Number = $erpMaterial.Number.ToUpper()
 	Log -End
 	return $erpMaterial
 }
+
+function PrepareErpMaterialForUpdate($erpMaterial, $vaultEntity) {
+	Log -Begin
+
+	$number = GetEntityNumber -entity $vaultEntity
+	
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
+
+	#TODO: Properties that need to be set on update
+	$erpMaterial.ModifiedDate = [DateTime]::Now
+
+	$erpMaterial.Number = $erpMaterial.Number.ToUpper()
+
+	Log -End
+	return $erpMaterial
+}
+
 function Update-VaultFileWithErrorHandling {
 	param (
 		$File,

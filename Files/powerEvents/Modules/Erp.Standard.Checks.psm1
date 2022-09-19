@@ -7,7 +7,7 @@ function Test-ErpItemExists {
     Log -End
 }
 
-function Test-ErpBomIsSynced {
+function Test-ErpBomIsSynced {    #JAKOB anschauen
     param(
         $Entity # Can be a powerVault FILE or Vault object
     )	
