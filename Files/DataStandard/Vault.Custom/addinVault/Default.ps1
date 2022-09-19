@@ -25,7 +25,7 @@ function OnLogOn {
 	Initialize-CoolOrange
 	Disconnect-ERP
 	Open-VaultConnection
-	ConnectToConfiguredErpServer 
+	ConnectToErpServerWithMessageBox 
 	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.log"
 	Set-LogFilePath -Path $logPath
 }

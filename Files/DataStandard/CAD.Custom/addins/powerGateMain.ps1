@@ -189,7 +189,7 @@ function InitializeWindow
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 	Initialize-CoolOrange 
 	Disconnect-ERP
-	ConnectToConfiguredErpServer
+	ConnectToErpServerWithMessageBox
 	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Inventor-powerGate.log"
 	Set-LogFilePath -Path $logPath
 	#begin rules applying commonly
