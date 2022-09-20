@@ -9,14 +9,20 @@
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  #
 #=============================================================================#
 
-$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.log"
-Set-LogFilePath -Path $logPath
+# JobEntityType = FILE
 
+#region Settings
 $hidePDF = $false
-$workingDirectory = "C:\Temp\$($file._Name)"
+
+# To enable faster opening of released Inventor drawings without downloading and opening their model files set Yes, otherwise No
+$openReleasedDrawingsFast = $true
+#endregion
+
 $localPDFfileLocation = "$workingDirectory\$($file._Name).pdf"
 $vaultPDFfileLocation = $file._EntityPath + "/" + (Split-Path -Leaf $localPDFfileLocation)
-$fastOpen = $file._Extension -eq "idw" -or $file._Extension -eq "dwg" -and $file._ReleasedRevision
+
+$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.log"
+Set-LogFilePath -Path $logPath
 
 Log -Message "Starting job 'Create PDF as attachment' for file '$($file._Name)' ..."
 
@@ -25,6 +31,9 @@ if ( @("idw", "dwg") -notcontains $file._Extension ) {
     return
 }
 
+ConnectToConfiguredErpServer
+
+$fastOpen = $openReleasedDrawingsFast -and $file._ReleasedRevision
 $downloadedFiles = Save-VaultFile -File $file._FullPath -DownloadDirectory $workingDirectory -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
 $file = $downloadedFiles | Select-Object -First 1
 $openResult = Open-Document -LocalFile $file.LocalPath -Options @{ FastOpen = $fastOpen } 
@@ -41,23 +50,15 @@ if ($openResult) {
         $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
         $file = Update-VaultFile -File $file._FullPath -AddAttachments @($PDFfile._FullPath)
 
-        Log -Message "Connecting to powerGate..."
-        $connected = ConnectToConfiguredErpServer
-        if (-not $connected) {
-            throw "Connection to powerGateServer could not be established!"
-        }
-
         Log -Message "Uploading PDF file $($PDFfile._Name) to ERP system..."
         $d = New-ERPObject -EntityType "Document"
         $d.FileName = $PDFfile._Name
         $d.Number = $file._PartNumber
         $d.Description = $file._Description
-        Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf" -File $localPDFfileLocation
+        $uploadPDFToErpResult = Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf" -File $localPDFfileLocation
     }
     $closeResult = Close-Document
 }
-
-Clean-Up -folder $workingDirectory
 
 if (-not $openResult) {
     throw("Failed to open document $($file.LocalPath)! Reason: $($openResult.Error.Message)")
@@ -67,5 +68,8 @@ if (-not $exportResult) {
 }
 if (-not $closeResult) {
     throw("Failed to close document $($file.LocalPath)! Reason: $($closeResult.Error.Message))")
+}
+if (-not $uploadPDFToErpResult) {
+    throw("Failed to upload PDF document to ERP system! Reason: $($Error[0]) (Source: $($Error[0].Exception.Source))")
 }
 Log -Message "Completed job 'Create PDF as attachment'"

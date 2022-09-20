@@ -7,48 +7,44 @@ function Test-SapChangeNumbers {
     $extensionsForDocumentInforRecord = @("idw", "dwg", "docx", "pptx", "xlsx", "doc", "xls", "ppt")
 
     if ($VaultEntity._Extension -in $extensionsForDocumentInforRecord) { 
-        # This function throws a error if the change number is not valid
         # We do not need the change number because we only verify if its valid!
-        (Get-SapValidChangeNumberForDir -VaultEntity $VaultEntity) | Out-Null
+        Test-SapValidChangeNumberForDir -VaultEntity $VaultEntity
     }
 
     $extensionsForSapMaterial = @("ipt", "iam")
 
     if ($VaultEntity._Extension -in $extensionsForSapMaterial) { 
-        # This function throws a error if the change number is not valid
         # We do not need the change number because we only verify if its valid!
-        (Get-SapValidChangeNumberForDir -VaultEntity $VaultEntity) | Out-Null
+        Test-SapValidChangeNumberForDir -VaultEntity $VaultEntity
     }
     Log -End
 }
 
-function Get-SapValidChangeNumberForDir {
+function Test-SapValidChangeNumberForDir {
     param (
         $VaultEntity
     )
     Log -Begin
 
-    $response = Get-ErpDir -VaultEntity $VaultEntity -DocumentInfoRecordData
-    $ErpRevision = $response.Entity.DocumentInfoRecordData.RevisionLevel
-    $ErpChangenumber = $response.Entity.DocumentInfoRecordData.ChangeNumber
+    $dirEntity = Get-ErpDir -VaultEntity $VaultEntity -DocumentInfoRecordData
+    $ErpRevision = $dirEntity.DocumentInfoRecordData.RevisionLevel
+    $ErpChangenumber = $dirEntity.DocumentInfoRecordData.ChangeNumber
     $result = New-Object PSObject -Property @{ 
         "SapRevision"     = $ErpRevision
         "SapChangenumber" = $ErpChangenumber
     }
     
-    $validChangeNumber = Get-SapValidChangeNumber -VaultEntity $VaultEntity -SapRevisionChangeNumber $result
+    Test-SapValidChangeNumber -VaultEntity $VaultEntity -SapRevisionChangeNumber $result
     Log -End
-    return $validChangeNumber
 }
 
-function Get-SapValidChangeNumberForMaterial {
+function Test-SapValidChangeNumberForMaterial {
     param (
         $VaultEntity
     )
     Log -Begin
 
-    $response = Get-SapMaterial -VaultEntity $VaultEntity -BasicData
-    $ERPMaterial = $response.Entity
+    $ERPMaterial = Get-SapMaterial -VaultEntity $VaultEntity -BasicData
     $ErpRevision = $ERPMaterial.BasicData.RevisionLevel
     $ErpChangenumber = $ERPMaterial.BasicData.ChangeNumber
     
@@ -56,12 +52,11 @@ function Get-SapValidChangeNumberForMaterial {
         "SapRevision"     = $ErpRevision
         "SapChangenumber" = $ErpChangenumber
     }
-    $validChangeNumber = Get-SapValidChangeNumber -VaultEntity $VaultEntity -SapRevisionChangeNumber $result
+    Test-SapValidChangeNumber -VaultEntity $VaultEntity -SapRevisionChangeNumber $result
     Log -End
-    return $validChangeNumber
 }
 
-function Get-SapValidChangeNumber {
+function Test-SapValidChangeNumber {
     param (
         $VaultEntity,
         [PSObject]$SapRevisionChangeNumber
@@ -72,9 +67,8 @@ function Get-SapValidChangeNumber {
 
     $leadingZeros = Test-ChangeNumberStartsWithZero -VaultEntity $VaultEntity
     if ($leadingZeros) {
-        $message = "SAP Change Number code with leading zeros is not supported by SAP"
-        Write-Error $message
-        throw $message
+        Add-VaultRestriction -EntityName $VaultEntity._Name -Message "SAP Change Number code with leading zeros is not supported by SAP"
+        return
     }
     
     $VaultRevison = $VaultEntity._Revision
@@ -83,24 +77,15 @@ function Get-SapValidChangeNumber {
     $validFrom = Get-Date $validFrom -Format yyyy-MM-ddTHH:mm:ss
         
     if ($VaultChangenumber -eq $ErpChangenumber -and $VaultRevison -ne $ErpRevision -and $ErpRevision -and $ErpChangenumber) {
-        $message = "ERROR - Change number matches but rev. level is different between Vault and SAP Revision Level: Vault $VaultRevison <> SAP: $ErpRevision"
-        Log -End -Message $message
-        throw $message
+        Add-VaultRestriction -EntityName $VaultEntity._Name -Message "Change number matches but rev. level is different between Vault and SAP Revision Level: Vault $VaultRevison <> SAP: $ErpRevision"
     }
     elseif ($VaultChangenumber -ne $ErpChangenumber -and $VaultRevison -eq $ErpRevision -and $ErpRevision -and $ErpChangenumber) {        
-        $message = "ERROR - Rev. level matches but Change Number is different between Vault and SAP Change Number: Vault: $VaultChangenumber <> SAP: $ErpChangenumber"
-        Log -End -Message $message
-        throw $message
+        Add-VaultRestriction -EntityName $VaultEntity._Name -Message "Rev. level matches but Change Number is different between Vault and SAP Change Number: Vault: $VaultChangenumber <> SAP: $ErpChangenumber"
     }
     elseif ($VaultChangenumber -eq $ErpChangenumber -and $VaultRevison -eq $ErpRevision -and $ErpRevision -and $ErpChangenumber) {
-        $message = "SUCCESS - Updated existing revision level in SAP with same change number"
-        Log -End -Message $message
-        return $VaultChangenumber
+        Log -End -Message "SUCCESS - Updated existing revision level in SAP with same change number"
+        return
     }
-    else {
-        Log -End
-        return $VaultChangenumber
-    } 
     Log -End
 } 
 
@@ -143,10 +128,8 @@ function Get-ErpDir {
     else {
         $dir = Get-ERPObject -EntitySet "DocumentInfoRecordContextCollection" -Keys $keys
     }
-    
-    $response = Get-ErpResponse
-    $response.Entity = $dir
-    return $response
+    Log -End
+    return $dir
 }
 
 
@@ -326,12 +309,8 @@ function Get-SapMaterial {
     else {
         $material = Get-ERPObject -EntitySet "MaterialContextCollection" -Keys $keys
     }
-
-    $response = Get-ErpResponse
-    $response.Entity = $material
-
     Log -End
-    return $response
+    return $material
 }
 
 function Get-SapValue {

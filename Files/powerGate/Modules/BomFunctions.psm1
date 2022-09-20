@@ -94,7 +94,7 @@ function PrepareBomRowForUpdate($erpBomRow, $parentNumber, $vaultEntity) {
 }
 #endregion
 
-#region Common Bom comparison logic
+#region Common Bom logic
 function GetVaultBomRows {
     param($entity)
 

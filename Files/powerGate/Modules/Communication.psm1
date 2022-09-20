@@ -49,8 +49,9 @@ function ConnectToErpServerWithMessageBox {
 		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
 	}
 	else {
-		ConnectToErpServer -PowerGateServerErpPluginUrl $powerGateServerErpPluginUrl
-
+		Write-Host "Connecting with URL: $powerGateServerErpPluginUrl"
+		$connected = Connect-ERP -Service $PowerGateServerErpPluginUrl
+		Write-Host "Connected: $connected"
 	}
 	Log -End
 }
@@ -59,35 +60,17 @@ function ConnectToConfiguredErpServer {
 	Log -Begin
 	$powerGateServerErpPluginUrl = CreateUrlFromPGServerName
 	if (-not $powerGateServerErpPluginUrl){
-		Write-Error -Message "no ERP Server URL specified!"
-		return
+		throw 'no ERP Server URL specified!'
 	}
 	else {
-		$connected = ConnectToErpServer -PowerGateServerErpPluginUrl $powerGateServerErpPluginUrl
-		if (-not $connected) {
-			$connectionError = ("Error on connecting to powerGateServer service! Check if powerGateServer is running on following host: '{0}' or try to access following link via your browser: '{1}'" -f (([Uri]$powerGateServerErpPluginUrl).Authority), $powerGateServerErpPluginUrl)
-			Write-Error -Message $connectionError
+		Write-Host "Connecting to: $powerGateServerErpPluginUrl"
+		$connected = Connect-ERP -Service $PowerGateServerErpPluginUrl
+		if($connected) {
+			throw("Connection to ERP could not be established!! Reason: $($Error[0]) (Source: $($Error[0].Exception.Source))")
 		}
-		return $connected
 	}
 	Log -End
 }
 
-
-function ConnectToErpServer($PowerGateServerErpPluginUrl) {
-	Log -Begin
-
-	if (-not $PowerGateServerErpPluginUrl) { 
-		return 
-	}
-
-	Write-Host "Connecting with URL: $PowerGateServerErpPluginUrl"
-	$connected = Connect-ERP -Service $PowerGateServerErpPluginUrl
-	Write-Host "Connection: $connected"
-	return $connected
-
-
-	Log -End
-}
 
 
