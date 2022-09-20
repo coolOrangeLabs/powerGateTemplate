@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
 	 xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <?include Includes\ProductVariables.wxi ?>
@@ -79,7 +79,7 @@
 	  <Property Id="POWERJOBSINSTALLEDVERSION">
 		<RegistrySearch Id="PowerJobsInstalledVersion"
 						Root="HKLM"
-						Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor"
+						Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor Processor"
 						Name="Version"
 						Type="raw" />
 	  </Property>

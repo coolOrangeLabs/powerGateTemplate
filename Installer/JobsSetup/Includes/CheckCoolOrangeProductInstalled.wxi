@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Include>
 
   <Property Id="POWERGATEINSTALLED">
@@ -20,7 +20,7 @@
   <Property Id="POWERJOBSINSTALLED">
     <RegistrySearch Id="PowerJobsInstalled"
                     Root="HKLM"
-                    Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor"
+                    Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor Processor"
                     Name="Installed"
                     Type="raw" />
   </Property>
