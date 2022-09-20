@@ -156,7 +156,6 @@ function Check-Boms($VaultBoms) {
                 continue
             }
 
-            $childNumber = GetEntityNumber -entity $vaultBomRow
             $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber.ToUpper() }
             if ($? -eq $false) {
                 $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails $vaultBomRow._StatusDetails
@@ -206,7 +205,7 @@ function Transfer-Boms($VaultBoms) {
             $erpBomRows = @()
             foreach ($vaultBomRow in $vaultBom.Children) {
                 $erpBomRow = NewErpBomRow
-                $erpBomRow = PrepareErpBomRow -erpBomRow $erpBomRow -parentNumber $parentNumber -vaultEntity $vaultBomRow
+                $erpBomRow = PrepareBomRowForCreate -erpBomRow $erpBomRow -parentNumber $parentNumber -vaultEntity $vaultBomRow
                 $erpBomRows += $erpBomRow
             }
             $erpBomHeader = NewErpBomHeader
@@ -269,22 +268,24 @@ function Transfer-Boms($VaultBoms) {
 
                     $createErpBomRowResult = Add-ERPObject -EntitySet "BomRows" -Properties $erpBomRow
                     if ($? -eq $false) {
-                        $vaultBom | Update-BomWindowEntity -Status 'Error' -StatusDetails $vaultBomRow._StatusDetails
+                        $vaultBom |  Update-BomWindowEntity -Status 'Error' -StatusDetails $vaultBomRow._StatusDetails
                         continue
                     }
                     
-                        Update-BomWindowEntity $vaultBomRow -Status "Identical" -StatusDetails ""
+                    Update-BomWindowEntity $vaultBomRow -Status "Identical" -StatusDetails ""
                     
                 }
                 else {
                     Update-BomWindowEntity $vaultBomRow -Status $vaultBomRow._Status
                 }
             }
-            # todo: if _Status -ne Error
-            Update-BomWindowEntity $vaultBom -Status 'Identical'
+            if ($vaultBom._Status -ne "Error") {
+                $vaultBom | Update-BomWindowEntity -Status 'Identical'
+            }
+            
         }
         else {
-            # removes the dialog questionmarks for rows that haven't been touched. should be fixed in the core product!
+            # removes the dialog questionmarks for boms that are identical, Error. should be fixed in the core product! 
             Update-BomWindowEntity $vaultBom -Status $vaultBom._Status
             foreach ($vaultBomRow in $vaultBom.Children) {
                 Update-BomWindowEntity $vaultBomRow -Status $vaultBomRow._Status

@@ -51,16 +51,16 @@ function CloseErpMaterialWindow {
 }
 
 function InitErpMaterialTab($number) {
-	$getErpMaterialResult = GetErpMaterial -number $number
+	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number.ToUpper() } -ErrorAction Stop #Jakob TODO testen was beste Lösung
 
 	$materialTabContext = New-Object -Type PsObject -Property @{
-		Entity = $getErpMaterialResult.Entity
+		Entity = $getErpMaterialResult
 		IsCreate = $false
 	}
 
-	if(-not $getErpMaterialResult.Entity) {
+	if(-not $getErpMaterialResult) {
 		$erpMaterial = NewErpMaterial
-		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial
+		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial   #TODO Jakob ersetzen durch PrepareErpMaterialForCreate?
 		$materialTabContext.IsCreate = $true
 		$materialTabContext.Entity = $erpMaterial
 		$goToEnabled = $false
@@ -118,23 +118,20 @@ function CreateOrUpdateErpMaterial {
 	$materialTabContext = $userControl.FindName("DataGrid").DataContext
 
 	if($materialTabContext.IsCreate) {
-		$createErpMaterialResult = CreateErpMaterial -erpMaterial $materialTabContext.Entity
-		if($createErpMaterialResult.ErrorMessage) {
-			ShowMessageBox -Message $createErpMaterialResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
+		$createErpMaterialResult = Add-ErpObject -EntitySet "Materials" -Properties $materialTabContext.Entity
+		if ($? -eq $false) {
+			return
 		}
-		else {
-			ShowMessageBox -Message "$($createErpMaterialResult.Entity.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
-			SetEntityProperties -erpMaterial $createErpMaterialResult.Entity
-		}
+		ShowMessageBox -Message "$($createErpMaterialResult.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
+		SetEntityProperties -erpMaterial $createErpMaterialResult
 	}
 	else {
-		$updateErpMaterialResult = UpdateErpMaterial -erpMaterial $materialTabContext.Entity
-		if($updateErpMaterialResult.ErrorMessage) {
-			ShowMessageBox -Message $updateErpMaterialResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
-		}
-		else {
-			ShowMessageBox -Message "$($updateErpMaterialResult.Entity.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
-		}
+		$updateErpMaterialResult = Update-ERPObject -EntitySet "Materials" -Key $materialTabContext.Entity._Keys -Properties $materialTabContext.Entity._Properties
+		#$updateErpMaterialResult = Update-ERPObject -EntitySet "Materials" -Key @{Number = 'SQUARETUBE'} -Properties @{Description = 'tests'}
+        if ($? -eq $false) {
+            return #-> SUPPORT TICKET bei erfolgreichem Ausführen kommt trotzdem $false zurück ...
+        }
+		ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
 	}
 
 	RefreshView

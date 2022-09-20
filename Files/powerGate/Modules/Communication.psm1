@@ -81,36 +81,8 @@ function ConnectToErpServer($PowerGateServerErpPluginUrl) {
 		return 
 	}
 
-	$collectResponse = {
-		param($settings)
-		$settings.AfterResponse = [System.Delegate]::Combine([Action[System.Net.Http.HttpResponseMessage]] {
-			param($response)
-			$global:powerGate_lastResponse = New-Object PSObject @{
-				'RequestUri' = $response.RequestMessage.RequestUri
-				'Code'       = [int]$response.StatusCode
-				'Status'     = $response.StatusCode.ToString()
-				'Protocol'   = 'HTTP/' + $response.Version
-				'Headers'    = @{ }
-				'Body'       = $null
-			} 
-			$response.Headers | ForEach-Object { $powerGate_lastResponse.Headers[$_.Key] = $_.Value }
-			if ($null -ne $response.Content) {
-				$body = $response.Content.ReadAsStringAsync().Result
-				try {
-					$powerGate_lastResponse.Body = $body | ConvertFrom-Json
-				}
-				catch {
-					$powerGate_lastResponse.Body = [xml]$body
-				}
-				$response.Content.Headers | ForEach-Object { $powerGate_lastResponse.Headers[$_.Key] = $_.Value }
-			}
-			$currentDomain = [AppDomain]::CurrentDomain
-			$currentDomain.SetData("powerGate_lastResponse", $global:powerGate_lastResponse)
-		}, $settings.AfterResponse)
-	}
-
 	Write-Host "Connecting with URL: $PowerGateServerErpPluginUrl"
-	$connected = Connect-ERP -Service $PowerGateServerErpPluginUrl -OnConnect $collectResponse
+	$connected = Connect-ERP -Service $PowerGateServerErpPluginUrl
 	Write-Host "Connection: $connected"
 	return $connected
 
@@ -118,47 +90,4 @@ function ConnectToErpServer($PowerGateServerErpPluginUrl) {
 	Log -End
 }
 
-function GetPowerGateError {
-	Log -Begin
-	$powerGateErrMsg = $null
-	$powerGateLastResponse = [AppDomain]::CurrentDomain.GetData("powerGate_lastResponse")
-	if ($powerGateLastResponse) {
-		if ($powerGateLastResponse.Code -as [int] -gt 500) {
-			$powerGateErrMsg = [string]$powerGateLastResponse.Body.error.message.innertext
-			if ($powerGateLastResponse.Body.error.innererror) {
-				$powerGateErrMsg = [string]$powerGateLastResponse.Body.error.innererror.message
-			}
-			if ($powerGateLastResponse.Body.error.innererror.internalexception) {
-				$powerGateErrMsg = [string]$powerGateLastResponse.Body.error.innererror.internalexception.message
-			}
-		}
-	}
-	Log -End
-	return $powerGateErrMsg
-}
-function Get-PgsErrorForLastResponse {
-	param(
-		$Entity
-	)
-	if($? -eq $false) { #Condition must be evaluated first as every other command like logging would change $?
-		$message = $null
-		$powerGateLastResponse = [AppDomain]::CurrentDomain.GetData("powerGate_lastResponse")
 
-		if($powerGateLastResponse.Status -as [int] -gt 500) {
-			$pGError = GetPowerGateError
-			$message = "{1} - Status: {0}; Message: {2}" -f `
-				$powerGateLastResponse.Code, `
-				$powerGateLastResponse.Status, `
-				$pGError
-		}
-	}
-	else { $message = $null }
-
-	Log -Begin
-	$result = @{
-		Entity = $Entity
-		ErrorMessage = $message
-	}
-	Log -End
-	return $result
-}
