@@ -156,7 +156,6 @@ function Check-Boms($VaultBoms) {
                 continue
             }
 
-            $childNumber = GetEntityNumber -entity $vaultBomRow
             $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber.ToUpper() }
             if ($? -eq $false) {
                 $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails $vaultBomRow._StatusDetails

@@ -1,12 +1,3 @@
-function Test-ErpItemExists {
-    param($ErpMaterial, $VaultEntity)
-    if (-not $erpMaterial -or $false -eq $erpMaterial) {
-        $entityNumber = GetEntityNumber -Entity $VaultEntity
-        throw "An item with the number '$($entityNumber)' does not exist in the ERP system."
-    }
-    Log -End
-}
-
 function Test-ErpBomIsSynced {    #JAKOB anschauen
     param(
         $Entity # Can be a powerVault FILE or Vault object
