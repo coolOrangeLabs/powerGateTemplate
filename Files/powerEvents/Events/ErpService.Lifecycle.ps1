@@ -62,7 +62,7 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
 			return
 		}
 		if ($vaultBomRow.Bom_Quantity -ne $erpBomRow.Quantity) {
-			Add-VaultRestriction -EntityName $number -Message "Open the BOM Window, because the ERP BOM is different then in Vault: Quantity is different: '$($vaultBomRow.Bom_Quantity) <> $($erpBomRow.Quantity)'"
+			Add-VaultRestriction -EntityName $number -Message "Open the BOM Window, because the ERP BOM is different then in Vault: Quantity is different: '$($vaultBomRow.Bom_Quantity) <> $($erpBomRow.Quantity)'!"
 			return
 		}
 	}
