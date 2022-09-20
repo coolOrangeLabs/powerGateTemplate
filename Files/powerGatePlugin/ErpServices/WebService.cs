@@ -11,7 +11,7 @@ using powerGateServer.SDK;
 
 namespace ErpServices
 {
-    [WebServiceData("coolOrange", "ErpServices")]
+    [WebServiceData("PGS", "ErpServices")]
     public class WebService : powerGateServer.SDK.WebService
     {
         static readonly ILog Log =
