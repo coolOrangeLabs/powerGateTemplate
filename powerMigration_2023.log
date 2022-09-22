@@ -1,0 +1,1225 @@
+2022-09-20 08:14:25,502 - [INFO] Init: powerMigration Version 1.0.0.0
+2022-09-20 08:14:48,686 - [INFO] Git clone https://github.com/coolOrangeLabs/powerGateTemplate to C:\temp\powerMigration\Git\1b8b9b80-471d-4d01-92c8-6512407028db\powerGateTemplate
+2022-09-20 08:14:49,766 - [INFO] Git create new branch powerMigration_2023
+2022-09-20 08:14:49,796 - [INFO] Git push C:\temp\powerMigration\Git\1b8b9b80-471d-4d01-92c8-6512407028db\powerGateTemplate to branch powerMigration_2023
+2022-09-20 08:14:50,662 - [INFO] Start migrating with ProjectMigrater
+2022-09-20 08:14:50,675 - [INFO] Start migrating with GeneralPowershellMigrater
+2022-09-20 08:14:50,680 - [INFO] Start processing AdminChecks.ps1
+2022-09-20 08:14:50,691 - [WARN] Found string with old version which probably needs to be replaced manually in file 'AdminChecks.ps1' line 41, see:             "2021" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerJobsProcessor22.0_Vault2021.exe";
+2022-09-20 08:14:50,692 - [WARN] Found string with old version which probably needs to be replaced manually in file 'AdminChecks.ps1' line 46, see:             "2021" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerEvents22.0_Vault2021.exe";
+2022-09-20 08:14:50,692 - [WARN] Found string with old version which probably needs to be replaced manually in file 'AdminChecks.ps1' line 51, see:             "2021" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGate21.0.exe";
+2022-09-20 08:14:50,692 - [WARN] Found string with old version which probably needs to be replaced manually in file 'AdminChecks.ps1' line 56, see:             "2021" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGateServer21.0_x64.msi";
+2022-09-20 08:14:50,694 - [INFO] Start processing AzureDevops_AddCopyRight.ps1
+2022-09-20 08:14:50,696 - [INFO] Start processing ErpService.Lifecycle.ps1
+2022-09-20 08:14:50,699 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,699 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 58 in 'ErpService.Lifecycle.ps1': 		ShowMessageBox -Message $_.Exception.Message -Icon Error
+
+2022-09-20 08:14:50,700 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,700 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 82 in 'ErpService.Lifecycle.ps1': 		ShowMessageBox -Message $_.Exception.Message -Icon Error
+
+2022-09-20 08:14:50,701 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,702 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 110 in 'ErpService.Lifecycle.ps1': 		ShowMessageBox -Message $_.Exception.Message -Icon Error
+
+2022-09-20 08:14:50,702 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,703 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 129 in 'ErpService.Lifecycle.ps1': 		ShowMessageBox -Message $_.Exception.Message -Icon Error
+
+2022-09-20 08:14:50,707 - [INFO] Start processing Erp.Standard.Checks.psm1
+2022-09-20 08:14:50,708 - [INFO] Start processing Import.Modules.psm1
+2022-09-20 08:14:50,709 - [INFO] Start processing ProAlpha.Checks.psm1
+2022-09-20 08:14:50,710 - [INFO] Start processing SAP.Checks.psm1
+2022-09-20 08:14:50,732 - [INFO] Start processing SAP.Classes.psm1
+2022-09-20 08:14:50,743 - [INFO] Start processing BomFunctions.psm1
+2022-09-20 08:14:50,764 - [INFO] Start processing Communication.psm1
+2022-09-20 08:14:50,766 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,766 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 49 in 'Communication.psm1': 		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
+
+2022-09-20 08:14:50,767 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,767 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 56 in 'Communication.psm1': 			ShowMessageBox -Message $connectionError -Icon Error
+
+2022-09-20 08:14:50,776 - [INFO] Start processing Initialize.psm1
+2022-09-20 08:14:50,777 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,777 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 24 in 'Initialize.psm1': function ShowMessageBox {
+
+2022-09-20 08:14:50,779 - [INFO] Start processing Logging.psm1
+2022-09-20 08:14:50,785 - [INFO] Start processing MaterialFunctions.psm1
+2022-09-20 08:14:50,789 - [INFO] Start processing SearchFunctions.psm1
+2022-09-20 08:14:50,792 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,793 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 105 in 'SearchFunctions.psm1':         ShowMessageBox -Message "An item needs to be selected to proceed!" -Icon "Hand" -Title "powerGate ERP - Link Item"
+
+2022-09-20 08:14:50,794 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:14:50,794 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 131 in 'SearchFunctions.psm1': 		ShowMessageBox -Message $searchErpMaterialsResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Search"
+
+2022-09-20 08:14:50,804 - [INFO] Start processing SelectionLists.psm1
+2022-09-20 08:14:50,810 - [INFO] Start processing PSFramework.psd1
+2022-09-20 08:14:50,820 - [INFO] Start processing PSFramework.psm1
+2022-09-20 08:14:51,653 - [WARN] Breaking Change in Version '2023' detected: ShowWarning method - added
+2022-09-20 08:14:51,654 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 4441 in 'PSFramework.psm1': 		You can enable this to always be on for your module by setting the feature flag: PSFramework.Stop-PSFFunction.ShowWarning
+
+2022-09-20 08:14:51,710 - [WARN] Breaking Change in Version '2023' detected: ShowWarning method - added
+2022-09-20 08:14:51,711 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 4599 in 'PSFramework.psm1': 	if (-not $showWarning) { $showWarning = Test-PSFFeature -Name 'PSFramework.Stop-PSFFunction.ShowWarning' -ModuleName $ModuleName }
+
+2022-09-20 08:15:00,240 - [WARN] Breaking Change in Version '2023' detected: ShowWarning method - added
+2022-09-20 08:15:00,241 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 15440 in 'PSFramework.psm1': Register-PSFFeature -Name 'PSFramework.Stop-PSFFunction.ShowWarning' -Owner PSFramework -Description 'Causes calls to Stop-PSFFunction to always show warnings. By default, using "-EnableException $true" will only throw the exception but not show the warning.'
+
+2022-09-20 08:15:00,987 - [INFO] Start processing PSFramework.psproj.psbuild
+2022-09-20 08:15:01,057 - [INFO] Start processing ErpServices.WorkflowEnhancements.pssproj
+2022-09-20 08:15:01,060 - [INFO] Start processing Erp.Service.CreatePDFFromItem.ps1
+2022-09-20 08:15:01,064 - [INFO] Start processing ErpService.Create.PDF.ps1
+2022-09-20 08:15:01,068 - [INFO] Start processing Import.Shared.Modules.psm1
+2022-09-20 08:15:01,069 - [INFO] Start processing powerGateMain.ps1
+2022-09-20 08:15:01,070 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,070 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 11 in 'powerGateMain.ps1': 				ShowMessageBox -Message "Virtual Component '$number' successfully inserted." -Title "powerGate ERP - Virtual Component" -Icon "Information" | Out-Null
+
+2022-09-20 08:15:01,070 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,070 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 14 in 'powerGateMain.ps1': 				ShowMessageBox -Message "'$number' already exists. Please choose another ERP item." -Title "powerGate ERP - Virtual Component" -Icon "Warning"  | Out-Null
+
+2022-09-20 08:15:01,071 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,071 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 20 in 'powerGateMain.ps1': 			ShowMessageBox -Message "Raw Material '$number' successfully inserted." -Title "powerGate ERP - Raw Material" -Icon "Information" | Out-Null
+
+2022-09-20 08:15:01,074 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,074 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 123 in 'powerGateMain.ps1': 			ShowMessageBox -Message $createErpMaterialResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
+
+2022-09-20 08:15:01,074 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,074 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 126 in 'powerGateMain.ps1': 			ShowMessageBox -Message "$($createErpMaterialResult.Entity.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
+
+2022-09-20 08:15:01,075 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,075 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 133 in 'powerGateMain.ps1': 			ShowMessageBox -Message $updateErpMaterialResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
+
+2022-09-20 08:15:01,075 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,075 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 136 in 'powerGateMain.ps1': 			ShowMessageBox -Message "$($updateErpMaterialResult.Entity.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
+
+2022-09-20 08:15:01,077 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,077 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 165 in 'powerGateMain.ps1': 	$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($erpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
+
+2022-09-20 08:15:01,090 - [INFO] Start processing Default.ps1
+2022-09-20 08:15:01,092 - [INFO] Start processing powerGateBomTransfer.ps1
+2022-09-20 08:15:01,106 - [INFO] Start processing powerGateMain.ps1
+2022-09-20 08:15:01,108 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,109 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 114 in 'powerGateMain.ps1': 			ShowMessageBox -Message $createErpMaterialResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Create Material" | Out-Null
+
+2022-09-20 08:15:01,109 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,109 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 117 in 'powerGateMain.ps1': 			ShowMessageBox -Message "$($createErpMaterialResult.Entity.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
+
+2022-09-20 08:15:01,110 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,110 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 127 in 'powerGateMain.ps1': 			ShowMessageBox -Message $updateErpMaterialResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Update Material" | Out-Null
+
+2022-09-20 08:15:01,110 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,110 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 130 in 'powerGateMain.ps1': 			ShowMessageBox -Message "$($updateErpMaterialResult.Entity.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information" | Out-Null
+
+2022-09-20 08:15:01,111 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,111 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 157 in 'powerGateMain.ps1': 				ShowMessageBox -Message "The ERP item $($erpMaterial.Number) cannot be assigned!`nAn item with an item number $($existingEntity._Number) already exists." -Button "Ok" -Icon "Warning" | Out-Null
+
+2022-09-20 08:15:01,112 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,113 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 175 in 'powerGateMain.ps1': 	$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($erpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
+
+2022-09-20 08:15:01,115 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,115 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 230 in 'powerGateMain.ps1': 			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
+
+2022-09-20 08:15:01,116 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,116 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 240 in 'powerGateMain.ps1': 			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
+
+2022-09-20 08:15:01,125 - [INFO] Start processing type-aliases.ps1
+2022-09-20 08:15:01,127 - [INFO] Start processing type-extensions.ps1
+2022-09-20 08:15:01,128 - [INFO] Start processing stringsAssembly.psd1
+2022-09-20 08:15:01,131 - [INFO] Start processing stringsComputerManagement.psd1
+2022-09-20 08:15:01,131 - [INFO] Start processing stringsConfiguration.psd1
+2022-09-20 08:15:01,135 - [INFO] Start processing stringsFlowControl.psd1
+2022-09-20 08:15:01,135 - [INFO] Start processing stringsImport.psd1
+2022-09-20 08:15:01,137 - [INFO] Start processing stringsLogging.psd1
+2022-09-20 08:15:01,139 - [INFO] Start processing stringsResultCache.psd1
+2022-09-20 08:15:01,139 - [INFO] Start processing stringsRunspaces.psd1
+2022-09-20 08:15:01,141 - [INFO] Start processing stringsScriptblock.psd1
+2022-09-20 08:15:01,142 - [INFO] Start processing stringsSerialization.psd1
+2022-09-20 08:15:01,143 - [INFO] Start processing stringsTabExpansion.psd1
+2022-09-20 08:15:01,144 - [INFO] Start processing stringsTaskEngine.psd1
+2022-09-20 08:15:01,144 - [INFO] Start processing stringsUtility.psd1
+2022-09-20 08:15:01,148 - [INFO] Start processing pester.ps1
+2022-09-20 08:15:01,153 - [INFO] Start processing PSFramework.Format.ps1xml
+2022-09-20 08:15:01,181 - [INFO] Start processing PSFramework.Types.ps1xml
+2022-09-20 08:15:01,187 - [INFO] Start processing Plugin-Service-Tests.ps1
+2022-09-20 08:15:01,189 - [INFO] Start processing Plugin-Stress-Tests.ps1
+2022-09-20 08:15:01,196 - [INFO] Start processing powerGateEditConfiguration.ps1
+2022-09-20 08:15:01,197 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,197 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 13 in 'powerGateEditConfiguration.ps1':     (ShowMessageBox -Message $_.Exception.Message -Button  "OK" -Icon "Error") | Out-Null
+
+2022-09-20 08:15:01,198 - [INFO] Start processing powerGateSaveConfiguration.ps1
+2022-09-20 08:15:01,199 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,199 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 8 in 'powerGateSaveConfiguration.ps1':         ShowMessageBox -Message "No config file found in '$cfgPath' `n Please download/edit the config file first and then save it back to the Vault server!" -Button  "OK" -Icon "Warning" | Out-Null
+
+2022-09-20 08:15:01,199 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,200 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 13 in 'powerGateSaveConfiguration.ps1':         ShowMessageBox -Message "Config file saved to Vault server" -Button "OK" -Icon "Information" | Out-Null
+
+2022-09-20 08:15:01,200 - [WARN] Breaking Change in Version '2023' detected: ShowMessage method - one overload added
+2022-09-20 08:15:01,201 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 19 in 'powerGateSaveConfiguration.ps1':     (ShowMessageBox -Message $_.Exception.Message -Button  "OK" -Icon "Error") | Out-Null
+
+2022-09-20 08:15:01,202 - [INFO] Start processing Invoke-PSFCommand.ps1
+2022-09-20 08:15:01,211 - [INFO] Start processing New-PSFSessionContainer.ps1
+2022-09-20 08:15:01,214 - [INFO] Start processing Register-PSFSessionObjectType.ps1
+2022-09-20 08:15:01,216 - [INFO] Start processing Export-PSFConfig.ps1
+2022-09-20 08:15:01,224 - [INFO] Start processing Get-PSFConfig.ps1
+2022-09-20 08:15:01,227 - [INFO] Start processing Get-PSFConfigValue.ps1
+2022-09-20 08:15:01,231 - [INFO] Start processing Import-PSFConfig.ps1
+2022-09-20 08:15:01,241 - [INFO] Start processing Register-PSFConfig.ps1
+2022-09-20 08:15:01,255 - [INFO] Start processing Register-PSFConfigSchema.ps1
+2022-09-20 08:15:01,257 - [INFO] Start processing Register-PSFConfigValidation.ps1
+2022-09-20 08:15:01,259 - [INFO] Start processing Remove-PSFConfig.ps1
+2022-09-20 08:15:01,268 - [INFO] Start processing Reset-PSFConfig.ps1
+2022-09-20 08:15:01,274 - [INFO] Start processing Select-PSFConfig.ps1
+2022-09-20 08:15:01,279 - [INFO] Start processing Unregister-PSFConfig.ps1
+2022-09-20 08:15:01,291 - [INFO] Start processing Get-PSFFeature.ps1
+2022-09-20 08:15:01,292 - [INFO] Start processing Register-PSFFeature.ps1
+2022-09-20 08:15:01,294 - [INFO] Start processing Set-PSFFeature.ps1
+2022-09-20 08:15:01,297 - [INFO] Start processing Test-PSFFeature.ps1
+2022-09-20 08:15:01,299 - [INFO] Start processing Get-PSFCallback.ps1
+2022-09-20 08:15:01,302 - [INFO] Start processing Get-PSFUserChoice.ps1
+2022-09-20 08:15:01,306 - [INFO] Start processing Register-PSFCallback.ps1
+2022-09-20 08:15:01,311 - [INFO] Start processing Stop-PSFFunction.ps1
+2022-09-20 08:15:01,313 - [WARN] Breaking Change in Version '2023' detected: ShowWarning method - added
+2022-09-20 08:15:01,313 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 85 in 'Stop-PSFFunction.ps1': 		You can enable this to always be on for your module by setting the feature flag: PSFramework.Stop-PSFFunction.ShowWarning
+
+2022-09-20 08:15:01,319 - [WARN] Breaking Change in Version '2023' detected: ShowWarning method - added
+2022-09-20 08:15:01,319 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 243 in 'Stop-PSFFunction.ps1': 	if (-not $showWarning) { $showWarning = Test-PSFFeature -Name 'PSFramework.Stop-PSFFunction.ShowWarning' -ModuleName $ModuleName }
+
+2022-09-20 08:15:01,332 - [INFO] Start processing Test-PSFFunctionInterrupt.ps1
+2022-09-20 08:15:01,334 - [INFO] Start processing Test-PSFLanguageMode.ps1
+2022-09-20 08:15:01,336 - [INFO] Start processing Test-PSFParameterBinding.ps1
+2022-09-20 08:15:01,341 - [INFO] Start processing Test-PSFPowerShell.ps1
+2022-09-20 08:15:01,350 - [INFO] Start processing Unregister-PSFCallback.ps1
+2022-09-20 08:15:01,352 - [INFO] Start processing Export-PSFModuleClass.ps1
+2022-09-20 08:15:01,354 - [INFO] Start processing Import-PSFCmdlet.ps1
+2022-09-20 08:15:01,358 - [INFO] Start processing Register-PSFParameterClassMapping.ps1
+2022-09-20 08:15:01,362 - [INFO] Start processing Set-PSFTypeAlias.ps1
+2022-09-20 08:15:01,365 - [INFO] Start processing Get-PSFLicense.ps1
+2022-09-20 08:15:01,368 - [INFO] Start processing New-PSFLicense.ps1
+2022-09-20 08:15:01,375 - [INFO] Start processing Remove-PSFLicense.ps1
+2022-09-20 08:15:01,377 - [INFO] Start processing Get-PSFLocalizedString.ps1
+2022-09-20 08:15:01,380 - [INFO] Start processing Import-PSFLocalizedString.ps1
+2022-09-20 08:15:01,382 - [INFO] Start processing Add-PSFLoggingProviderRunspace.ps1
+2022-09-20 08:15:01,386 - [INFO] Start processing Get-PSFLoggingProvider.ps1
+2022-09-20 08:15:01,388 - [INFO] Start processing Get-PSFLoggingProviderInstance.ps1
+2022-09-20 08:15:01,391 - [INFO] Start processing Import-PSFLoggingProvider.ps1
+2022-09-20 08:15:01,404 - [INFO] Start processing Install-PSFLoggingProvider.ps1
+2022-09-20 08:15:01,409 - [INFO] Start processing Register-PSFLoggingProvider.ps1
+2022-09-20 08:15:01,443 - [INFO] Start processing Remove-PSFLoggingProviderRunspace.ps1
+2022-09-20 08:15:01,445 - [INFO] Start processing Set-PSFLoggingProvider.ps1
+2022-09-20 08:15:01,462 - [INFO] Start processing Get-PSFMessage.ps1
+2022-09-20 08:15:01,468 - [INFO] Start processing Get-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:01,470 - [INFO] Start processing New-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:01,476 - [INFO] Start processing Register-PSFMessageEvent.ps1
+2022-09-20 08:15:01,481 - [INFO] Start processing Register-PSFMessageTransform.ps1
+2022-09-20 08:15:01,489 - [INFO] Start processing Remove-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:01,493 - [INFO] Start processing Wait-PSFMessage.ps1
+2022-09-20 08:15:01,496 - [INFO] Start processing Write-PSFHostColor.ps1
+2022-09-20 08:15:01,503 - [INFO] Start processing Write-PSFMessageProxy.ps1
+2022-09-20 08:15:01,508 - [INFO] Start processing Get-PSFPipeline.ps1
+2022-09-20 08:15:01,514 - [INFO] Start processing Clear-PSFresultCache.ps1
+2022-09-20 08:15:01,516 - [INFO] Start processing Get-PSFResultCache.ps1
+2022-09-20 08:15:01,519 - [INFO] Start processing Set-PSFResultCache.ps1
+2022-09-20 08:15:01,523 - [INFO] Start processing Get-PSFDynamicContentObject.ps1
+2022-09-20 08:15:01,525 - [INFO] Start processing Get-PSFRunspace.ps1
+2022-09-20 08:15:01,526 - [INFO] Start processing Register-PSFRunspace.ps1
+2022-09-20 08:15:01,531 - [INFO] Start processing Set-PSFDynamicContentObject.ps1
+2022-09-20 08:15:01,536 - [INFO] Start processing Start-PSFRunspace.ps1
+2022-09-20 08:15:01,541 - [INFO] Start processing Stop-PSFRunspace.ps1
+2022-09-20 08:15:01,547 - [INFO] Start processing ConvertFrom-PSFClixml.ps1
+2022-09-20 08:15:01,549 - [INFO] Start processing ConvertTo-PSFClixml.ps1
+2022-09-20 08:15:01,553 - [INFO] Start processing Export-PSFClixml.ps1
+2022-09-20 08:15:01,559 - [INFO] Start processing Get-PSFTypeSerializationData.ps1
+2022-09-20 08:15:01,567 - [INFO] Start processing Import-PSFClixml.ps1
+2022-09-20 08:15:01,570 - [INFO] Start processing Register-PSFTypeSerializationData.ps1
+2022-09-20 08:15:01,573 - [INFO] Start processing Register-PSFTeppArgumentCompleter.ps1
+2022-09-20 08:15:01,576 - [INFO] Start processing Register-PSFTeppScriptblock.ps1
+2022-09-20 08:15:01,581 - [INFO] Start processing Set-PSFTeppResult.ps1
+2022-09-20 08:15:01,584 - [INFO] Start processing Disable-PSFTaskEngineTask.ps1
+2022-09-20 08:15:01,586 - [INFO] Start processing Enable-PSFTaskEngineTask.ps1
+2022-09-20 08:15:01,588 - [INFO] Start processing Get-PSFTaskEngineCache.ps1
+2022-09-20 08:15:01,591 - [INFO] Start processing Get-PSFTaskEngineTask.ps1
+2022-09-20 08:15:01,592 - [INFO] Start processing Register-PSFTaskEngineTask.ps1
+2022-09-20 08:15:01,600 - [INFO] Start processing Set-PSFTaskEngineCache.ps1
+2022-09-20 08:15:01,605 - [INFO] Start processing Test-PSFTaskEngineCache.ps1
+2022-09-20 08:15:01,607 - [INFO] Start processing Test-PSFTaskEngineTask.ps1
+2022-09-20 08:15:01,608 - [INFO] Start processing Compare-PSFArray.ps1
+2022-09-20 08:15:01,613 - [INFO] Start processing ConvertFrom-PSFArray.ps1
+2022-09-20 08:15:01,621 - [INFO] Start processing Get-PSFPath.ps1
+2022-09-20 08:15:01,623 - [INFO] Start processing Get-PSFScriptblock.ps1
+2022-09-20 08:15:01,626 - [INFO] Start processing Import-PSFPowerShellDataFile.ps1
+2022-09-20 08:15:01,629 - [INFO] Start processing Join-PSFPath.ps1
+2022-09-20 08:15:01,631 - [INFO] Start processing New-PSFSupportPackage.ps1
+2022-09-20 08:15:01,645 - [INFO] Start processing Remove-PSFAlias.ps1
+2022-09-20 08:15:01,647 - [INFO] Start processing Resolve-PSFDefaultParameterValue.ps1
+2022-09-20 08:15:01,650 - [INFO] Start processing Resolve-PSFPath.ps1
+2022-09-20 08:15:01,655 - [INFO] Start processing Select-PSFPropertyValue.ps1
+2022-09-20 08:15:01,659 - [INFO] Start processing Set-PSFPath.ps1
+2022-09-20 08:15:01,662 - [INFO] Start processing Set-PSFScriptblock.ps1
+2022-09-20 08:15:01,664 - [INFO] Start processing computermanagement.ps1
+2022-09-20 08:15:01,667 - [INFO] Start processing general.ps1
+2022-09-20 08:15:01,673 - [INFO] Start processing logging.ps1
+2022-09-20 08:15:01,682 - [INFO] Start processing message.ps1
+2022-09-20 08:15:01,700 - [INFO] Start processing path.ps1
+2022-09-20 08:15:01,702 - [INFO] Start processing runspace.ps1
+2022-09-20 08:15:01,703 - [INFO] Start processing serialization.ps1
+2022-09-20 08:15:01,705 - [INFO] Start processing utility.ps1
+2022-09-20 08:15:01,708 - [INFO] Start processing default.ps1
+2022-09-20 08:15:01,716 - [INFO] Start processing metajson.ps1
+2022-09-20 08:15:01,727 - [INFO] Start processing bool.ps1
+2022-09-20 08:15:01,728 - [INFO] Start processing consolecolor.ps1
+2022-09-20 08:15:01,729 - [INFO] Start processing credential.ps1
+2022-09-20 08:15:01,730 - [INFO] Start processing datetime.ps1
+2022-09-20 08:15:01,731 - [INFO] Start processing double.ps1
+2022-09-20 08:15:01,731 - [INFO] Start processing guidarray.ps1
+2022-09-20 08:15:01,732 - [INFO] Start processing integer.ps1
+2022-09-20 08:15:01,733 - [INFO] Start processing integer0to9.ps1
+2022-09-20 08:15:01,734 - [INFO] Start processing integer1to9.ps1
+2022-09-20 08:15:01,735 - [INFO] Start processing integerarray.ps1
+2022-09-20 08:15:01,736 - [INFO] Start processing integerpositive.ps1
+2022-09-20 08:15:01,736 - [INFO] Start processing languagecode.ps1
+2022-09-20 08:15:01,738 - [INFO] Start processing logfilefiletype.ps1
+2022-09-20 08:15:01,739 - [INFO] Start processing long.ps1
+2022-09-20 08:15:01,739 - [INFO] Start processing sizestyle.ps1
+2022-09-20 08:15:01,740 - [INFO] Start processing string.ps1
+2022-09-20 08:15:01,741 - [INFO] Start processing stringarray.ps1
+2022-09-20 08:15:01,742 - [INFO] Start processing timespan.ps1
+2022-09-20 08:15:01,743 - [INFO] Start processing uriabsolute.ps1
+2022-09-20 08:15:01,744 - [INFO] Start processing azureloganalytics.provider.ps1
+2022-09-20 08:15:01,761 - [INFO] Start processing console.provider.ps1
+2022-09-20 08:15:01,764 - [INFO] Start processing eventlog.provider.ps1
+2022-09-20 08:15:01,770 - [INFO] Start processing filesystem.provider.ps1
+2022-09-20 08:15:01,808 - [INFO] Start processing gelf.provider.ps1
+2022-09-20 08:15:01,813 - [INFO] Start processing logfile.provider.ps1
+2022-09-20 08:15:01,838 - [INFO] Start processing splunk.provider.ps1
+2022-09-20 08:15:01,849 - [INFO] Start processing sql.provider.ps1
+2022-09-20 08:15:01,861 - [INFO] Start processing ComputerParameter.ps1
+2022-09-20 08:15:01,863 - [INFO] Start processing paths.validate.ps1
+2022-09-20 08:15:01,865 - [INFO] Start processing timespan.validate.ps1
+2022-09-20 08:15:01,866 - [INFO] Start processing async-logging2.ps1
+2022-09-20 08:15:01,881 - [INFO] Start processing cmdlets.ps1
+2022-09-20 08:15:01,883 - [INFO] Start processing environment.ps1
+2022-09-20 08:15:01,889 - [INFO] Start processing license.ps1
+2022-09-20 08:15:01,898 - [INFO] Start processing loadConfigurationPersisted.ps1
+2022-09-20 08:15:01,900 - [INFO] Start processing loggingProviderInstanceModuleCode.ps1
+2022-09-20 08:15:01,906 - [INFO] Start processing postimport.ps1
+2022-09-20 08:15:01,909 - [INFO] Start processing preimport.ps1
+2022-09-20 08:15:01,910 - [INFO] Start processing removalEvent.ps1
+2022-09-20 08:15:01,911 - [INFO] Start processing sessionRegistration.ps1
+2022-09-20 08:15:01,912 - [INFO] Start processing strings.ps1
+2022-09-20 08:15:01,912 - [INFO] Start processing taskEngine.ps1
+2022-09-20 08:15:01,915 - [INFO] Start processing teppCoreCode.ps1
+2022-09-20 08:15:01,989 - [INFO] Start processing teppInputResources.ps1
+2022-09-20 08:15:01,992 - [INFO] Start processing variables.ps1
+2022-09-20 08:15:01,993 - [WARN] Breaking Change in Version '2023' detected: ShowWarning method - added
+2022-09-20 08:15:01,993 - [ERROR] Failed because a method was found in the code which does not exist in Vault API v2023! Make sure to input the correct value for 'old VaultYear' in powerMigration! Affected line 27 in 'variables.ps1': Register-PSFFeature -Name 'PSFramework.Stop-PSFFunction.ShowWarning' -Owner PSFramework -Description 'Causes calls to Stop-PSFFunction to always show warnings. By default, using "-EnableException $true" will only throw the exception but not show the warning.'
+
+2022-09-20 08:15:01,995 - [INFO] Start processing tepp-assignment.ps1
+2022-09-20 08:15:02,006 - [INFO] Start processing BeTrueFOrAll.ps1
+2022-09-20 08:15:02,007 - [INFO] Start processing BeTrueForAny.ps1
+2022-09-20 08:15:02,009 - [INFO] Start processing HaveProperty.ps1
+2022-09-20 08:15:02,015 - [INFO] Start processing FileIntegrity.Exceptions.ps1
+2022-09-20 08:15:02,018 - [INFO] Start processing FileIntegrity.Tests.ps1
+2022-09-20 08:15:02,023 - [INFO] Start processing Help.Exceptions.ps1
+2022-09-20 08:15:02,024 - [INFO] Start processing Help.Tests.ps1
+2022-09-20 08:15:02,033 - [INFO] Start processing manifest.Tests.ps1
+2022-09-20 08:15:02,037 - [INFO] Start processing PSScriptAnalyzer.Tests.ps1
+2022-09-20 08:15:02,039 - [INFO] Start processing strings.Exceptions.ps1
+2022-09-20 08:15:02,041 - [INFO] Start processing strings.Tests.ps1
+2022-09-20 08:15:02,043 - [INFO] Start processing Convert-PsfConfigValue.ps1
+2022-09-20 08:15:02,045 - [INFO] Start processing Read-PsfConfigEnvironment.ps1
+2022-09-20 08:15:02,049 - [INFO] Start processing Read-PsfConfigFile.ps1
+2022-09-20 08:15:02,053 - [INFO] Start processing Read-PsfConfigPersisted.ps1
+2022-09-20 08:15:02,064 - [INFO] Start processing Write-PsfConfigFile.ps1
+2022-09-20 08:15:02,067 - [INFO] Start processing Convert-PsfMessageException.ps1
+2022-09-20 08:15:02,071 - [INFO] Start processing Convert-PsfMessageLevel.ps1
+2022-09-20 08:15:02,074 - [INFO] Start processing Convert-PsfMessageTarget.ps1
+2022-09-20 08:15:02,077 - [INFO] Start processing New-PSFTeppCompletionResult.ps1
+2022-09-20 08:15:02,081 - [INFO] Start processing callback-name.ps1
+2022-09-20 08:15:02,082 - [INFO] Start processing config-fullname.ps1
+2022-09-20 08:15:02,082 - [INFO] Start processing config-module.ps1
+2022-09-20 08:15:02,083 - [INFO] Start processing config-name.ps1
+2022-09-20 08:15:02,083 - [INFO] Start processing config-schema.ps1
+2022-09-20 08:15:02,084 - [INFO] Start processing config-validation.ps1
+2022-09-20 08:15:02,084 - [INFO] Start processing dynamiccontentobject-name.ps1
+2022-09-20 08:15:02,085 - [INFO] Start processing encoding.ps1
+2022-09-20 08:15:02,085 - [INFO] Start processing features.ps1
+2022-09-20 08:15:02,086 - [INFO] Start processing input.ps1
+2022-09-20 08:15:02,127 - [INFO] Start processing license-name.ps1
+2022-09-20 08:15:02,127 - [INFO] Start processing localization.ps1
+2022-09-20 08:15:02,128 - [INFO] Start processing logging-provider.ps1
+2022-09-20 08:15:02,129 - [INFO] Start processing message.ps1
+2022-09-20 08:15:02,131 - [INFO] Start processing pathName.ps1
+2022-09-20 08:15:02,131 - [INFO] Start processing psprovider.ps1
+2022-09-20 08:15:02,131 - [INFO] Start processing runspace.ps1
+2022-09-20 08:15:02,132 - [INFO] Start processing tepp.ps1
+2022-09-20 08:15:02,133 - [INFO] Start processing Unregister-PSFConfig.ps1
+2022-09-20 08:15:02,135 - [INFO] Start processing Export-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,148 - [INFO] Start processing Get-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,150 - [INFO] Start processing Get-PSFConfigValue.Tests.ps1
+2022-09-20 08:15:02,154 - [INFO] Start processing Import-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,225 - [INFO] Start processing Register-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,240 - [INFO] Start processing Register-PSFConfigValidation.Tests.ps1
+2022-09-20 08:15:02,244 - [INFO] Start processing Remove-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,250 - [INFO] Start processing Set-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,298 - [INFO] Start processing Unregister-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,318 - [INFO] Start processing providerV2.Tests.ps1
+2022-09-20 08:15:02,322 - [INFO] Start processing Remove-PSFNull.Tests.ps1
+2022-09-20 08:15:02,325 - [INFO] Start processing input.Tests.ps1
+2022-09-20 08:15:02,328 - [INFO] Start processing teppSystem.Tests.ps1
+2022-09-20 08:15:02,330 - [INFO] Start processing Select-PSFObject.Tests.ps1
+2022-09-20 08:15:02,341 - [INFO] Start processing Select-PSFPropertyValue.Tests.ps1
+2022-09-20 08:15:02,350 - [INFO] Start migrating with PowerJobsMigrater
+2022-09-20 08:15:02,355 - [INFO] Start processing AdminChecks.ps1
+2022-09-20 08:15:02,356 - [INFO] Start processing AzureDevops_AddCopyRight.ps1
+2022-09-20 08:15:02,356 - [INFO] Start processing ErpService.Lifecycle.ps1
+2022-09-20 08:15:02,356 - [INFO] Start processing Erp.Standard.Checks.psm1
+2022-09-20 08:15:02,356 - [INFO] Start processing Import.Modules.psm1
+2022-09-20 08:15:02,357 - [INFO] Start processing ProAlpha.Checks.psm1
+2022-09-20 08:15:02,357 - [INFO] Start processing SAP.Checks.psm1
+2022-09-20 08:15:02,357 - [INFO] Start processing SAP.Classes.psm1
+2022-09-20 08:15:02,357 - [INFO] Start processing BomFunctions.psm1
+2022-09-20 08:15:02,358 - [INFO] Start processing Communication.psm1
+2022-09-20 08:15:02,358 - [INFO] Start processing Initialize.psm1
+2022-09-20 08:15:02,358 - [INFO] Start processing Logging.psm1
+2022-09-20 08:15:02,358 - [INFO] Start processing MaterialFunctions.psm1
+2022-09-20 08:15:02,359 - [INFO] Start processing SearchFunctions.psm1
+2022-09-20 08:15:02,359 - [INFO] Start processing SelectionLists.psm1
+2022-09-20 08:15:02,359 - [INFO] Start processing PSFramework.psd1
+2022-09-20 08:15:02,359 - [INFO] Start processing PSFramework.psm1
+2022-09-20 08:15:02,361 - [INFO] Start processing PSFramework.psproj.psbuild
+2022-09-20 08:15:02,362 - [INFO] Start processing ErpServices.WorkflowEnhancements.pssproj
+2022-09-20 08:15:02,362 - [INFO] Start processing Erp.Service.CreatePDFFromItem.ps1
+2022-09-20 08:15:02,362 - [INFO] Start processing ErpService.Create.PDF.ps1
+2022-09-20 08:15:02,363 - [INFO] Start processing Import.Shared.Modules.psm1
+2022-09-20 08:15:02,364 - [INFO] Start processing powerGateMain.ps1
+2022-09-20 08:15:02,364 - [INFO] Start processing Default.ps1
+2022-09-20 08:15:02,364 - [INFO] Start processing powerGateBomTransfer.ps1
+2022-09-20 08:15:02,364 - [INFO] Start processing powerGateMain.ps1
+2022-09-20 08:15:02,365 - [INFO] Start processing type-aliases.ps1
+2022-09-20 08:15:02,365 - [INFO] Start processing type-extensions.ps1
+2022-09-20 08:15:02,365 - [INFO] Start processing stringsAssembly.psd1
+2022-09-20 08:15:02,365 - [INFO] Start processing stringsComputerManagement.psd1
+2022-09-20 08:15:02,366 - [INFO] Start processing stringsConfiguration.psd1
+2022-09-20 08:15:02,366 - [INFO] Start processing stringsFlowControl.psd1
+2022-09-20 08:15:02,366 - [INFO] Start processing stringsImport.psd1
+2022-09-20 08:15:02,366 - [INFO] Start processing stringsLogging.psd1
+2022-09-20 08:15:02,367 - [INFO] Start processing stringsResultCache.psd1
+2022-09-20 08:15:02,367 - [INFO] Start processing stringsRunspaces.psd1
+2022-09-20 08:15:02,367 - [INFO] Start processing stringsScriptblock.psd1
+2022-09-20 08:15:02,367 - [INFO] Start processing stringsSerialization.psd1
+2022-09-20 08:15:02,368 - [INFO] Start processing stringsTabExpansion.psd1
+2022-09-20 08:15:02,368 - [INFO] Start processing stringsTaskEngine.psd1
+2022-09-20 08:15:02,368 - [INFO] Start processing stringsUtility.psd1
+2022-09-20 08:15:02,368 - [INFO] Start processing pester.ps1
+2022-09-20 08:15:02,368 - [INFO] Start processing PSFramework.Format.ps1xml
+2022-09-20 08:15:02,369 - [INFO] Start processing PSFramework.Types.ps1xml
+2022-09-20 08:15:02,369 - [INFO] Start processing Plugin-Service-Tests.ps1
+2022-09-20 08:15:02,369 - [INFO] Start processing Plugin-Stress-Tests.ps1
+2022-09-20 08:15:02,369 - [INFO] Start processing powerGateEditConfiguration.ps1
+2022-09-20 08:15:02,370 - [INFO] Start processing powerGateSaveConfiguration.ps1
+2022-09-20 08:15:02,370 - [INFO] Start processing Invoke-PSFCommand.ps1
+2022-09-20 08:15:02,370 - [INFO] Start processing New-PSFSessionContainer.ps1
+2022-09-20 08:15:02,370 - [INFO] Start processing Register-PSFSessionObjectType.ps1
+2022-09-20 08:15:02,370 - [INFO] Start processing Export-PSFConfig.ps1
+2022-09-20 08:15:02,371 - [INFO] Start processing Get-PSFConfig.ps1
+2022-09-20 08:15:02,371 - [INFO] Start processing Get-PSFConfigValue.ps1
+2022-09-20 08:15:02,371 - [INFO] Start processing Import-PSFConfig.ps1
+2022-09-20 08:15:02,371 - [INFO] Start processing Register-PSFConfig.ps1
+2022-09-20 08:15:02,372 - [INFO] Start processing Register-PSFConfigSchema.ps1
+2022-09-20 08:15:02,372 - [INFO] Start processing Register-PSFConfigValidation.ps1
+2022-09-20 08:15:02,372 - [INFO] Start processing Remove-PSFConfig.ps1
+2022-09-20 08:15:02,372 - [INFO] Start processing Reset-PSFConfig.ps1
+2022-09-20 08:15:02,372 - [INFO] Start processing Select-PSFConfig.ps1
+2022-09-20 08:15:02,373 - [INFO] Start processing Unregister-PSFConfig.ps1
+2022-09-20 08:15:02,373 - [INFO] Start processing Get-PSFFeature.ps1
+2022-09-20 08:15:02,373 - [INFO] Start processing Register-PSFFeature.ps1
+2022-09-20 08:15:02,373 - [INFO] Start processing Set-PSFFeature.ps1
+2022-09-20 08:15:02,373 - [INFO] Start processing Test-PSFFeature.ps1
+2022-09-20 08:15:02,374 - [INFO] Start processing Get-PSFCallback.ps1
+2022-09-20 08:15:02,374 - [INFO] Start processing Get-PSFUserChoice.ps1
+2022-09-20 08:15:02,374 - [INFO] Start processing Register-PSFCallback.ps1
+2022-09-20 08:15:02,374 - [INFO] Start processing Stop-PSFFunction.ps1
+2022-09-20 08:15:02,375 - [INFO] Start processing Test-PSFFunctionInterrupt.ps1
+2022-09-20 08:15:02,375 - [INFO] Start processing Test-PSFLanguageMode.ps1
+2022-09-20 08:15:02,375 - [INFO] Start processing Test-PSFParameterBinding.ps1
+2022-09-20 08:15:02,375 - [INFO] Start processing Test-PSFPowerShell.ps1
+2022-09-20 08:15:02,375 - [INFO] Start processing Unregister-PSFCallback.ps1
+2022-09-20 08:15:02,376 - [INFO] Start processing Export-PSFModuleClass.ps1
+2022-09-20 08:15:02,376 - [INFO] Start processing Import-PSFCmdlet.ps1
+2022-09-20 08:15:02,376 - [INFO] Start processing Register-PSFParameterClassMapping.ps1
+2022-09-20 08:15:02,376 - [INFO] Start processing Set-PSFTypeAlias.ps1
+2022-09-20 08:15:02,376 - [INFO] Start processing Get-PSFLicense.ps1
+2022-09-20 08:15:02,377 - [INFO] Start processing New-PSFLicense.ps1
+2022-09-20 08:15:02,377 - [INFO] Start processing Remove-PSFLicense.ps1
+2022-09-20 08:15:02,377 - [INFO] Start processing Get-PSFLocalizedString.ps1
+2022-09-20 08:15:02,377 - [INFO] Start processing Import-PSFLocalizedString.ps1
+2022-09-20 08:15:02,378 - [INFO] Start processing Add-PSFLoggingProviderRunspace.ps1
+2022-09-20 08:15:02,378 - [INFO] Start processing Get-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,378 - [INFO] Start processing Get-PSFLoggingProviderInstance.ps1
+2022-09-20 08:15:02,378 - [INFO] Start processing Import-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,378 - [INFO] Start processing Install-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,379 - [INFO] Start processing Register-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,379 - [INFO] Start processing Remove-PSFLoggingProviderRunspace.ps1
+2022-09-20 08:15:02,379 - [INFO] Start processing Set-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,379 - [INFO] Start processing Get-PSFMessage.ps1
+2022-09-20 08:15:02,380 - [INFO] Start processing Get-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:02,380 - [INFO] Start processing New-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:02,380 - [INFO] Start processing Register-PSFMessageEvent.ps1
+2022-09-20 08:15:02,380 - [INFO] Start processing Register-PSFMessageTransform.ps1
+2022-09-20 08:15:02,381 - [INFO] Start processing Remove-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:02,381 - [INFO] Start processing Wait-PSFMessage.ps1
+2022-09-20 08:15:02,381 - [INFO] Start processing Write-PSFHostColor.ps1
+2022-09-20 08:15:02,381 - [INFO] Start processing Write-PSFMessageProxy.ps1
+2022-09-20 08:15:02,382 - [INFO] Start processing Get-PSFPipeline.ps1
+2022-09-20 08:15:02,382 - [INFO] Start processing Clear-PSFresultCache.ps1
+2022-09-20 08:15:02,382 - [INFO] Start processing Get-PSFResultCache.ps1
+2022-09-20 08:15:02,382 - [INFO] Start processing Set-PSFResultCache.ps1
+2022-09-20 08:15:02,382 - [INFO] Start processing Get-PSFDynamicContentObject.ps1
+2022-09-20 08:15:02,383 - [INFO] Start processing Get-PSFRunspace.ps1
+2022-09-20 08:15:02,383 - [INFO] Start processing Register-PSFRunspace.ps1
+2022-09-20 08:15:02,383 - [INFO] Start processing Set-PSFDynamicContentObject.ps1
+2022-09-20 08:15:02,383 - [INFO] Start processing Start-PSFRunspace.ps1
+2022-09-20 08:15:02,383 - [INFO] Start processing Stop-PSFRunspace.ps1
+2022-09-20 08:15:02,384 - [INFO] Start processing ConvertFrom-PSFClixml.ps1
+2022-09-20 08:15:02,384 - [INFO] Start processing ConvertTo-PSFClixml.ps1
+2022-09-20 08:15:02,384 - [INFO] Start processing Export-PSFClixml.ps1
+2022-09-20 08:15:02,384 - [INFO] Start processing Get-PSFTypeSerializationData.ps1
+2022-09-20 08:15:02,385 - [INFO] Start processing Import-PSFClixml.ps1
+2022-09-20 08:15:02,385 - [INFO] Start processing Register-PSFTypeSerializationData.ps1
+2022-09-20 08:15:02,385 - [INFO] Start processing Register-PSFTeppArgumentCompleter.ps1
+2022-09-20 08:15:02,385 - [INFO] Start processing Register-PSFTeppScriptblock.ps1
+2022-09-20 08:15:02,385 - [INFO] Start processing Set-PSFTeppResult.ps1
+2022-09-20 08:15:02,386 - [INFO] Start processing Disable-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,386 - [INFO] Start processing Enable-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,386 - [INFO] Start processing Get-PSFTaskEngineCache.ps1
+2022-09-20 08:15:02,386 - [INFO] Start processing Get-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,387 - [INFO] Start processing Register-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,387 - [INFO] Start processing Set-PSFTaskEngineCache.ps1
+2022-09-20 08:15:02,387 - [INFO] Start processing Test-PSFTaskEngineCache.ps1
+2022-09-20 08:15:02,387 - [INFO] Start processing Test-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,387 - [INFO] Start processing Compare-PSFArray.ps1
+2022-09-20 08:15:02,388 - [INFO] Start processing ConvertFrom-PSFArray.ps1
+2022-09-20 08:15:02,388 - [INFO] Start processing Get-PSFPath.ps1
+2022-09-20 08:15:02,388 - [INFO] Start processing Get-PSFScriptblock.ps1
+2022-09-20 08:15:02,388 - [INFO] Start processing Import-PSFPowerShellDataFile.ps1
+2022-09-20 08:15:02,388 - [INFO] Start processing Join-PSFPath.ps1
+2022-09-20 08:15:02,389 - [INFO] Start processing New-PSFSupportPackage.ps1
+2022-09-20 08:15:02,389 - [INFO] Start processing Remove-PSFAlias.ps1
+2022-09-20 08:15:02,389 - [INFO] Start processing Resolve-PSFDefaultParameterValue.ps1
+2022-09-20 08:15:02,389 - [INFO] Start processing Resolve-PSFPath.ps1
+2022-09-20 08:15:02,390 - [INFO] Start processing Select-PSFPropertyValue.ps1
+2022-09-20 08:15:02,390 - [INFO] Start processing Set-PSFPath.ps1
+2022-09-20 08:15:02,390 - [INFO] Start processing Set-PSFScriptblock.ps1
+2022-09-20 08:15:02,390 - [INFO] Start processing computermanagement.ps1
+2022-09-20 08:15:02,390 - [INFO] Start processing general.ps1
+2022-09-20 08:15:02,391 - [INFO] Start processing logging.ps1
+2022-09-20 08:15:02,391 - [INFO] Start processing message.ps1
+2022-09-20 08:15:02,391 - [INFO] Start processing path.ps1
+2022-09-20 08:15:02,391 - [INFO] Start processing runspace.ps1
+2022-09-20 08:15:02,391 - [INFO] Start processing serialization.ps1
+2022-09-20 08:15:02,392 - [INFO] Start processing utility.ps1
+2022-09-20 08:15:02,392 - [INFO] Start processing default.ps1
+2022-09-20 08:15:02,392 - [INFO] Start processing metajson.ps1
+2022-09-20 08:15:02,392 - [INFO] Start processing bool.ps1
+2022-09-20 08:15:02,393 - [INFO] Start processing consolecolor.ps1
+2022-09-20 08:15:02,393 - [INFO] Start processing credential.ps1
+2022-09-20 08:15:02,393 - [INFO] Start processing datetime.ps1
+2022-09-20 08:15:02,393 - [INFO] Start processing double.ps1
+2022-09-20 08:15:02,393 - [INFO] Start processing guidarray.ps1
+2022-09-20 08:15:02,394 - [INFO] Start processing integer.ps1
+2022-09-20 08:15:02,394 - [INFO] Start processing integer0to9.ps1
+2022-09-20 08:15:02,394 - [INFO] Start processing integer1to9.ps1
+2022-09-20 08:15:02,394 - [INFO] Start processing integerarray.ps1
+2022-09-20 08:15:02,394 - [INFO] Start processing integerpositive.ps1
+2022-09-20 08:15:02,395 - [INFO] Start processing languagecode.ps1
+2022-09-20 08:15:02,395 - [INFO] Start processing logfilefiletype.ps1
+2022-09-20 08:15:02,395 - [INFO] Start processing long.ps1
+2022-09-20 08:15:02,395 - [INFO] Start processing sizestyle.ps1
+2022-09-20 08:15:02,395 - [INFO] Start processing string.ps1
+2022-09-20 08:15:02,396 - [INFO] Start processing stringarray.ps1
+2022-09-20 08:15:02,396 - [INFO] Start processing timespan.ps1
+2022-09-20 08:15:02,396 - [INFO] Start processing uriabsolute.ps1
+2022-09-20 08:15:02,396 - [INFO] Start processing azureloganalytics.provider.ps1
+2022-09-20 08:15:02,397 - [INFO] Start processing console.provider.ps1
+2022-09-20 08:15:02,397 - [INFO] Start processing eventlog.provider.ps1
+2022-09-20 08:15:02,397 - [INFO] Start processing filesystem.provider.ps1
+2022-09-20 08:15:02,397 - [INFO] Start processing gelf.provider.ps1
+2022-09-20 08:15:02,397 - [INFO] Start processing logfile.provider.ps1
+2022-09-20 08:15:02,398 - [INFO] Start processing splunk.provider.ps1
+2022-09-20 08:15:02,398 - [INFO] Start processing sql.provider.ps1
+2022-09-20 08:15:02,398 - [INFO] Start processing ComputerParameter.ps1
+2022-09-20 08:15:02,398 - [INFO] Start processing paths.validate.ps1
+2022-09-20 08:15:02,398 - [INFO] Start processing timespan.validate.ps1
+2022-09-20 08:15:02,399 - [INFO] Start processing async-logging2.ps1
+2022-09-20 08:15:02,399 - [INFO] Start processing cmdlets.ps1
+2022-09-20 08:15:02,399 - [INFO] Start processing environment.ps1
+2022-09-20 08:15:02,399 - [INFO] Start processing license.ps1
+2022-09-20 08:15:02,400 - [INFO] Start processing loadConfigurationPersisted.ps1
+2022-09-20 08:15:02,400 - [INFO] Start processing loggingProviderInstanceModuleCode.ps1
+2022-09-20 08:15:02,400 - [INFO] Start processing postimport.ps1
+2022-09-20 08:15:02,400 - [INFO] Start processing preimport.ps1
+2022-09-20 08:15:02,400 - [INFO] Start processing removalEvent.ps1
+2022-09-20 08:15:02,401 - [INFO] Start processing sessionRegistration.ps1
+2022-09-20 08:15:02,401 - [INFO] Start processing strings.ps1
+2022-09-20 08:15:02,401 - [INFO] Start processing taskEngine.ps1
+2022-09-20 08:15:02,401 - [INFO] Start processing teppCoreCode.ps1
+2022-09-20 08:15:02,402 - [INFO] Start processing teppInputResources.ps1
+2022-09-20 08:15:02,402 - [INFO] Start processing variables.ps1
+2022-09-20 08:15:02,402 - [INFO] Start processing tepp-assignment.ps1
+2022-09-20 08:15:02,402 - [INFO] Start processing BeTrueFOrAll.ps1
+2022-09-20 08:15:02,402 - [INFO] Start processing BeTrueForAny.ps1
+2022-09-20 08:15:02,403 - [INFO] Start processing HaveProperty.ps1
+2022-09-20 08:15:02,403 - [INFO] Start processing FileIntegrity.Exceptions.ps1
+2022-09-20 08:15:02,403 - [INFO] Start processing FileIntegrity.Tests.ps1
+2022-09-20 08:15:02,403 - [INFO] Start processing Help.Exceptions.ps1
+2022-09-20 08:15:02,403 - [INFO] Start processing Help.Tests.ps1
+2022-09-20 08:15:02,404 - [INFO] Start processing manifest.Tests.ps1
+2022-09-20 08:15:02,404 - [INFO] Start processing PSScriptAnalyzer.Tests.ps1
+2022-09-20 08:15:02,404 - [INFO] Start processing strings.Exceptions.ps1
+2022-09-20 08:15:02,404 - [INFO] Start processing strings.Tests.ps1
+2022-09-20 08:15:02,405 - [INFO] Start processing Convert-PsfConfigValue.ps1
+2022-09-20 08:15:02,405 - [INFO] Start processing Read-PsfConfigEnvironment.ps1
+2022-09-20 08:15:02,405 - [INFO] Start processing Read-PsfConfigFile.ps1
+2022-09-20 08:15:02,405 - [INFO] Start processing Read-PsfConfigPersisted.ps1
+2022-09-20 08:15:02,405 - [INFO] Start processing Write-PsfConfigFile.ps1
+2022-09-20 08:15:02,406 - [INFO] Start processing Convert-PsfMessageException.ps1
+2022-09-20 08:15:02,406 - [INFO] Start processing Convert-PsfMessageLevel.ps1
+2022-09-20 08:15:02,406 - [INFO] Start processing Convert-PsfMessageTarget.ps1
+2022-09-20 08:15:02,406 - [INFO] Start processing New-PSFTeppCompletionResult.ps1
+2022-09-20 08:15:02,406 - [INFO] Start processing callback-name.ps1
+2022-09-20 08:15:02,407 - [INFO] Start processing config-fullname.ps1
+2022-09-20 08:15:02,407 - [INFO] Start processing config-module.ps1
+2022-09-20 08:15:02,407 - [INFO] Start processing config-name.ps1
+2022-09-20 08:15:02,407 - [INFO] Start processing config-schema.ps1
+2022-09-20 08:15:02,408 - [INFO] Start processing config-validation.ps1
+2022-09-20 08:15:02,408 - [INFO] Start processing dynamiccontentobject-name.ps1
+2022-09-20 08:15:02,408 - [INFO] Start processing encoding.ps1
+2022-09-20 08:15:02,408 - [INFO] Start processing features.ps1
+2022-09-20 08:15:02,408 - [INFO] Start processing input.ps1
+2022-09-20 08:15:02,409 - [INFO] Start processing license-name.ps1
+2022-09-20 08:15:02,409 - [INFO] Start processing localization.ps1
+2022-09-20 08:15:02,409 - [INFO] Start processing logging-provider.ps1
+2022-09-20 08:15:02,409 - [INFO] Start processing message.ps1
+2022-09-20 08:15:02,409 - [INFO] Start processing pathName.ps1
+2022-09-20 08:15:02,410 - [INFO] Start processing psprovider.ps1
+2022-09-20 08:15:02,410 - [INFO] Start processing runspace.ps1
+2022-09-20 08:15:02,410 - [INFO] Start processing tepp.ps1
+2022-09-20 08:15:02,411 - [INFO] Start processing Unregister-PSFConfig.ps1
+2022-09-20 08:15:02,411 - [INFO] Start processing Export-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,411 - [INFO] Start processing Get-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,411 - [INFO] Start processing Get-PSFConfigValue.Tests.ps1
+2022-09-20 08:15:02,411 - [INFO] Start processing Import-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,412 - [INFO] Start processing Register-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,412 - [INFO] Start processing Register-PSFConfigValidation.Tests.ps1
+2022-09-20 08:15:02,412 - [INFO] Start processing Remove-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,412 - [INFO] Start processing Set-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,413 - [INFO] Start processing Unregister-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,413 - [INFO] Start processing providerV2.Tests.ps1
+2022-09-20 08:15:02,413 - [INFO] Start processing Remove-PSFNull.Tests.ps1
+2022-09-20 08:15:02,413 - [INFO] Start processing input.Tests.ps1
+2022-09-20 08:15:02,413 - [INFO] Start processing teppSystem.Tests.ps1
+2022-09-20 08:15:02,414 - [INFO] Start processing Select-PSFObject.Tests.ps1
+2022-09-20 08:15:02,414 - [INFO] Start processing Select-PSFPropertyValue.Tests.ps1
+2022-09-20 08:15:02,418 - [INFO] Start processing .gitignore
+2022-09-20 08:15:02,418 - [INFO] Start processing AdminChecks.ps1
+2022-09-20 08:15:02,419 - [INFO] Start processing azure-pipelines.yml
+2022-09-20 08:15:02,419 - [INFO] Start processing AzureDevops_AddCopyRight.ps1
+2022-09-20 08:15:02,419 - [INFO] Start processing LICENSE
+2022-09-20 08:15:02,419 - [INFO] Start processing README.md
+2022-09-20 08:15:02,420 - [INFO] Start processing config
+2022-09-20 08:15:02,420 - [INFO] Start processing description
+2022-09-20 08:15:02,420 - [INFO] Start processing FETCH_HEAD
+2022-09-20 08:15:02,420 - [INFO] Start processing HEAD
+2022-09-20 08:15:02,420 - [INFO] Start processing index
+2022-09-20 08:15:02,421 - [INFO] Start processing harvest.cmd
+2022-09-20 08:15:02,421 - [INFO] Start processing harvest.exclude
+2022-09-20 08:15:02,421 - [INFO] Start processing make.cmd
+2022-09-20 08:15:02,422 - [INFO] Start processing Readme_Inventor.png
+2022-09-20 08:15:02,429 - [INFO] Start processing Readme_Vault_BOM.png
+2022-09-20 08:15:02,434 - [INFO] Start processing Installer.sln
+2022-09-20 08:15:02,435 - [INFO] Start processing advanced-topics.md
+2022-09-20 08:15:02,435 - [INFO] Start processing after-golive-phase.md
+2022-09-20 08:15:02,435 - [INFO] Start processing api-examples-for-erp.md
+2022-09-20 08:15:02,435 - [INFO] Start processing bom-display.md
+2022-09-20 08:15:02,435 - [INFO] Start processing bom-workflow-boms.md
+2022-09-20 08:15:02,436 - [INFO] Start processing bom-workflow-items.md
+2022-09-20 08:15:02,436 - [INFO] Start processing bom-workflow-raw-materials.md
+2022-09-20 08:15:02,436 - [INFO] Start processing bom-workflow.md
+2022-09-20 08:15:02,436 - [INFO] Start processing business-logic-phase.md
+2022-09-20 08:15:02,437 - [INFO] Start processing c#-sdk-api-example.md
+2022-09-20 08:15:02,437 - [INFO] Start processing client-configuration.md
+2022-09-20 08:15:02,437 - [INFO] Start processing client-installation.md
+2022-09-20 08:15:02,437 - [INFO] Start processing client-logging.md
+2022-09-20 08:15:02,438 - [INFO] Start processing columns.csv
+2022-09-20 08:15:02,438 - [INFO] Start processing common-errors.md
+2022-09-20 08:15:02,438 - [INFO] Start processing configuration-phase.md
+2022-09-20 08:15:02,438 - [INFO] Start processing contacts.md
+2022-09-20 08:15:02,438 - [INFO] Start processing documents.md
+2022-09-20 08:15:02,439 - [INFO] Start processing erp-bom-mapping.md
+2022-09-20 08:15:02,439 - [INFO] Start processing erp-client.md
+2022-09-20 08:15:02,439 - [INFO] Start processing erp-connection.md
+2022-09-20 08:15:02,439 - [INFO] Start processing erp-item-mapping.md
+2022-09-20 08:15:02,439 - [INFO] Start processing golive-phase.md
+2022-09-20 08:15:02,440 - [INFO] Start processing home.md
+2022-09-20 08:15:02,440 - [INFO] Start processing initialisation-phase.md
+2022-09-20 08:15:02,440 - [INFO] Start processing install-customizations.md
+2022-09-20 08:15:02,440 - [INFO] Start processing integration-phase.md
+2022-09-20 08:15:02,441 - [INFO] Start processing inventor-change-assembly.md
+2022-09-20 08:15:02,441 - [INFO] Start processing inventor-create-assembly.md
+2022-09-20 08:15:02,441 - [INFO] Start processing jobs-installation.md
+2022-09-20 08:15:02,441 - [INFO] Start processing jobs-logging.md
+2022-09-20 08:15:02,441 - [INFO] Start processing labels.csv
+2022-09-20 08:15:02,442 - [INFO] Start processing licenses.md
+2022-09-20 08:15:02,442 - [INFO] Start processing meetingnotes.md
+2022-09-20 08:15:02,442 - [INFO] Start processing monitoring-erp-api.md
+2022-09-20 08:15:02,442 - [INFO] Start processing pdf-export.md
+2022-09-20 08:15:02,442 - [INFO] Start processing phases-explanation.md
+2022-09-20 08:15:02,443 - [INFO] Start processing plugin-configuration.md
+2022-09-20 08:15:02,443 - [INFO] Start processing plugin-definition.md
+2022-09-20 08:15:02,443 - [INFO] Start processing plugin-installation.md
+2022-09-20 08:15:02,443 - [INFO] Start processing powerevents-restrictions.md
+2022-09-20 08:15:02,444 - [INFO] Start processing projectbudget.md
+2022-09-20 08:15:02,444 - [INFO] Start processing projects.csv
+2022-09-20 08:15:02,444 - [INFO] Start processing projectschedule.md
+2022-09-20 08:15:02,444 - [INFO] Start processing server-logging.md
+2022-09-20 08:15:02,444 - [INFO] Start processing testenvironment.md
+2022-09-20 08:15:02,445 - [INFO] Start processing vault-create.md
+2022-09-20 08:15:02,445 - [INFO] Start processing vault-update.md
+2022-09-20 08:15:02,445 - [INFO] Start processing webservice-api-example.md
+2022-09-20 08:15:02,445 - [INFO] Start processing _footer.md
+2022-09-20 08:15:02,446 - [INFO] Start processing _sidebar.md
+2022-09-20 08:15:02,446 - [INFO] Start processing README.sample
+2022-09-20 08:15:02,446 - [INFO] Start processing exclude
+2022-09-20 08:15:02,446 - [INFO] Start processing HEAD
+2022-09-20 08:15:02,446 - [INFO] Start processing powerGateConfigurationTemplate.xml
+2022-09-20 08:15:02,447 - [INFO] Start processing ErpServices.sln
+2022-09-20 08:15:02,447 - [INFO] Start processing Client_Setupx64.wixproj
+2022-09-20 08:15:02,447 - [INFO] Start processing Directories.wxs
+2022-09-20 08:15:02,447 - [INFO] Start processing en-us.wxl
+2022-09-20 08:15:02,447 - [INFO] Start processing Product.wxs
+2022-09-20 08:15:02,448 - [INFO] Start processing UserInterface.wxs
+2022-09-20 08:15:02,448 - [INFO] Start processing Directories.wxs
+2022-09-20 08:15:02,448 - [INFO] Start processing en-us.wxl
+2022-09-20 08:15:02,448 - [INFO] Start processing Jobs_Setupx64.wixproj
+2022-09-20 08:15:02,449 - [INFO] Start processing Product.wxs
+2022-09-20 08:15:02,449 - [DEBUG] Replace in Product.wxs: 'SOFTWARE\coolOrange s.r.l.\powerJobs' with 'SOFTWARE\coolOrange s.r.l.\powerJobs Processor'
+2022-09-20 08:15:02,450 - [INFO] Start processing UserInterface.wxs
+2022-09-20 08:15:02,450 - [INFO] Start processing bg_banner.bmp
+2022-09-20 08:15:02,451 - [INFO] Start processing bg_dialog.bmp
+2022-09-20 08:15:02,458 - [INFO] Start processing coolOrange.ico
+2022-09-20 08:15:02,461 - [INFO] Start processing EULA.rtf
+2022-09-20 08:15:02,461 - [INFO] Start processing powerJobs_64.ico
+2022-09-20 08:15:02,462 - [INFO] Start processing README.txt
+2022-09-20 08:15:02,462 - [INFO] Start processing RtfTheme.wxl
+2022-09-20 08:15:02,462 - [INFO] Start processing RtfTheme.xml
+2022-09-20 08:15:02,463 - [INFO] Start processing Transform_HeatDir.xslt
+2022-09-20 08:15:02,463 - [INFO] Start processing Directories.wxs
+2022-09-20 08:15:02,463 - [INFO] Start processing en-us.wxl
+2022-09-20 08:15:02,463 - [INFO] Start processing Product.wxs
+2022-09-20 08:15:02,464 - [INFO] Start processing Server_Setupx64.wixproj
+2022-09-20 08:15:02,464 - [INFO] Start processing UserInterface.wxs
+2022-09-20 08:15:02,464 - [INFO] Start processing pack-47bceb72039c3f58aadeda397063e3e56ec3b80a.idx
+2022-09-20 08:15:02,465 - [INFO] Start processing pack-47bceb72039c3f58aadeda397063e3e56ec3b80a.pack
+2022-09-20 08:15:02,530 - [INFO] Start processing master
+2022-09-20 08:15:02,531 - [INFO] Start processing powerMigration_2023
+2022-09-20 08:15:02,531 - [INFO] Start processing 1.0.4611
+2022-09-20 08:15:02,531 - [INFO] Start processing 1.0.4717
+2022-09-20 08:15:02,531 - [INFO] Start processing v1.0.18.0
+2022-09-20 08:15:02,532 - [INFO] Start processing v1.0.21.0
+2022-09-20 08:15:02,532 - [INFO] Start processing v1.0.24.0
+2022-09-20 08:15:02,532 - [INFO] Start processing v1.0.4740.0
+2022-09-20 08:15:02,532 - [INFO] Start processing v1.0.5098.0
+2022-09-20 08:15:02,533 - [INFO] Start processing v1.0.5110.0
+2022-09-20 08:15:02,533 - [INFO] Start processing v1.0.5111.0
+2022-09-20 08:15:02,533 - [INFO] Start processing v1.0.5190.0
+2022-09-20 08:15:02,533 - [INFO] Start processing v1.0.5195.0
+2022-09-20 08:15:02,534 - [INFO] Start processing v1.0.5250.0
+2022-09-20 08:15:02,534 - [INFO] Start processing v1.0.5384.0
+2022-09-20 08:15:02,534 - [INFO] Start processing v21.0.115.0
+2022-09-20 08:15:02,534 - [INFO] Start processing v21.0.161.0
+2022-09-20 08:15:02,535 - [INFO] Start processing v21.0.78.0
+2022-09-20 08:15:02,535 - [INFO] Start processing v21.0.86.0
+2022-09-20 08:15:02,535 - [INFO] Start processing co.ico
+2022-09-20 08:15:02,537 - [INFO] Start processing MenuDefinitions.xml
+2022-09-20 08:15:02,537 - [INFO] Start processing ErpService.Lifecycle.ps1
+2022-09-20 08:15:02,537 - [INFO] Start processing Erp.Standard.Checks.psm1
+2022-09-20 08:15:02,537 - [INFO] Start processing Import.Modules.psm1
+2022-09-20 08:15:02,537 - [INFO] Start processing ProAlpha.Checks.psm1
+2022-09-20 08:15:02,538 - [INFO] Start processing SAP.Checks.psm1
+2022-09-20 08:15:02,538 - [INFO] Start processing SAP.Classes.psm1
+2022-09-20 08:15:02,538 - [INFO] Start processing BomFunctions.psm1
+2022-09-20 08:15:02,539 - [INFO] Start processing Communication.psm1
+2022-09-20 08:15:02,539 - [INFO] Start processing Initialize.psm1
+2022-09-20 08:15:02,539 - [INFO] Start processing Logging.psm1
+2022-09-20 08:15:02,540 - [INFO] Start processing MaterialFunctions.psm1
+2022-09-20 08:15:02,540 - [INFO] Start processing SearchFunctions.psm1
+2022-09-20 08:15:02,540 - [INFO] Start processing SelectionLists.psm1
+2022-09-20 08:15:02,540 - [INFO] Start processing changelog.md
+2022-09-20 08:15:02,541 - [INFO] Start processing PSFramework.psd1
+2022-09-20 08:15:02,542 - [INFO] Start processing PSFramework.psm1
+2022-09-20 08:15:02,543 - [INFO] Start processing PSFramework.psproj.psbuild
+2022-09-20 08:15:02,544 - [INFO] Start processing PSGetModuleInfo.xml
+2022-09-20 08:15:02,544 - [INFO] Start processing The PSFramework Reliability Promise.md
+2022-09-20 08:15:02,544 - [INFO] Start processing ContainerWindow.xaml
+2022-09-20 08:15:02,545 - [INFO] Start processing DeleteFilter.png
+2022-09-20 08:15:02,545 - [INFO] Start processing Filter.png
+2022-09-20 08:15:02,545 - [INFO] Start processing powerGate.ico
+2022-09-20 08:15:02,548 - [INFO] Start processing SearchWindow.xaml
+2022-09-20 08:15:02,548 - [INFO] Start processing Common.csproj
+2022-09-20 08:15:02,549 - [INFO] Start processing dataStandard.UI.csproj
+2022-09-20 08:15:02,549 - [INFO] Start processing NumSchm.cs
+2022-09-20 08:15:02,549 - [INFO] Start processing app.config
+2022-09-20 08:15:02,549 - [INFO] Start processing ErpServices.addin
+2022-09-20 08:15:02,550 - [INFO] Start processing ErpServices.csproj
+2022-09-20 08:15:02,550 - [INFO] Start processing MaterialNumbers.cs
+2022-09-20 08:15:02,550 - [INFO] Start processing packages.config
+2022-09-20 08:15:02,550 - [INFO] Start processing powerGateServer.log4net
+2022-09-20 08:15:02,551 - [INFO] Start processing WebService.cs
+2022-09-20 08:15:02,551 - [INFO] Start processing ErpBase_TestConfigurator.cs
+2022-09-20 08:15:02,551 - [INFO] Start processing ErpItemManager_Tests.cs
+2022-09-20 08:15:02,551 - [INFO] Start processing ErpServices.Tests.csproj
+2022-09-20 08:15:02,552 - [INFO] Start processing packages.config
+2022-09-20 08:15:02,552 - [INFO] Start processing ErpServices.VDS.csproj
+2022-09-20 08:15:02,553 - [INFO] Start processing ErpServices.WorkflowEnhancements.pssproj
+2022-09-20 08:15:02,554 - [INFO] Start processing BuildCommon.targets
+2022-09-20 08:15:02,555 - [INFO] Start processing Erp.Service.CreatePDFFromItem.ps1
+2022-09-20 08:15:02,555 - [INFO] Start processing ErpService.Create.PDF.ps1
+2022-09-20 08:15:02,556 - [INFO] Start processing Import.Shared.Modules.psm1
+2022-09-20 08:15:02,556 - [INFO] Start processing ARPProperties.wxi
+2022-09-20 08:15:02,557 - [INFO] Start processing CheckCoolOrangeProductInstalled.wxi
+2022-09-20 08:15:02,557 - [INFO] Start processing ProductVariables.wxi
+2022-09-20 08:15:02,557 - [INFO] Start processing Runtime.wxi
+2022-09-20 08:15:02,557 - [INFO] Start processing ARPProperties.wxi
+2022-09-20 08:15:02,558 - [INFO] Start processing CheckCoolOrangeProductInstalled.wxi
+2022-09-20 08:15:02,558 - [DEBUG] Replace in CheckCoolOrangeProductInstalled.wxi: 'SOFTWARE\coolOrange s.r.l.\powerJobs' with 'SOFTWARE\coolOrange s.r.l.\powerJobs Processor'
+2022-09-20 08:15:02,559 - [INFO] Start processing ProductVariables.wxi
+2022-09-20 08:15:02,559 - [INFO] Start processing Runtime.wxi
+2022-09-20 08:15:02,559 - [INFO] Start processing ARPProperties.wxi
+2022-09-20 08:15:02,559 - [INFO] Start processing MainInclude.wxi
+2022-09-20 08:15:02,560 - [INFO] Start processing ProductVariables.wxi
+2022-09-20 08:15:02,560 - [INFO] Start processing Runtime.wxi
+2022-09-20 08:15:02,560 - [INFO] Start processing master
+2022-09-20 08:15:02,560 - [INFO] Start processing powerMigration_2023
+2022-09-20 08:15:02,561 - [INFO] Start processing issue-138
+2022-09-20 08:15:02,561 - [INFO] Start processing issue-195
+2022-09-20 08:15:02,561 - [INFO] Start processing master
+2022-09-20 08:15:02,561 - [INFO] Start processing powerGate_rework
+2022-09-20 08:15:02,561 - [INFO] Start processing powerMigration_2023
+2022-09-20 08:15:02,562 - [INFO] Start processing powerGateMain.ps1
+2022-09-20 08:15:02,562 - [INFO] Start processing Inventor.xaml
+2022-09-20 08:15:02,562 - [INFO] Start processing Default.ps1
+2022-09-20 08:15:02,562 - [INFO] Start processing powerGateBomTransfer.ps1
+2022-09-20 08:15:02,563 - [INFO] Start processing powerGateMain.ps1
+2022-09-20 08:15:02,563 - [INFO] Start processing PSFramework.dll
+2022-09-20 08:15:02,564 - [INFO] Start processing PSFramework.xml
+2022-09-20 08:15:02,565 - [INFO] Start processing readme.md
+2022-09-20 08:15:02,566 - [INFO] Start processing type-aliases.ps1
+2022-09-20 08:15:02,566 - [INFO] Start processing type-extensions.ps1
+2022-09-20 08:15:02,566 - [INFO] Start processing about_psframework.help.txt
+2022-09-20 08:15:02,566 - [INFO] Start processing about_psf_flowcontrol.help.txt
+2022-09-20 08:15:02,566 - [INFO] Start processing about_psf_license.help.txt
+2022-09-20 08:15:02,567 - [INFO] Start processing about_psf_message.help.txt
+2022-09-20 08:15:02,567 - [INFO] Start processing about_psf_resultcache.help.txt
+2022-09-20 08:15:02,567 - [INFO] Start processing about_psf_runspace.help.txt
+2022-09-20 08:15:02,568 - [INFO] Start processing about_psf_tabexpansion.help.txt
+2022-09-20 08:15:02,568 - [INFO] Start processing about_psf_taskengine.help.txt
+2022-09-20 08:15:02,568 - [INFO] Start processing PSFramework.dll-Help.xml
+2022-09-20 08:15:02,569 - [INFO] Start processing stringsAssembly.psd1
+2022-09-20 08:15:02,569 - [INFO] Start processing stringsComputerManagement.psd1
+2022-09-20 08:15:02,569 - [INFO] Start processing stringsConfiguration.psd1
+2022-09-20 08:15:02,570 - [INFO] Start processing stringsFlowControl.psd1
+2022-09-20 08:15:02,570 - [INFO] Start processing stringsImport.psd1
+2022-09-20 08:15:02,570 - [INFO] Start processing stringsLogging.psd1
+2022-09-20 08:15:02,570 - [INFO] Start processing stringsResultCache.psd1
+2022-09-20 08:15:02,570 - [INFO] Start processing stringsRunspaces.psd1
+2022-09-20 08:15:02,571 - [INFO] Start processing stringsScriptblock.psd1
+2022-09-20 08:15:02,571 - [INFO] Start processing stringsSerialization.psd1
+2022-09-20 08:15:02,571 - [INFO] Start processing stringsTabExpansion.psd1
+2022-09-20 08:15:02,571 - [INFO] Start processing stringsTaskEngine.psd1
+2022-09-20 08:15:02,572 - [INFO] Start processing stringsUtility.psd1
+2022-09-20 08:15:02,572 - [INFO] Start processing readme.md
+2022-09-20 08:15:02,572 - [INFO] Start processing readme.md
+2022-09-20 08:15:02,572 - [INFO] Start processing help_par_EnableException.snippet
+2022-09-20 08:15:02,572 - [INFO] Start processing pester.ps1
+2022-09-20 08:15:02,573 - [INFO] Start processing readme.md
+2022-09-20 08:15:02,573 - [INFO] Start processing PSFramework.Format.ps1xml
+2022-09-20 08:15:02,573 - [INFO] Start processing PSFramework.Types.ps1xml
+2022-09-20 08:15:02,573 - [INFO] Start processing readme.md
+2022-09-20 08:15:02,574 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,574 - [INFO] Start processing TabTitleBehavior.cs
+2022-09-20 08:15:02,574 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,574 - [INFO] Start processing BindingDecoratorBase.cs
+2022-09-20 08:15:02,575 - [INFO] Start processing DSNumSchemeCtrl.cs
+2022-09-20 08:15:02,575 - [INFO] Start processing ValidatedBinding.cs
+2022-09-20 08:15:02,575 - [INFO] Start processing Window.cs
+2022-09-20 08:15:02,575 - [INFO] Start processing BomHeader.cs
+2022-09-20 08:15:02,575 - [INFO] Start processing BomRow.cs
+2022-09-20 08:15:02,576 - [INFO] Start processing Category.cs
+2022-09-20 08:15:02,576 - [INFO] Start processing Document.cs
+2022-09-20 08:15:02,576 - [INFO] Start processing Material.cs
+2022-09-20 08:15:02,576 - [INFO] Start processing Plugin-Service-Tests.ps1
+2022-09-20 08:15:02,577 - [INFO] Start processing Plugin-Stress-Tests.ps1
+2022-09-20 08:15:02,577 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,577 - [INFO] Start processing coolOrange.Logging.dll
+2022-09-20 08:15:02,579 - [INFO] Start processing powerGateServer.SDK.dll
+2022-09-20 08:15:02,579 - [INFO] Start processing powerGateServer.SDK.Helper.dll
+2022-09-20 08:15:02,580 - [INFO] Start processing BomHeaders.cs
+2022-09-20 08:15:02,580 - [INFO] Start processing BomRows.cs
+2022-09-20 08:15:02,580 - [INFO] Start processing Categories.cs
+2022-09-20 08:15:02,580 - [INFO] Start processing Documents.cs
+2022-09-20 08:15:02,581 - [INFO] Start processing ErpBaseService.cs
+2022-09-20 08:15:02,581 - [INFO] Start processing Materials.cs
+2022-09-20 08:15:02,581 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,581 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,581 - [INFO] Start processing issue-138
+2022-09-20 08:15:02,582 - [INFO] Start processing issue-195
+2022-09-20 08:15:02,582 - [INFO] Start processing master
+2022-09-20 08:15:02,582 - [INFO] Start processing powerGate_rework
+2022-09-20 08:15:02,583 - [INFO] Start processing powerMigration_2023
+2022-09-20 08:15:02,583 - [INFO] Start processing powerGateEditConfiguration.ps1
+2022-09-20 08:15:02,583 - [INFO] Start processing powerGateSaveConfiguration.ps1
+2022-09-20 08:15:02,584 - [INFO] Start processing ERP Item.xaml
+2022-09-20 08:15:02,584 - [INFO] Start processing erpBom.xaml
+2022-09-20 08:15:02,584 - [INFO] Start processing ERP Item.xaml
+2022-09-20 08:15:02,584 - [INFO] Start processing erpBom.xaml
+2022-09-20 08:15:02,585 - [INFO] Start processing Invoke-PSFCommand.ps1
+2022-09-20 08:15:02,585 - [INFO] Start processing New-PSFSessionContainer.ps1
+2022-09-20 08:15:02,585 - [INFO] Start processing Register-PSFSessionObjectType.ps1
+2022-09-20 08:15:02,585 - [INFO] Start processing Export-PSFConfig.ps1
+2022-09-20 08:15:02,586 - [INFO] Start processing Get-PSFConfig.ps1
+2022-09-20 08:15:02,586 - [INFO] Start processing Get-PSFConfigValue.ps1
+2022-09-20 08:15:02,586 - [INFO] Start processing Import-PSFConfig.ps1
+2022-09-20 08:15:02,586 - [INFO] Start processing Register-PSFConfig.ps1
+2022-09-20 08:15:02,587 - [INFO] Start processing Register-PSFConfigSchema.ps1
+2022-09-20 08:15:02,587 - [INFO] Start processing Register-PSFConfigValidation.ps1
+2022-09-20 08:15:02,587 - [INFO] Start processing Remove-PSFConfig.ps1
+2022-09-20 08:15:02,587 - [INFO] Start processing Reset-PSFConfig.ps1
+2022-09-20 08:15:02,587 - [INFO] Start processing Select-PSFConfig.ps1
+2022-09-20 08:15:02,588 - [INFO] Start processing Unregister-PSFConfig.ps1
+2022-09-20 08:15:02,588 - [INFO] Start processing Get-PSFFeature.ps1
+2022-09-20 08:15:02,588 - [INFO] Start processing Register-PSFFeature.ps1
+2022-09-20 08:15:02,589 - [INFO] Start processing Set-PSFFeature.ps1
+2022-09-20 08:15:02,589 - [INFO] Start processing Test-PSFFeature.ps1
+2022-09-20 08:15:02,589 - [INFO] Start processing Get-PSFCallback.ps1
+2022-09-20 08:15:02,589 - [INFO] Start processing Get-PSFUserChoice.ps1
+2022-09-20 08:15:02,589 - [INFO] Start processing Register-PSFCallback.ps1
+2022-09-20 08:15:02,590 - [INFO] Start processing Stop-PSFFunction.ps1
+2022-09-20 08:15:02,590 - [INFO] Start processing Test-PSFFunctionInterrupt.ps1
+2022-09-20 08:15:02,590 - [INFO] Start processing Test-PSFLanguageMode.ps1
+2022-09-20 08:15:02,590 - [INFO] Start processing Test-PSFParameterBinding.ps1
+2022-09-20 08:15:02,591 - [INFO] Start processing Test-PSFPowerShell.ps1
+2022-09-20 08:15:02,591 - [INFO] Start processing Unregister-PSFCallback.ps1
+2022-09-20 08:15:02,591 - [INFO] Start processing Export-PSFModuleClass.ps1
+2022-09-20 08:15:02,591 - [INFO] Start processing Import-PSFCmdlet.ps1
+2022-09-20 08:15:02,592 - [INFO] Start processing Register-PSFParameterClassMapping.ps1
+2022-09-20 08:15:02,592 - [INFO] Start processing Set-PSFTypeAlias.ps1
+2022-09-20 08:15:02,592 - [INFO] Start processing Get-PSFLicense.ps1
+2022-09-20 08:15:02,592 - [INFO] Start processing New-PSFLicense.ps1
+2022-09-20 08:15:02,592 - [INFO] Start processing Remove-PSFLicense.ps1
+2022-09-20 08:15:02,593 - [INFO] Start processing Get-PSFLocalizedString.ps1
+2022-09-20 08:15:02,593 - [INFO] Start processing Import-PSFLocalizedString.ps1
+2022-09-20 08:15:02,593 - [INFO] Start processing Add-PSFLoggingProviderRunspace.ps1
+2022-09-20 08:15:02,593 - [INFO] Start processing Get-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,594 - [INFO] Start processing Get-PSFLoggingProviderInstance.ps1
+2022-09-20 08:15:02,594 - [INFO] Start processing Import-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,594 - [INFO] Start processing Install-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,594 - [INFO] Start processing Register-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,594 - [INFO] Start processing Remove-PSFLoggingProviderRunspace.ps1
+2022-09-20 08:15:02,595 - [INFO] Start processing Set-PSFLoggingProvider.ps1
+2022-09-20 08:15:02,595 - [INFO] Start processing Get-PSFMessage.ps1
+2022-09-20 08:15:02,595 - [INFO] Start processing Get-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:02,595 - [INFO] Start processing New-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:02,596 - [INFO] Start processing Register-PSFMessageEvent.ps1
+2022-09-20 08:15:02,596 - [INFO] Start processing Register-PSFMessageTransform.ps1
+2022-09-20 08:15:02,596 - [INFO] Start processing Remove-PSFMessageLevelModifier.ps1
+2022-09-20 08:15:02,596 - [INFO] Start processing Wait-PSFMessage.ps1
+2022-09-20 08:15:02,597 - [INFO] Start processing Write-PSFHostColor.ps1
+2022-09-20 08:15:02,597 - [INFO] Start processing Write-PSFMessageProxy.ps1
+2022-09-20 08:15:02,597 - [INFO] Start processing Get-PSFPipeline.ps1
+2022-09-20 08:15:02,597 - [INFO] Start processing Clear-PSFresultCache.ps1
+2022-09-20 08:15:02,597 - [INFO] Start processing Get-PSFResultCache.ps1
+2022-09-20 08:15:02,598 - [INFO] Start processing Set-PSFResultCache.ps1
+2022-09-20 08:15:02,598 - [INFO] Start processing Get-PSFDynamicContentObject.ps1
+2022-09-20 08:15:02,598 - [INFO] Start processing Get-PSFRunspace.ps1
+2022-09-20 08:15:02,598 - [INFO] Start processing Register-PSFRunspace.ps1
+2022-09-20 08:15:02,599 - [INFO] Start processing Set-PSFDynamicContentObject.ps1
+2022-09-20 08:15:02,599 - [INFO] Start processing Start-PSFRunspace.ps1
+2022-09-20 08:15:02,599 - [INFO] Start processing Stop-PSFRunspace.ps1
+2022-09-20 08:15:02,599 - [INFO] Start processing ConvertFrom-PSFClixml.ps1
+2022-09-20 08:15:02,599 - [INFO] Start processing ConvertTo-PSFClixml.ps1
+2022-09-20 08:15:02,600 - [INFO] Start processing Export-PSFClixml.ps1
+2022-09-20 08:15:02,600 - [INFO] Start processing Get-PSFTypeSerializationData.ps1
+2022-09-20 08:15:02,600 - [INFO] Start processing Import-PSFClixml.ps1
+2022-09-20 08:15:02,600 - [INFO] Start processing Register-PSFTypeSerializationData.ps1
+2022-09-20 08:15:02,601 - [INFO] Start processing Register-PSFTeppArgumentCompleter.ps1
+2022-09-20 08:15:02,601 - [INFO] Start processing Register-PSFTeppScriptblock.ps1
+2022-09-20 08:15:02,601 - [INFO] Start processing Set-PSFTeppResult.ps1
+2022-09-20 08:15:02,601 - [INFO] Start processing Disable-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,601 - [INFO] Start processing Enable-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,602 - [INFO] Start processing Get-PSFTaskEngineCache.ps1
+2022-09-20 08:15:02,602 - [INFO] Start processing Get-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,602 - [INFO] Start processing Register-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,602 - [INFO] Start processing Set-PSFTaskEngineCache.ps1
+2022-09-20 08:15:02,603 - [INFO] Start processing Test-PSFTaskEngineCache.ps1
+2022-09-20 08:15:02,603 - [INFO] Start processing Test-PSFTaskEngineTask.ps1
+2022-09-20 08:15:02,603 - [INFO] Start processing Compare-PSFArray.ps1
+2022-09-20 08:15:02,603 - [INFO] Start processing ConvertFrom-PSFArray.ps1
+2022-09-20 08:15:02,603 - [INFO] Start processing Get-PSFPath.ps1
+2022-09-20 08:15:02,604 - [INFO] Start processing Get-PSFScriptblock.ps1
+2022-09-20 08:15:02,604 - [INFO] Start processing Import-PSFPowerShellDataFile.ps1
+2022-09-20 08:15:02,604 - [INFO] Start processing Join-PSFPath.ps1
+2022-09-20 08:15:02,604 - [INFO] Start processing New-PSFSupportPackage.ps1
+2022-09-20 08:15:02,605 - [INFO] Start processing Remove-PSFAlias.ps1
+2022-09-20 08:15:02,605 - [INFO] Start processing Resolve-PSFDefaultParameterValue.ps1
+2022-09-20 08:15:02,605 - [INFO] Start processing Resolve-PSFPath.ps1
+2022-09-20 08:15:02,605 - [INFO] Start processing Select-PSFPropertyValue.ps1
+2022-09-20 08:15:02,605 - [INFO] Start processing Set-PSFPath.ps1
+2022-09-20 08:15:02,606 - [INFO] Start processing Set-PSFScriptblock.ps1
+2022-09-20 08:15:02,606 - [INFO] Start processing computermanagement.ps1
+2022-09-20 08:15:02,606 - [INFO] Start processing general.ps1
+2022-09-20 08:15:02,606 - [INFO] Start processing logging.ps1
+2022-09-20 08:15:02,606 - [INFO] Start processing message.ps1
+2022-09-20 08:15:02,607 - [INFO] Start processing path.ps1
+2022-09-20 08:15:02,607 - [INFO] Start processing runspace.ps1
+2022-09-20 08:15:02,607 - [INFO] Start processing serialization.ps1
+2022-09-20 08:15:02,607 - [INFO] Start processing utility.ps1
+2022-09-20 08:15:02,608 - [INFO] Start processing default.ps1
+2022-09-20 08:15:02,608 - [INFO] Start processing metajson.ps1
+2022-09-20 08:15:02,608 - [INFO] Start processing bool.ps1
+2022-09-20 08:15:02,608 - [INFO] Start processing consolecolor.ps1
+2022-09-20 08:15:02,608 - [INFO] Start processing credential.ps1
+2022-09-20 08:15:02,609 - [INFO] Start processing datetime.ps1
+2022-09-20 08:15:02,609 - [INFO] Start processing double.ps1
+2022-09-20 08:15:02,609 - [INFO] Start processing guidarray.ps1
+2022-09-20 08:15:02,609 - [INFO] Start processing integer.ps1
+2022-09-20 08:15:02,610 - [INFO] Start processing integer0to9.ps1
+2022-09-20 08:15:02,610 - [INFO] Start processing integer1to9.ps1
+2022-09-20 08:15:02,610 - [INFO] Start processing integerarray.ps1
+2022-09-20 08:15:02,610 - [INFO] Start processing integerpositive.ps1
+2022-09-20 08:15:02,610 - [INFO] Start processing languagecode.ps1
+2022-09-20 08:15:02,611 - [INFO] Start processing logfilefiletype.ps1
+2022-09-20 08:15:02,611 - [INFO] Start processing long.ps1
+2022-09-20 08:15:02,611 - [INFO] Start processing sizestyle.ps1
+2022-09-20 08:15:02,611 - [INFO] Start processing string.ps1
+2022-09-20 08:15:02,611 - [INFO] Start processing stringarray.ps1
+2022-09-20 08:15:02,612 - [INFO] Start processing timespan.ps1
+2022-09-20 08:15:02,612 - [INFO] Start processing uriabsolute.ps1
+2022-09-20 08:15:02,612 - [INFO] Start processing azureloganalytics.provider.ps1
+2022-09-20 08:15:02,612 - [INFO] Start processing console.provider.ps1
+2022-09-20 08:15:02,613 - [INFO] Start processing eventlog.provider.ps1
+2022-09-20 08:15:02,613 - [INFO] Start processing filesystem.provider.ps1
+2022-09-20 08:15:02,613 - [INFO] Start processing gelf.provider.ps1
+2022-09-20 08:15:02,613 - [INFO] Start processing logfile.provider.ps1
+2022-09-20 08:15:02,613 - [INFO] Start processing splunk.provider.ps1
+2022-09-20 08:15:02,614 - [INFO] Start processing sql.provider.ps1
+2022-09-20 08:15:02,614 - [INFO] Start processing ComputerParameter.ps1
+2022-09-20 08:15:02,614 - [INFO] Start processing readme.md
+2022-09-20 08:15:02,614 - [INFO] Start processing paths.validate.ps1
+2022-09-20 08:15:02,615 - [INFO] Start processing timespan.validate.ps1
+2022-09-20 08:15:02,615 - [INFO] Start processing async-logging2.ps1
+2022-09-20 08:15:02,615 - [INFO] Start processing cmdlets.ps1
+2022-09-20 08:15:02,615 - [INFO] Start processing environment.ps1
+2022-09-20 08:15:02,616 - [INFO] Start processing license.ps1
+2022-09-20 08:15:02,616 - [INFO] Start processing loadConfigurationPersisted.ps1
+2022-09-20 08:15:02,616 - [INFO] Start processing loggingProviderInstanceModuleCode.ps1
+2022-09-20 08:15:02,616 - [INFO] Start processing postimport.ps1
+2022-09-20 08:15:02,617 - [INFO] Start processing preimport.ps1
+2022-09-20 08:15:02,617 - [INFO] Start processing removalEvent.ps1
+2022-09-20 08:15:02,617 - [INFO] Start processing sessionRegistration.ps1
+2022-09-20 08:15:02,617 - [INFO] Start processing strings.ps1
+2022-09-20 08:15:02,617 - [INFO] Start processing taskEngine.ps1
+2022-09-20 08:15:02,618 - [INFO] Start processing teppCoreCode.ps1
+2022-09-20 08:15:02,618 - [INFO] Start processing teppInputResources.ps1
+2022-09-20 08:15:02,618 - [INFO] Start processing variables.ps1
+2022-09-20 08:15:02,618 - [INFO] Start processing tepp-assignment.ps1
+2022-09-20 08:15:02,619 - [INFO] Start processing BeTrueFOrAll.ps1
+2022-09-20 08:15:02,619 - [INFO] Start processing BeTrueForAny.ps1
+2022-09-20 08:15:02,619 - [INFO] Start processing HaveProperty.ps1
+2022-09-20 08:15:02,619 - [INFO] Start processing readme.md
+2022-09-20 08:15:02,620 - [INFO] Start processing FileIntegrity.Exceptions.ps1
+2022-09-20 08:15:02,620 - [INFO] Start processing FileIntegrity.Tests.ps1
+2022-09-20 08:15:02,620 - [INFO] Start processing Help.Exceptions.ps1
+2022-09-20 08:15:02,620 - [INFO] Start processing Help.Tests.ps1
+2022-09-20 08:15:02,620 - [INFO] Start processing manifest.Tests.ps1
+2022-09-20 08:15:02,621 - [INFO] Start processing PSScriptAnalyzer.Tests.ps1
+2022-09-20 08:15:02,621 - [INFO] Start processing strings.Exceptions.ps1
+2022-09-20 08:15:02,621 - [INFO] Start processing strings.Tests.ps1
+2022-09-20 08:15:02,621 - [INFO] Start processing configdata.json
+2022-09-20 08:15:02,622 - [INFO] Start processing ErpBomManager.cs
+2022-09-20 08:15:02,622 - [INFO] Start processing ErpDocumentManager.cs
+2022-09-20 08:15:02,622 - [INFO] Start processing ErpItemManager.cs
+2022-09-20 08:15:02,622 - [INFO] Start processing ErpManager.cs
+2022-09-20 08:15:02,622 - [INFO] Start processing ErpLogin.cs
+2022-09-20 08:15:02,623 - [INFO] Start processing ErpMaterialSearchSettings.cs
+2022-09-20 08:15:02,623 - [INFO] Start processing IErpManager.cs
+2022-09-20 08:15:02,623 - [INFO] Start processing bg_banner.bmp
+2022-09-20 08:15:02,624 - [INFO] Start processing bg_dialog.bmp
+2022-09-20 08:15:02,630 - [INFO] Start processing coolOrange.ico
+2022-09-20 08:15:02,633 - [INFO] Start processing EULA.rtf
+2022-09-20 08:15:02,633 - [INFO] Start processing powerJobs_64.ico
+2022-09-20 08:15:02,634 - [INFO] Start processing RtfTheme.wxl
+2022-09-20 08:15:02,634 - [INFO] Start processing RtfTheme.xml
+2022-09-20 08:15:02,634 - [INFO] Start processing Transform_HeatDir.xslt
+2022-09-20 08:15:02,635 - [INFO] Start processing Convert-PsfConfigValue.ps1
+2022-09-20 08:15:02,635 - [INFO] Start processing Read-PsfConfigEnvironment.ps1
+2022-09-20 08:15:02,635 - [INFO] Start processing Read-PsfConfigFile.ps1
+2022-09-20 08:15:02,635 - [INFO] Start processing Read-PsfConfigPersisted.ps1
+2022-09-20 08:15:02,636 - [INFO] Start processing Write-PsfConfigFile.ps1
+2022-09-20 08:15:02,636 - [INFO] Start processing Convert-PsfMessageException.ps1
+2022-09-20 08:15:02,636 - [INFO] Start processing Convert-PsfMessageLevel.ps1
+2022-09-20 08:15:02,636 - [INFO] Start processing Convert-PsfMessageTarget.ps1
+2022-09-20 08:15:02,637 - [INFO] Start processing New-PSFTeppCompletionResult.ps1
+2022-09-20 08:15:02,637 - [INFO] Start processing callback-name.ps1
+2022-09-20 08:15:02,637 - [INFO] Start processing config-fullname.ps1
+2022-09-20 08:15:02,637 - [INFO] Start processing config-module.ps1
+2022-09-20 08:15:02,638 - [INFO] Start processing config-name.ps1
+2022-09-20 08:15:02,638 - [INFO] Start processing config-schema.ps1
+2022-09-20 08:15:02,638 - [INFO] Start processing config-validation.ps1
+2022-09-20 08:15:02,638 - [INFO] Start processing dynamiccontentobject-name.ps1
+2022-09-20 08:15:02,639 - [INFO] Start processing encoding.ps1
+2022-09-20 08:15:02,639 - [INFO] Start processing features.ps1
+2022-09-20 08:15:02,639 - [INFO] Start processing input.ps1
+2022-09-20 08:15:02,639 - [INFO] Start processing license-name.ps1
+2022-09-20 08:15:02,640 - [INFO] Start processing localization.ps1
+2022-09-20 08:15:02,640 - [INFO] Start processing logging-provider.ps1
+2022-09-20 08:15:02,640 - [INFO] Start processing message.ps1
+2022-09-20 08:15:02,640 - [INFO] Start processing pathName.ps1
+2022-09-20 08:15:02,640 - [INFO] Start processing psprovider.ps1
+2022-09-20 08:15:02,641 - [INFO] Start processing runspace.ps1
+2022-09-20 08:15:02,641 - [INFO] Start processing tepp.ps1
+2022-09-20 08:15:02,641 - [INFO] Start processing Unregister-PSFConfig.ps1
+2022-09-20 08:15:02,641 - [INFO] Start processing Export-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,642 - [INFO] Start processing Get-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,642 - [INFO] Start processing Get-PSFConfigValue.Tests.ps1
+2022-09-20 08:15:02,642 - [INFO] Start processing Import-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,642 - [INFO] Start processing Register-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,642 - [INFO] Start processing Register-PSFConfigValidation.Tests.ps1
+2022-09-20 08:15:02,643 - [INFO] Start processing Remove-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,643 - [INFO] Start processing Set-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,643 - [INFO] Start processing Unregister-PSFConfig.Tests.ps1
+2022-09-20 08:15:02,643 - [INFO] Start processing providerV2.Tests.ps1
+2022-09-20 08:15:02,644 - [INFO] Start processing Remove-PSFNull.Tests.ps1
+2022-09-20 08:15:02,644 - [INFO] Start processing input.Tests.ps1
+2022-09-20 08:15:02,644 - [INFO] Start processing teppSystem.Tests.ps1
+2022-09-20 08:15:02,644 - [INFO] Start processing Select-PSFObject.Tests.ps1
+2022-09-20 08:15:02,645 - [INFO] Start processing Select-PSFPropertyValue.Tests.ps1
+2022-09-20 08:15:02,645 - [INFO] Start migrating with PGS_PluginMigrater
+2022-09-20 08:15:02,650 - [INFO] Start processing Common.csproj
+2022-09-20 08:15:02,661 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\coolOrange\powerGateServer\v23
+2022-09-20 08:15:02,664 - [INFO] Found 0 references
+2022-09-20 08:15:02,664 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,666 - [DEBUG] Replace in Common.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,666 - [INFO] Start processing dataStandard.UI.csproj
+2022-09-20 08:15:02,666 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\coolOrange\powerGateServer\v23
+2022-09-20 08:15:02,667 - [INFO] Found 0 references
+2022-09-20 08:15:02,667 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,667 - [DEBUG] Replace in dataStandard.UI.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,668 - [INFO] Start processing ErpServices.csproj
+2022-09-20 08:15:02,668 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\coolOrange\powerGateServer\v23
+2022-09-20 08:15:02,668 - [INFO] Found 4 references
+2022-09-20 08:15:02,669 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,670 - [INFO] Project file ErpServices.csproj: Upgraded following file: coolOrange.Logging.dll
+2022-09-20 08:15:02,671 - [INFO] Project file ErpServices.csproj: Found no replacement for following file: LiteDB.dll
+2022-09-20 08:15:02,671 - [INFO] Project file ErpServices.csproj: Upgraded following file: powerGateServer.SDK.dll
+2022-09-20 08:15:02,671 - [INFO] Project file ErpServices.csproj: Found no replacement for following file: powerGateServer.SDK.Helper.dll
+2022-09-20 08:15:02,672 - [DEBUG] Replace in ErpServices.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,672 - [INFO] Start processing ErpServices.Tests.csproj
+2022-09-20 08:15:02,672 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\coolOrange\powerGateServer\v23
+2022-09-20 08:15:02,673 - [INFO] Found 9 references
+2022-09-20 08:15:02,673 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,673 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: Castle.Core.dll
+2022-09-20 08:15:02,674 - [INFO] Project file ErpServices.Tests.csproj: Upgraded following file: coolOrange.Logging.dll
+2022-09-20 08:15:02,674 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: LiteDB.dll
+2022-09-20 08:15:02,674 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+2022-09-20 08:15:02,674 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+2022-09-20 08:15:02,674 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: Moq.dll
+2022-09-20 08:15:02,675 - [INFO] Project file ErpServices.Tests.csproj: Upgraded following file: powerGateServer.SDK.dll
+2022-09-20 08:15:02,675 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: System.Runtime.CompilerServices.Unsafe.dll
+2022-09-20 08:15:02,675 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: System.Threading.Tasks.Extensions.dll
+2022-09-20 08:15:02,675 - [DEBUG] Replace in ErpServices.Tests.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,676 - [INFO] Start processing ErpServices.VDS.csproj
+2022-09-20 08:15:02,676 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\coolOrange\powerGateServer\v23
+2022-09-20 08:15:02,677 - [INFO] Found 0 references
+2022-09-20 08:15:02,677 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,677 - [DEBUG] Replace in ErpServices.VDS.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,677 - [INFO] Start migrating with GeneralDotNetMigrater
+2022-09-20 08:15:02,682 - [INFO] Start processing Common.csproj
+2022-09-20 08:15:02,682 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\Vault_SDK\2023
+2022-09-20 08:15:02,683 - [INFO] Found 0 references
+2022-09-20 08:15:02,683 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,683 - [DEBUG] Replace in Common.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,684 - [INFO] Start processing dataStandard.UI.csproj
+2022-09-20 08:15:02,684 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\Vault_SDK\2023
+2022-09-20 08:15:02,685 - [INFO] Found 0 references
+2022-09-20 08:15:02,685 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,685 - [DEBUG] Replace in dataStandard.UI.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,685 - [INFO] Start processing ErpServices.csproj
+2022-09-20 08:15:02,686 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\Vault_SDK\2023
+2022-09-20 08:15:02,686 - [INFO] Found 4 references
+2022-09-20 08:15:02,686 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,686 - [INFO] Project file ErpServices.csproj: Found no replacement for following file: coolOrange.Logging.dll
+2022-09-20 08:15:02,687 - [INFO] Project file ErpServices.csproj: Found no replacement for following file: LiteDB.dll
+2022-09-20 08:15:02,687 - [INFO] Project file ErpServices.csproj: Found no replacement for following file: powerGateServer.SDK.dll
+2022-09-20 08:15:02,687 - [INFO] Project file ErpServices.csproj: Found no replacement for following file: powerGateServer.SDK.Helper.dll
+2022-09-20 08:15:02,687 - [DEBUG] Replace in ErpServices.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,688 - [INFO] Start processing ErpServices.Tests.csproj
+2022-09-20 08:15:02,688 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\Vault_SDK\2023
+2022-09-20 08:15:02,688 - [INFO] Found 9 references
+2022-09-20 08:15:02,688 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,688 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: Castle.Core.dll
+2022-09-20 08:15:02,689 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: coolOrange.Logging.dll
+2022-09-20 08:15:02,689 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: LiteDB.dll
+2022-09-20 08:15:02,689 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+2022-09-20 08:15:02,689 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+2022-09-20 08:15:02,689 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: Moq.dll
+2022-09-20 08:15:02,689 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: powerGateServer.SDK.dll
+2022-09-20 08:15:02,690 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: System.Runtime.CompilerServices.Unsafe.dll
+2022-09-20 08:15:02,690 - [INFO] Project file ErpServices.Tests.csproj: Found no replacement for following file: System.Threading.Tasks.Extensions.dll
+2022-09-20 08:15:02,690 - [DEBUG] Replace in ErpServices.Tests.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,690 - [INFO] Start processing ErpServices.VDS.csproj
+2022-09-20 08:15:02,691 - [INFO] Found sdk dir: C:\Users\StefanNairz\Desktop\git\powerMigration\Files\powerMigration\powerMigration.GUI\bin\Debug\netcoreapp3.1\Vault_SDK\2023
+2022-09-20 08:15:02,691 - [INFO] Found 0 references
+2022-09-20 08:15:02,691 - [INFO] Found 0 reference/s to 'clmloader.dll'
+2022-09-20 08:15:02,691 - [DEBUG] Replace in ErpServices.VDS.csproj: '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>' with '<TargetFrameworkVersion>v4.7</TargetFrameworkVersion>'
+2022-09-20 08:15:02,696 - [INFO] Start processing columns.csv
+2022-09-20 08:15:02,697 - [INFO] Start processing labels.csv
+2022-09-20 08:15:02,698 - [INFO] Start processing projects.csv
+2022-09-20 08:15:02,699 - [INFO] Start processing Common.csproj
+2022-09-20 08:15:02,701 - [INFO] Start processing dataStandard.UI.csproj
+2022-09-20 08:15:02,704 - [INFO] Start processing NumSchm.cs
+2022-09-20 08:15:02,705 - [INFO] Start processing ErpServices.csproj
+2022-09-20 08:15:02,712 - [INFO] Start processing MaterialNumbers.cs
+2022-09-20 08:15:02,713 - [INFO] Start processing WebService.cs
+2022-09-20 08:15:02,717 - [INFO] Start processing ErpBase_TestConfigurator.cs
+2022-09-20 08:15:02,719 - [INFO] Start processing ErpItemManager_Tests.cs
+2022-09-20 08:15:02,730 - [WARN] Found string with old version which probably needs to be replaced manually in file 'ErpItemManager_Tests.cs' line 42, see:                     Mandant = 2021
+2022-09-20 08:15:02,738 - [INFO] Start processing ErpServices.Tests.csproj
+2022-09-20 08:15:02,747 - [INFO] Start processing ErpServices.VDS.csproj
+2022-09-20 08:15:02,757 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,759 - [INFO] Start processing TabTitleBehavior.cs
+2022-09-20 08:15:02,760 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,762 - [INFO] Start processing BindingDecoratorBase.cs
+2022-09-20 08:15:02,763 - [INFO] Start processing DSNumSchemeCtrl.cs
+2022-09-20 08:15:02,764 - [INFO] Start processing ValidatedBinding.cs
+2022-09-20 08:15:02,765 - [INFO] Start processing Window.cs
+2022-09-20 08:15:02,765 - [INFO] Start processing BomHeader.cs
+2022-09-20 08:15:02,767 - [INFO] Start processing BomRow.cs
+2022-09-20 08:15:02,768 - [INFO] Start processing Category.cs
+2022-09-20 08:15:02,768 - [INFO] Start processing Document.cs
+2022-09-20 08:15:02,769 - [INFO] Start processing Material.cs
+2022-09-20 08:15:02,770 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,771 - [INFO] Start processing BomHeaders.cs
+2022-09-20 08:15:02,773 - [INFO] Start processing BomRows.cs
+2022-09-20 08:15:02,775 - [INFO] Start processing Categories.cs
+2022-09-20 08:15:02,777 - [INFO] Start processing Documents.cs
+2022-09-20 08:15:02,780 - [INFO] Start processing ErpBaseService.cs
+2022-09-20 08:15:02,782 - [INFO] Start processing Materials.cs
+2022-09-20 08:15:02,784 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,785 - [INFO] Start processing AssemblyInfo.cs
+2022-09-20 08:15:02,786 - [INFO] Start processing ErpBomManager.cs
+2022-09-20 08:15:02,790 - [INFO] Start processing ErpDocumentManager.cs
+2022-09-20 08:15:02,793 - [INFO] Start processing ErpItemManager.cs
+2022-09-20 08:15:02,799 - [INFO] Start processing ErpManager.cs
+2022-09-20 08:15:02,802 - [INFO] Start processing ErpLogin.cs
+2022-09-20 08:15:02,803 - [INFO] Start processing ErpMaterialSearchSettings.cs
+2022-09-20 08:15:02,803 - [INFO] Start processing IErpManager.cs
+2022-09-20 08:15:02,810 - [INFO] Git commit all untracked files
+2022-09-20 08:15:02,845 - [INFO] Git commit all modified files C:\temp\powerMigration\Git\1b8b9b80-471d-4d01-92c8-6512407028db\powerGateTemplate with comment 'powerMigration from 2021 to 2023 by PC cOITPC16'
+2022-09-20 08:15:02,869 - [INFO] Git commit all C:\temp\powerMigration\Git\1b8b9b80-471d-4d01-92c8-6512407028db\powerGateTemplate with comment 'powerMigration from 2021 to 2023 by PC cOITPC16'
+2022-09-20 08:15:03,078 - [INFO] Copied C:\Users\StefanNairz\AppData\Local\coolOrange\powerMigration\Logs\powerMigration.log to C:\temp\powerMigration\Git\1b8b9b80-471d-4d01-92c8-6512407028db\powerGateTemplate\powerMigration_2023.log
