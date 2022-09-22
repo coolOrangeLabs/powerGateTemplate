@@ -250,7 +250,7 @@ function Transfer-Boms($VaultBoms) {
                         $vaultBom | Update-BomWindowEntity -Status 'Error' -StatusDetails $vaultBomRow._StatusDetails
                         continue
                     }
-                    $updateProperties = PrepareBomRowForUpdate -erpBomRow $erpBomRow -vaultEntity $vaultBom
+                    $updateProperties = PrepareBomRowForUpdate -erpBomRow $erpBomRow -parentNumber $parentNumber -vaultEntity $vaultBomRow
 					$updateErpBomRowResult = Update-ERPObject -EntitySet "BomRows" -Keys $ErpBomRow._Keys -Properties $updateProperties
                     if ($? -eq $false) {
                         $vaultBom | Update-BomWindowEntity -Status 'Error' -StatusDetails $vaultBomRow._StatusDetails
