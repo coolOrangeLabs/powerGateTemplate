@@ -50,10 +50,10 @@ function PrepareErpMaterialForUpdate($erpMaterial, $vaultEntity) {
 	
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
 	else { $descriptionProp = '_Description' }
-
+	$erpMaterial.Number = $number
 	#TODO: Properties that need to be set on update
 	$erpMaterial.ModifiedDate = [DateTime]::Now
-
+	$erpMaterial.Description = $vaultEntity.$descriptionProp
 	$erpMaterial.Number = $erpMaterial.Number.ToUpper()
 
 	Log -End

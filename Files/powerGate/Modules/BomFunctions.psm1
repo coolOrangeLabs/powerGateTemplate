@@ -77,7 +77,7 @@ function PrepareBomRowForCreate($ErpBomRow, $parentNumber, $VaultEntity) {
 
 
     Log -End
-    return $result
+    return $erpBomRow
 }
 
 function PrepareBomRowForUpdate($erpBomRow, $parentNumber, $vaultEntity) {

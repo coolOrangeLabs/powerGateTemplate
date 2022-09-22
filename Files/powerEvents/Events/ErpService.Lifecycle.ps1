@@ -31,7 +31,9 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
         Add-VaultRestriction -EntityName $number -Message "An item with the number '$($number)' does not exist in the ERP system."
 		return
     }
-
+	if ($Entity._Extension -eq "ipt") {
+		return
+	}
 	# ToDO: When ProAlpha is used then enable this section
 	<#
 	$notAllowedErpStates = @("gesperrt", "ausgelaufen")
@@ -52,7 +54,7 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
     }
 
 	Log -Message "Bom head exists! Check if rows need to be added/updated"
-	$vaultBomRows = GetVaultBomRows -Entity $vaultEntity
+	$vaultBomRows = GetVaultBomRows -Entity $Entity
 	foreach ($vaultBomRow in $vaultBomRows) {
 		$childNumber = GetEntityNumber -entity $vaultBomRow
 
@@ -68,7 +70,7 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
 	}
 
 	foreach ($erpBomRow in $erpBomHeader.BomRows) {
-		$vaultBomRow = $VaultBom.Children | Where-Object { (GetEntityNumber -entity $_) -eq $erpBomRow.ChildNumber -and $_.Bom_PositionNumber -eq $erpBomRow.Position }
+		$vaultBomRow = $vaultBomRows | Where-Object { (GetEntityNumber -entity $_) -eq $erpBomRow.ChildNumber -and $_.Bom_PositionNumber -eq $erpBomRow.Position }
 		if (-not $vaultBomRow) {
 			Add-VaultRestriction -EntityName $number -Message "Open the BOM Window, because the ERP BOM is different then in Vault!"
 			return

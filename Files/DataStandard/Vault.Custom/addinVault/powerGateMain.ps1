@@ -35,7 +35,7 @@ function GetSelectedObject {
 function InitBomTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
-	$getErpBomHeaderResult = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $number } -Expand "BomRows" -ErrorAction Stop #Jakob TODO testen was beste Lösung
+	$getErpBomHeaderResult = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $number } -Expand "BomRows" -ErrorAction Stop
 
 	if(-not $getErpBomHeaderResult) {
 		$goToEnabled = $false

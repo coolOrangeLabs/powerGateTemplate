@@ -51,7 +51,7 @@ function CloseErpMaterialWindow {
 }
 
 function InitErpMaterialTab($number) {
-	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number.ToUpper() } -ErrorAction Stop #Jakob TODO testen was beste Lösung
+	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number.ToUpper() } -ErrorAction Stop
 
 	$materialTabContext = New-Object -Type PsObject -Property @{
 		Entity = $getErpMaterialResult
@@ -60,7 +60,7 @@ function InitErpMaterialTab($number) {
 
 	if(-not $getErpMaterialResult) {
 		$erpMaterial = NewErpMaterial
-		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial   #TODO Jakob ersetzen durch PrepareErpMaterialForCreate?
+		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial
 		$materialTabContext.IsCreate = $true
 		$materialTabContext.Entity = $erpMaterial
 		$goToEnabled = $false
@@ -76,6 +76,7 @@ function InitErpMaterialTab($number) {
 function PrepareErpMaterial($erpMaterial) {
 	#TODO: Property mapping for material creation
 	$erpMaterial.Number = $prop["Part Number"].Value
+	$erpMaterial.Number = $erpMaterial.Number.ToUpper()
 	$erpMaterial.Description = $prop["Description"].Value
 
 	return $erpMaterial
