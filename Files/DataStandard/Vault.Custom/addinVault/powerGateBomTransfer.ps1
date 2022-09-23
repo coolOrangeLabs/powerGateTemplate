@@ -17,25 +17,26 @@ function Get-BomRows($entity) {
 function Check-Items($entities) {
     foreach ($entity in $entities) {
         $number = GetEntityNumber -entity $entity
-        if ($null -eq $number -or $number -eq "") {
+        
+
+        if (-not $number) {
             if ($entity._VaultStatus.Status.LockState -eq "Locked") {
-                Update-BomWindowEntity $entity -Status "Error" -StatusDetails "Entity is locked"
-            }
-            else {
+                Update-BomWindowEntity $entity -Status "Error" -StatusDetails "Number is empty! Entity is locked"
+            }else {
                 Update-BomWindowEntity $entity -Status "New" -StatusDetails "Item does not exist in ERP. Will be created."
             }
             continue
         }
+    
+        $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number.ToUpper() }
+        if ($? -eq $false) {
+            continue
+        }
+ 
 
-        $getErpMaterialResult = GetErpMaterial -number $number
-		if ($getErpMaterialResult.ErrorMessage) {
-			Update-BomWindowEntity $entity -Status "Error" -StatusDetails "Couldn't read material from server! ErrorMessage: '$($getErpMaterialResult.ErrorMessage)'"
-			continue
-		}
-
-		if (-not $getErpMaterialResult.Entity) {
+        if (-not $erpMaterial) {
             #TODO: check if obligatory fields are filled!
-			if ($number.Length -gt 20) {
+            if ($number.Length -gt 20) {
                 $statusDetails = "The number '$($number)' is longer than 20 characters. The ERP item cannot be created"
                 Update-BomWindowEntity $entity -Status "Error" -StatusDetails $statusDetails
             }
@@ -46,7 +47,7 @@ function Check-Items($entities) {
                 Update-BomWindowEntity $entity -Status "Identical" -StatusDetails "Virtual Component or Raw Material where no file in Vault is present"
             }
             else {
-                $differences = CompareErpMaterial -erpMaterial $getErpMaterialResult.Entity -vaultEntity $entity
+                $differences = CompareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
                 if ($differences) {
                     Update-BomWindowEntity $entity -Status "Different" -StatusDetails $differences
                 }
@@ -62,26 +63,24 @@ function Transfer-Items($entities) {
     foreach ($entity in $entities) {
         if ($entity._Status -eq "New") {
             $erpMaterial = NewErpMaterial
-            $erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
-			$createErpMaterialResult = CreateErpMaterial -erpMaterial $erpMaterial
-			if($createErpMaterialResult.ErrorMessage) {
-                Update-BomWindowEntity $entity -Status "Error" -StatusDetails $createErpMaterialResult.ErrorMessage
+            $erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $entity
+            $createErpMaterial = Add-ErpObject -EntitySet "Materials" -Properties $erpMaterial
+            if ($? -eq $false) {
+                continue
             }
-            else {
-                Update-BomWindowEntity $entity -Status "Identical" -Properties $entity
-                SetEntityProperties -erpMaterial $createErpMaterialResult.Entity -vaultEntity $entity
-            }
+            
+            Update-BomWindowEntity $entity -Status "Identical" -Properties $entity
+            SetEntityProperties -erpMaterial $createErpMaterial -vaultEntity $entity
+            
         }
         elseif ($entity._Status -eq "Different") {
             $erpMaterial = NewErpMaterial
-            $erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
-			$updateErpMaterialResult = UpdateErpMaterial -erpMaterial $erpMaterial
-			if($updateErpMaterialResult.ErrorMessage) {
-                Update-BomWindowEntity $entity -Status "Error" -StatusDetails $updateErpMaterialResult.ErrorMessage
+            $erpMaterial = PrepareErpMaterialForUpdate -erpMaterial $erpMaterial -vaultEntity $entity
+            $updateErpMaterial = Update-ERPObject -EntitySet "Materials" -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
+            if ($? -eq $false) {
+                continue
             }
-            else {
-                Update-BomWindowEntity $entity -Status "Identical"
-            }
+            Update-BomWindowEntity $entity -Status "Identical"
         }
         else {
             Update-BomWindowEntity $entity -Status $entity._Status
@@ -92,28 +91,111 @@ function Transfer-Items($entities) {
 function Check-Boms($VaultBoms) {
     [array]::Reverse($VaultBoms)
     foreach ($vaultBom in $VaultBoms) {
+  
+        
 
-        if ($vaultBom._Status -ne "Unknown") {
-            Update-BomWindowEntity -InputObject $vaultBom -Status $vaultBom._Status -StatusDetails $vaultBom.Message
-			foreach ($vaultBomRow in $vaultBom.Children) {
-                Update-BomWindowEntity -InputObject $vaultBomRow -Status $vaultBomRow._Status -StatusDetails $vaultBomRow.Message
+        $number = GetEntityNumber -entity $VaultBom
+        if (-not $number) {
+		
+            $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails "There is no erp material linked to this entity!"
+            foreach ($vaultBomRow in $VaultBom.Children) {
+                $vaultBomRow | Update-BomWindowEntity -Status Error -StatusDetails "BOM head has no linked erp material!"
             }
             continue
         }
-        
-        $differences = CompareErpBom -VaultBom $vaultBom
-        foreach ($diff in $differences) {
-            if ($diff.Status -eq "Remove" -and $diff.Parent) {
-                $remove = Add-BomWindowEntity -Parent $diff.Parent -Type BomRow -Properties $diff.AffectedObject
-                Update-BomWindowEntity $remove -Status $diff.Status -StatusDetails $diff.Message
+        $erpBomHeader = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $number } -Expand "BomRows" 
+        if ($? -eq $false) {
+            foreach ($vaultBomRow in $VaultBom.Children) {
+                $vaultBomRow | Update-BomWindowEntity -Status Error -StatusDetails $vaultBOM._StatusDetails 
+            }
+            continue
+        }
+
+        if (-not $erpBomHeader) {
+            # bomhead new
+            Log -Message "Bomheader doesn't exist yet!"
+
+            $VaultBom | Update-BomWindowEntity -Status New -StatusDetails "BOM does not exist in ERP"
+            foreach ($vaultBomRow in $VaultBom.Children) {
+                $childNumber = GetEntityNumber -entity $vaultBomRow
+            
+                $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber.ToUpper() }
+                if ($? -eq $false) {
+                    $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails $vaultBomRow._StatusDetails
+                    continue
+                }
+                if (-not $erpMaterial) {
+                    # material doesn't exist yet
+                    Log -Message "Error Erpmaterial doesn't exist yet! BomNumber $($childNumber)"
+                    $vaultBomRow | Update-BomWindowEntity -Status Error -StatusDetails "Position doesn't exist as Item in ERP"
+                    $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails "BOM contains positions that do not exist as Items in ERP"
+                }
+                else {
+                    $vaultBomRow | Update-BomWindowEntity -Status New -StatusDetails "Position will be added to ERP"
+                }
+            }
+            continue
+        }
+
+        # bomhead exists
+        Log -Message "Bom head exists! Check if rows need to be added/updated"
+
+        $vaultBom | Update-BomWindowEntity -Status Identical -StatusDetails "BOM is identical between Vault and ERP"
+        foreach ($vaultBomRow in $VaultBom.Children) {
+            $childNumber = GetEntityNumber -entity $vaultBomRow
+            $erpBomRow = $erpBomHeader.BomRows | Where-Object { $_.ChildNumber -eq $childNumber -and $_.Position -eq $vaultBomRow.Bom_PositionNumber }
+            if ($erpBomRow) {
+                if ($vaultBomRow.Bom_Quantity -eq $erpBomRow.Quantity) {
+                    $vaultBomRow | Update-BomWindowEntity -Status Identical -StatusDetails "Position is identical"
+                }
+                else {
+                    $vaultBomRow | Update-BomWindowEntity -Status Different -StatusDetails "Quantity is different: '$($vaultBomRow.Bom_Quantity) <> $($erpBomRow.Quantity)'"
+                    $vaultBom | Update-BomWindowEntity -Status Different -StatusDetails "BOMs are different between Vault and ERP!"      
+                }
+
+                continue
+            }
+
+            $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber.ToUpper() }
+            if ($? -eq $false) {
+                $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails $vaultBomRow._StatusDetails
+                continue
+            }
+            if (-not $erpMaterial) {
+                Log -Message "Error Erpmaterial doesn't exist yet! BomNumber $($childNumber)"
+                $vaultBomRow | Update-BomWindowEntity -Status Error -StatusDetails "Position doesn't exist as Item in ERP"  
+                $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails "BOM contains positions that do not exist as Items in ERP" 
             }
             else {
-                Update-BomWindowEntity -InputObject $diff.AffectedObject -Status $diff.Status -StatusDetails $diff.Message
+                Log -Message "Bomrow is new!"
+                $vaultBomRow | Update-BomWindowEntity -Status New -StatusDetails "Position will be added to ERP"  
+                $vaultBom | Update-BomWindowEntity -Status Different -StatusDetails "BOMs are different between Vault and ERP!" 
             }
         }
+        foreach ($erpBomRow in $erpBomHeader.BomRows) {
+            $vaultBomRow = $VaultBom.Children | Where-Object { (GetEntityNumber -entity $_) -eq $erpBomRow.ChildNumber -and $_.Bom_PositionNumber -eq $erpBomRow.Position }
+            if ($null -eq $vaultBomRow) {
+			
+                $remove = Add-BomWindowEntity -Parent $VaultBom -Type BomRow -Properties @{
+                    'Part Number'        = $erpBomRow.ChildNumber
+                    '_PartNumber'        = $erpBomRow.ChildNumber
+                    'Name'               = $erpBomRow.ChildNumber
+                    '_Name'              = $erpBomRow.ChildNumber
+                    'Number'             = $erpBomRow.ChildNumber
+                    '_Number'            = $erpBomRow.ChildNumber
+                    'Bom_Number'         = $erpBomRow.ChildNumber
+                    'Bom_Name'           = $erpBomRow.ChildNumber
+                    'Bom_Quantity'       = $erpBomRow.Quantity
+                    'Bom_Position'       = $erpBomRow.Position
+                    'Bom_PositionNumber' = $erpBomRow.Position
+                }
+                Update-BomWindowEntity $remove -Status Remove -StatusDetails "Position will be deleted in ERP"
+                $vaultBom | Update-BomWindowEntity -Status Different -StatusDetails "BOM rows are different between Vault and ERP!" 
+            }
+        }
+
     }
 }
-
 function Transfer-Boms($VaultBoms) {
     [array]::Reverse($VaultBoms)
     foreach ($vaultBom in $VaultBoms) {
@@ -123,92 +205,87 @@ function Transfer-Boms($VaultBoms) {
             $erpBomRows = @()
             foreach ($vaultBomRow in $vaultBom.Children) {
                 $erpBomRow = NewErpBomRow
-                $erpBomRow = PrepareErpBomRow -erpBomRow $erpBomRow -parentNumber $parentNumber -vaultEntity $vaultBomRow
+                $erpBomRow = PrepareBomRowForCreate -erpBomRow $erpBomRow -parentNumber $parentNumber -vaultEntity $vaultBomRow
                 $erpBomRows += $erpBomRow
             }
             $erpBomHeader = NewErpBomHeader
-            $erpBomHeader = PrepareErpBomHeader -erpBomHeader $erpBomHeader -vaultEntity $vaultBom
+            $erpBomHeader = PrepareBomHeaderForCreate -erpBomHeader $erpBomHeader -vaultEntity $vaultBom
             $erpBomHeader.BomRows = $erpBomRows
+            $erpBomHeaderResult = Add-ERPObject -EntitySet "BomHeaders" -Properties $erpBomHeader
+            if ($? -eq $false) {
+                foreach ($vaultBomRow in $vaultBom.Children) {
+                    Update-BomWindowEntity $vaultBomRow -Status "Error" -StatusDetails $vaultBom._StatusDetails
+                }
+                continue
+            }
+            Update-BomWindowEntity $vaultBom -Status "Identical"
+            foreach ($vaultBomRow in $vaultBom.Children) {
+                Update-BomWindowEntity $vaultBomRow -Status "Identical" -StatusDetails ""
+            }
 
-			$createErpBomHeaderResult = CreateErpBomHeader -erpBomHeader $erpBomHeader
-			if($createErpBomHeaderResult.ErrorMessage) {
-				Update-BomWindowEntity $vaultBom -Status "Error" -StatusDetails $createErpBomHeaderResult.ErrorMessage
-				foreach ($vaultBomRow in $vaultBom.Children) {
-					Update-BomWindowEntity $vaultBomRow -Status "Error" -StatusDetails $createErpBomHeaderResult.ErrorMessage
-				}
-			}
-			else {
-				Update-BomWindowEntity $vaultBom -Status "Identical"
-				foreach ($vaultBomRow in $vaultBom.Children) {
-					Update-BomWindowEntity $vaultBomRow -Status "Identical" -StatusDetails ""
-				}
-			}
-
-			continue
+            continue
         }
 
         if ($vaultBom._Status -eq "Different") {
-            $bomHeaderStatus = "Identical"
-			# Status: "Unknown", "Remove", "Identical", "Error"
+            # Status: "Unknown", "Remove", "Identical", "Error"
             $vaultBomRows = $vaultBom.Children | Sort-Object -Property _Status -Descending
             foreach ($vaultBomRow in $vaultBomRows) {
 
                 if ($vaultBomRow._Status -eq "Remove") {
-                    $removeErpBomRowResult = RemoveErpBomRow -parentNumber $parentNumber -childNumber $vaultBomRow.Bom_Number -position $vaultBomRow.Bom_PositionNumber
-					if ($removeErpBomRowResult.ErrorMessage) {
-						Update-BomWindowEntity $vaultBomRow -Status "Error" -StatusDetails $removeErpBomRowResult.ErrorMessage
-						$bomHeaderStatus = "Error"
-					}
-					else {
-						$vaultBomRow | Remove-BomWindowEntity
-					}
+                    $removeErpBomRowResult = Remove-ERPObject -EntitySet "BomRows" -Keys @{ParentNumber = $parentNumber; ChildNumber = $vaultBomRow.Bom_Number; Position = $vaultBomRow.Bom_PositionNumber}
+                    if ($? -eq $false) {
+                        $vaultBom | Update-BomWindowEntity -Status 'Error' StatusDetails $vaultBomRow._StatusDetails
+                    }
+                    else {
+                        $vaultBomRow | Remove-BomWindowEntity
+                    }
 
-					continue
+                    continue
                 }
 
-				$childNumber = GetEntityNumber -entity $vaultBomRow
-				if ($vaultBomRow._Status -eq "Different") {
-                    $getErpBomRowResult = GetErpBomRow -parentNumber $parentNumber -childNumber $childNumber -position $vaultBomRow.Bom_PositionNumber
-					if($getErpBomRowResult.ErrorMessage) {
-						Update-BomWindowEntity $vaultBomRow -Status "Error" -StatusDetails $getErpBomRowResult.ErrorMessage
-						$bomHeaderStatus = "Error"
-						continue
-					}
-					
-                    $updateErpBomRowResult = UpdateErpBomRow -ErpBomRow $getErpBomRowResult.Entity -VaultEntity $vaultBomRow
-					if($updateErpBomRowResult.ErrorMessage) {
-						Update-BomWindowEntity $vaultBomRow -Status "Error" -StatusDetails $updateErpBomRowResult.ErrorMessage
-						$bomHeaderStatus = "Error"
-						continue
-					}
+                $childNumber = GetEntityNumber -entity $vaultBomRow
+                if ($vaultBomRow._Status -eq "Different") {
+                    $getErpBomRowResult = Get-ERPObject -EntitySet "BomRows" -Keys @{ParentNumber = $parentNumber; ChildNumber = $childNumber; Position = $vaultBomRow.Bom_PositionNumber } #warum wird Rückgabewert nicht verwendet? Patrick fragen.
+                    if ($? -eq $false) {
+                        $vaultBom | Update-BomWindowEntity -Status 'Error' -StatusDetails $vaultBomRow._StatusDetails
+                        continue
+                    }
+                    $updateProperties = PrepareBomRowForUpdate -erpBomRow $erpBomRow -parentNumber $parentNumber -vaultEntity $vaultBomRow
+					$updateErpBomRowResult = Update-ERPObject -EntitySet "BomRows" -Keys $ErpBomRow._Keys -Properties $updateProperties
+                    if ($? -eq $false) {
+                        $vaultBom | Update-BomWindowEntity -Status 'Error' -StatusDetails $vaultBomRow._StatusDetails
+                        continue
+                    }
 
-					Update-BomWindowEntity $vaultBomRow -Status "Identical" -StatusDetails ""
+                    Update-BomWindowEntity $vaultBomRow -Status "Identical" -StatusDetails ""
 
-					continue
+                    continue
                 }
 
                 if ($vaultBomRow._Status -eq "New") {
                     $erpBomRow = NewErpBomRow
-                    $erpBomRow = PrepareErpBomRow -erpBomRow $erpBomRow -parentNumber $parentNumber -vaultEntity $vaultBomRow
+                    $erpBomRow = PrepareBomRowForCreate -erpBomRow $erpBomRow -parentNumber $parentNumber -vaultEntity $vaultBomRow
 
-					$createErpBomRowResult = CreateErpBomRow -erpBomRow $erpBomRow
-					if($createErpBomRowResult.ErrorMessage) {
-						Update-BomWindowEntity $vaultBomRow -Status "Error" -StatusDetails $createErpBomRowResult.ErrorMessage
-						$bomHeaderStatus = "Error"
-					}
-					else {
-						Update-BomWindowEntity $vaultBomRow -Status "Identical" -StatusDetails ""
-					}
+                    $createErpBomRowResult = Add-ERPObject -EntitySet "BomRows" -Properties $erpBomRow
+                    if ($? -eq $false) {
+                        $vaultBom |  Update-BomWindowEntity -Status 'Error' -StatusDetails $vaultBomRow._StatusDetails
+                        continue
+                    }
+                    
+                    Update-BomWindowEntity $vaultBomRow -Status "Identical" -StatusDetails ""
+                    
                 }
                 else {
                     Update-BomWindowEntity $vaultBomRow -Status $vaultBomRow._Status
                 }
             }
-
-            Update-BomWindowEntity $vaultBom -Status $bomHeaderStatus
+            if ($vaultBom._Status -ne "Error") {
+                $vaultBom | Update-BomWindowEntity -Status 'Identical'
+            }
+            
         }
         else {
-            # removes the dialog questionmarks for rows that haven't been touched. should be fixed in the core product!
+            # removes the dialog questionmarks for boms that are identical, Error. should be fixed in the core product! 
             Update-BomWindowEntity $vaultBom -Status $vaultBom._Status
             foreach ($vaultBomRow in $vaultBom.Children) {
                 Update-BomWindowEntity $vaultBomRow -Status $vaultBomRow._Status

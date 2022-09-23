@@ -154,7 +154,7 @@ function Start-StressTest {
 }
 
 Import-Module powerGate
-#Disconnect-ERP -Service "http://$($ENV:Computername):8080/coolOrange/ErpServices"
-Connect-ERP -Service "http://$($ENV:Computername):8080/coolOrange/ErpServices"
+#Disconnect-ERP -Service "http://$($ENV:Computername):8080/PGS/ErpServices"
+Connect-ERP -Service "http://$($ENV:Computername):8080/PGS/ErpServices"
 
 Start-StressTest

@@ -1,12 +1,6 @@
 ﻿$materialEntitySet = "Materials"
 $materialEntityType = "Material"
 
-function SearchErpMaterials ($filter, $top = 100) {
-	$erpMaterials = Get-ERPObjects -EntitySet $materialEntitySet -Filter $filter -Top $top
-	$result = Get-PgsErrorForLastResponse -Entity $erpMaterials
-	return $result
-}
-
 function OpenErpSearchWindow {
     Log -Begin
     [xml]$searchWindowXaml = Get-Content "C:\ProgramData\coolOrange\powerGate\UI\SearchWindow.xaml"
@@ -125,18 +119,15 @@ function ExecuteErpSearch {
     $filter = ConvertSearchCriteriaToFilter -SearchCriteria $searchCriteria -CaseSensitive $CaseSensitive
     $dsDiag.Trace("filter = $filter")
 
-	$searchErpMaterialsResult = SearchErpMaterials -filter $filter -top $topa
+	$searchErpMaterialsResult = Get-ERPObjects -EntitySet $materialEntitySet -Filter $filter -Top $topa
     $dsWindow.Cursor = "Arrow"
-	if ($searchErpMaterialsResult.ErrorMessage) {
-		ShowMessageBox -Message $searchErpMaterialsResult.ErrorMessage -Icon "Error" -Title "powerGate ERP - Search"
-	}
-    if (-not $searchErpMaterialsResult.Entity) {
+    if (-not $searchErpMaterialsResult) {
         $searchWindow.FindName("SearchResults").ItemsSource = $null
         $searchWindow.FindName("RecordsFound").Content = "Results found: 0"
     }
 	else {
-        $searchWindow.FindName("SearchResults").ItemsSource = @($searchErpMaterialsResult.Entity) #this is because PowerShell transforms one result into a single object instead of keeping it as a list of one element
-        $searchWindow.FindName("RecordsFound").Content = "Results found: $(@($searchErpMaterialsResult.Entity).Count)"
+        $searchWindow.FindName("SearchResults").ItemsSource = @($searchErpMaterialsResult) #this is because PowerShell transforms one result into a single object instead of keeping it as a list of one element
+        $searchWindow.FindName("RecordsFound").Content = "Results found: $(@($searchErpMaterialsResult).Count)"
     }
     Log -End
 }

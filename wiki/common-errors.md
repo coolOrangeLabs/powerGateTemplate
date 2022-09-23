@@ -1,9 +1,9 @@
 [Menu](../README.md) [Home](./home.md)
 
-## Error: Connection to ".../coolOrange/ErpService" could not be established!!!
+## Error: powerGate ERP Integration
 
-![image](https://user-images.githubusercontent.com/67685033/95969599-3a479480-0e0f-11eb-921a-d8951454040d.png)
-The shown error is thrown if the client cannot connect to the powerGate Server.
+![image](https://doc.coolorange.com/projects/powergate/en/stable/_images/connection_errordialog.png)
+The Connection Error Dialog is displayed when connection problems occur between the local computer, powerGateServer or the ERP system.
 
 ### **Possible reasons:** 
 * The most obvious reason is, that the **powerGateServe service is not running on your server machine**. Refer to [this](https://www.coolorange.com/wiki/doku.php?id=powergateserver:getting_started) article to find out, how to start/stop the service.
