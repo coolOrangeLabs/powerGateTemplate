@@ -3,8 +3,8 @@ Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Glo
 Initialize-CoolOrange
 function OnTabContextChanged_powerGate($xamlFile) {
 	Open-VaultConnection
-	$servicesNotAvaileble= Get-ERPServices -Available #| Where-Object { -not $_.Available } #TODO JAKOB issue anlegen
-	if (-not $servicesNotAvaileble) {
+	$servicesNotAvaileble= (Get-ERPServices) | Where-Object { -not $_.Available }
+	if ($servicesNotAvaileble) {
 		$dsWindow.IsEnabled = $false
 		return
 	}
