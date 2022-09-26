@@ -89,11 +89,10 @@ function Transfer-Items($entities) {
 }
 
 function Check-Boms($VaultBoms) {
+    #Attention!!! When changing inside this function please check if you have to change somthing in "Test-ErpItemAndBOMForVaultFileOrVaultItem" function, beacause the functions are similare
     [array]::Reverse($VaultBoms)
     foreach ($vaultBom in $VaultBoms) {
   
-        
-
         $number = GetEntityNumber -entity $VaultBom
         if (-not $number) {
 		
@@ -118,7 +117,11 @@ function Check-Boms($VaultBoms) {
             $VaultBom | Update-BomWindowEntity -Status New -StatusDetails "BOM does not exist in ERP"
             foreach ($vaultBomRow in $VaultBom.Children) {
                 $childNumber = GetEntityNumber -entity $vaultBomRow
-            
+                if (-not $vaultBomRow.Bom_PositionNumber) {
+                    $vaultBomRow | Update-BomWindowEntity -Status Error -StatusDetails "Position property is empty."
+                    $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails "BOM contains bomrows with a empty position property"
+                    continue
+                }
                 $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber.ToUpper() }
                 if ($? -eq $false) {
                     $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails $vaultBomRow._StatusDetails
@@ -143,6 +146,11 @@ function Check-Boms($VaultBoms) {
         $vaultBom | Update-BomWindowEntity -Status Identical -StatusDetails "BOM is identical between Vault and ERP"
         foreach ($vaultBomRow in $VaultBom.Children) {
             $childNumber = GetEntityNumber -entity $vaultBomRow
+            if (-not $vaultBomRow.Bom_PositionNumber) {
+                $vaultBomRow | Update-BomWindowEntity -Status Error -StatusDetails "Position property is empty."
+                $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails "BOM contains bomrows with a empty position property"
+                continue
+            }
             $erpBomRow = $erpBomHeader.BomRows | Where-Object { $_.ChildNumber -eq $childNumber -and $_.Position -eq $vaultBomRow.Bom_PositionNumber }
             if ($erpBomRow) {
                 if ($vaultBomRow.Bom_Quantity -eq $erpBomRow.Quantity) {

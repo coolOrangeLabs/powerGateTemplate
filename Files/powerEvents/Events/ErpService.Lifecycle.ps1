@@ -16,6 +16,7 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
 	param(
 		$Entity # Can be a powerVault File or Item
 	)
+	#Attention!!! When changing inside this function please check if you have to change somthing in "Check-Boms" function, beacause the functions are similare
 	Log -Begin
 	$number = GetEntityNumber -Entity $Entity
 	if(-not $number) {
@@ -57,7 +58,10 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
 	$vaultBomRows = GetVaultBomRows -Entity $Entity
 	foreach ($vaultBomRow in $vaultBomRows) {
 		$childNumber = GetEntityNumber -entity $vaultBomRow
-
+		if (-not $vaultBomRow.Bom_PositionNumber) {
+			Add-VaultRestriction -EntityName $number -Message "BOM contains bomrows with a empty position property"
+			return
+		}
 		$erpBomRow = $erpBomHeader.BomRows | Where-Object { $_.ChildNumber -eq $childNumber -and $_.Position -eq $vaultBomRow.Bom_PositionNumber }
 		if (-not $erpBomRow) {
 			Add-VaultRestriction -EntityName $number -Message "Open the BOM Window, because the ERP BOM is different then in Vault!"
