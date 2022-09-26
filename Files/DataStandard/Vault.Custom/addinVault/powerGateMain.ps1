@@ -129,9 +129,8 @@ function CreateOrUpdateErpMaterial {
 	}
 	else {
 		$updateErpMaterialResult = Update-ERPObject -EntitySet "Materials" -Key $materialTabContext.Entity._Keys -Properties $materialTabContext.Entity._Properties
-		#$updateErpMaterialResult = Update-ERPObject -EntitySet "Materials" -Key @{Number = 'SQUARETUBE'} -Properties @{Description = 'tests'}
         if ($? -eq $false) {
-            return #-> SUPPORT TICKET bei erfolgreichem Ausführen kommt trotzdem $false zurück ...
+            return
         }
 		ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information" | Out-Null
 		InitMaterialTab
