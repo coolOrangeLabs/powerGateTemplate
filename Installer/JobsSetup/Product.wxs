@@ -79,7 +79,7 @@
 	  <Property Id="POWERJOBSINSTALLEDVERSION">
 		<RegistrySearch Id="PowerJobsInstalledVersion"
 						Root="HKLM"
-						Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor Processor"
+						Key="SOFTWARE\coolOrange s.r.l.\powerJobs Processor"
 						Name="Version"
 						Type="raw" />
 	  </Property>
