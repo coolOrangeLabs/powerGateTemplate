@@ -65,7 +65,7 @@ function ConnectToConfiguredErpServer {
 	else {
 		Write-Host "Connecting to: $powerGateServerErpPluginUrl"
 		$connected = Connect-ERP -Service $PowerGateServerErpPluginUrl
-		if($connected) {
+		if(-not $connected) {
 			throw("Connection to ERP could not be established!! Reason: $($Error[0]) (Source: $($Error[0].Exception.Source))")
 		}
 	}
