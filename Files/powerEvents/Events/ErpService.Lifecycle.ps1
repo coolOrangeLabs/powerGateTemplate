@@ -23,7 +23,7 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
 		Add-VaultRestriction -EntityName $number -Message "There is no erp material linked to this entity!"
 	}
 
-	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number.ToUpper() }
+	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 	if ($? -eq $false) {
 		return
     }

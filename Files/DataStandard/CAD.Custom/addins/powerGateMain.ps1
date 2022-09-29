@@ -51,7 +51,7 @@ function CloseErpMaterialWindow {
 }
 
 function InitErpMaterialTab($number) {
-	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number.ToUpper() } -ErrorAction Stop
+	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 
 	$materialTabContext = New-Object -Type PsObject -Property @{
 		Entity = $getErpMaterialResult
@@ -76,7 +76,6 @@ function InitErpMaterialTab($number) {
 function PrepareErpMaterial($erpMaterial) {
 	#TODO: Property mapping for material creation
 	$erpMaterial.Number = $prop["Part Number"].Value
-	$erpMaterial.Number = $erpMaterial.Number.ToUpper()
 	$erpMaterial.Description = $prop["Description"].Value
 
 	return $erpMaterial

@@ -35,7 +35,7 @@ function GetSelectedObject {
 function InitBomTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
-	$getErpBomHeaderResult = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $number } -Expand "BomRows" -ErrorAction Stop
+	$getErpBomHeaderResult = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $number } -Expand "BomRows"
 
 	if(-not $getErpBomHeaderResult) {
 		$goToEnabled = $false
@@ -51,7 +51,7 @@ function InitMaterialTab {
 	$entity = GetSelectedObject
 	$number = GetEntityNumber -entity $entity
 
-	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number.ToUpper() } -ErrorAction Stop
+	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 
 	$materialTabContext = New-Object -Type PsObject -Property @{
 		Entity = $getErpMaterialResult

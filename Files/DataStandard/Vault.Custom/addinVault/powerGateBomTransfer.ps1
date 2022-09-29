@@ -28,7 +28,7 @@ function Check-Items($entities) {
             continue
         }
     
-        $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number.ToUpper() }
+        $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
         if ($? -eq $false) {
             continue
         }
@@ -122,7 +122,7 @@ function Check-Boms($VaultBoms) {
                     $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails "BOM contains bomrows with a empty position property"
                     continue
                 }
-                $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber.ToUpper() }
+                $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber }
                 if ($? -eq $false) {
                     $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails $vaultBomRow._StatusDetails
                     continue
@@ -164,7 +164,7 @@ function Check-Boms($VaultBoms) {
                 continue
             }
 
-            $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber.ToUpper() }
+            $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $childNumber }
             if ($? -eq $false) {
                 $vaultBom | Update-BomWindowEntity -Status Error -StatusDetails $vaultBomRow._StatusDetails
                 continue

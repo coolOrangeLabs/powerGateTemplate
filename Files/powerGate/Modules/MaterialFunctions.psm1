@@ -31,7 +31,7 @@ function PrepareErpMaterialForCreate($erpMaterial, $vaultEntity) {
 	else { $descriptionProp = '_Description' }
 
 	#TODO: Property mapping for material creation
-	$erpMaterial.Number = $number.ToUpper()
+	$erpMaterial.Number = $number
 	$erpMaterial.Description = $vaultEntity.$descriptionProp
 	#TODO: Numbering generation for material creation (only if needed)
 	if (-not $erpMaterial.Number) {
@@ -51,7 +51,7 @@ function PrepareErpMaterialForUpdate($erpMaterial, $vaultEntity) {
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
 	else { $descriptionProp = '_Description' }
 	#TODO: Properties that need to be set on update
-	$erpMaterial.Number = $number.ToUpper()
+	$erpMaterial.Number = $number
 	$erpMaterial.ModifiedDate = [DateTime]::Now
 	$erpMaterial.Description = $vaultEntity.$descriptionProp
 

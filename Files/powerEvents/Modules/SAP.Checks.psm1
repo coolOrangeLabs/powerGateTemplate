@@ -280,7 +280,7 @@ function Get-SapMaterialNumber {
         $number = $VaultEntity._Number
     }
 
-    if ($number) { $number = $number.ToUpper() }
+    if ($number) { $number = $number }
     return Get-PaddedOrUnchangedMaterialNumber -number $number
 }
 
