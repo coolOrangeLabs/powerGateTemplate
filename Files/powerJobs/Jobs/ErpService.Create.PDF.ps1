@@ -40,6 +40,8 @@ $localIpjFile = (Save-VaultFile -File $ipjVaultPath -DownloadDirectory $localWor
 $fastOpen = $openReleasedDrawingsFast -and $file._ReleasedRevision
 $downloadedFiles = Save-VaultFile -File $file._FullPath -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
 $file = $downloadedFiles | select -First 1
+# InventorServer does not support all target & source formats, you can find all supportet formats here: 
+# https://doc.coolorange.com/projects/powerjobsprocessor/en/stable/jobprocessor/file_conversion/?highlight=InventorServer#supported-format-conversions"
 $openResult = Open-Document -LocalFile $file.LocalPath -Options @{ "Project" = $localIpjFile.LocalPath; FastOpen = $fastOpen } -Application InventorServer
 
 if ($openResult) {

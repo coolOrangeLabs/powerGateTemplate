@@ -45,6 +45,8 @@ foreach ($drawing in $attachedDrawings) {
     $fastOpen = $openReleasedDrawingsFast -and $drawing._ReleasedRevision
     $downloadedFiles = Save-VaultFile -File $drawing._FullPath -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
     $drawing = $downloadedFiles | select -First 1
+    # InventorServer does not support all target & source formats, you can find all supportet formats here: 
+    # https://doc.coolorange.com/projects/powerjobsprocessor/en/stable/jobprocessor/file_conversion/?highlight=InventorServer#supported-format-conversions"
     $openResult = Open-Document -LocalFile $drawing.LocalPath -Options @{ "Project" = $localIpjFile.LocalPath; FastOpen = $fastOpen } -Application InventorServer
     if ($openResult) {
         if ($openResult.Application.Name -like 'Inventor*') {
