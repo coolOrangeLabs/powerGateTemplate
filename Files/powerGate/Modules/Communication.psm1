@@ -35,7 +35,7 @@ function CreateUrlFromPGServerName {
 	if (-not $powerGateServerName) {
 		return;
 	}
-	$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/PGS/ErpServices"
+	$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/PGS/CATALOGSERVICE"
 	#$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/PGS/DynamicsNav"
 	# Dynamics NAV 2017 Plugin available here: https://github.com/coolOrangeLabs/powergate-dynamics-nav-sample/releases
 	Log -End
