@@ -33,10 +33,16 @@ if ( @("idw", "dwg") -notcontains $file._Extension ) {
 
 ConnectToConfiguredErpServer
 
+$ipjVaultPath = $vault.DocumentService.GetInventorProjectFileLocation()
+$localWorkspaceFolder = ($vaultConnection.WorkingFoldersManager.GetWorkingFolder("$/")).FullPath
+$localIpjFile = (Save-VaultFile -File $ipjVaultPath -DownloadDirectory $localWorkspaceFolder)[0]
+
 $fastOpen = $openReleasedDrawingsFast -and $file._ReleasedRevision
-$downloadedFiles = Save-VaultFile -File $file._FullPath -DownloadDirectory $workingDirectory -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
-$file = $downloadedFiles | Select-Object -First 1
-$openResult = Open-Document -LocalFile $file.LocalPath -Options @{ FastOpen = $fastOpen } 
+$downloadedFiles = Save-VaultFile -File $file._FullPath -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
+$file = $downloadedFiles | select -First 1
+# InventorServer does not support all target & source formats, you can find all supportet formats here: 
+# https://doc.coolorange.com/projects/powerjobsprocessor/en/stable/jobprocessor/file_conversion/?highlight=InventorServer#supported-format-conversions"
+$openResult = Open-Document -LocalFile $file.LocalPath -Options @{ "Project" = $localIpjFile.LocalPath; FastOpen = $fastOpen } -Application InventorServer
 
 if ($openResult) {
     if ($openResult.Application.Name -like 'Inventor*') {
@@ -59,6 +65,14 @@ if ($openResult) {
     }
     $closeResult = Close-Document
 }
+
+Get-ChildItem -LiteralPath $workingDirectory -Recurse -File -ErrorAction SilentlyContinue `
+| Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath $workingDirectory -Recurse -Force -ErrorAction SilentlyContinue
+
+Get-ChildItem -LiteralPath $localWorkspaceFolder -Recurse -File `
+| Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath $localWorkspaceFolder -Recurse -Force -ErrorAction SilentlyContinue
 
 if (-not $openResult) {
     throw("Failed to open document $($file.LocalPath)! Reason: $($openResult.Error.Message)")

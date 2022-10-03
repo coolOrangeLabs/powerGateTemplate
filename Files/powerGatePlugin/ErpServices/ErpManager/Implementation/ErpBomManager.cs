@@ -31,6 +31,8 @@ namespace ErpServices.ErpManager.Implementation
                 foreach (var bomRow in bomRows)
                 {
                     var material = GetMaterialyByNumber(bomRow.ChildNumber);
+                    if (material == null)
+                        throw new System.Exception($"Found {bomRows.Count} bomrows but Bom Row with Part Number '{bomRow.ChildNumber}' has no existing MATERIAL!!");
                     bomRow.Description = material.Description;
                     bomRow.UnitOfMeasure = material.UnitOfMeasure;
                 }

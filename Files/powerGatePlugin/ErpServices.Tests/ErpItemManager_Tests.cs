@@ -195,7 +195,7 @@ namespace ErpServices.Tests
             AssertMaterials(defaultMaterial, createdErpMaterial);
 
             var startedMeasure2 = StartMeasure(String.Format("GetMaterialByNumber for '{0}'", defaultMaterial.Number));
-            var queriedMaterial = erpManager.GetMaterialByNumber(createdErpMaterial.Number);
+            var queriedMaterial = erpManager.GetMaterialyByNumber(createdErpMaterial.Number);
             StopMeasure(startedMeasure2);
 
             AssertMaterials(createdErpMaterial, queriedMaterial);
@@ -265,7 +265,7 @@ namespace ErpServices.Tests
             AssertMaterials(updatedErpMaterial, createdErpMaterial);
 
             var startedMeasure2 = StartMeasure(String.Format("GetMaterialByNumber for '{0}'", defaultMaterial.Number));
-            var queriedMaterial = erpManager.GetMaterialByNumber(createdErpMaterial.Number);
+            var queriedMaterial = erpManager.GetMaterialyByNumber(createdErpMaterial.Number);
             StopMeasure(startedMeasure2);
 
             AssertMaterials(updatedErpMaterial, queriedMaterial);

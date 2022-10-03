@@ -1,4 +1,14 @@
-﻿# JobEntityType = ITEM
+﻿#=============================================================================#
+# PowerShell script sample for coolOrange powerJobs                           #
+#                                                                             #
+# Copyright (c) coolOrange s.r.l. - All rights reserved.                      #
+#                                                                             #
+# THIS SCRIPT/CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER   #
+# EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES #
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  #
+#=============================================================================#
+
+# JobEntityType = ITEM
 
 #region Settings
 $hidePDF = $false
@@ -25,9 +35,19 @@ foreach ($drawing in $attachedDrawings) {
         Log -Message "Files with extension: '$($drawing._Extension)' are not supported"
         continue
     }
-
+    
     $drawing = Get-VaultFile -File $drawing._FullPath -DownloadPath $workingDirectory
-    $openResult = Open-Document -LocalFile $drawing.LocalPath
+
+    $ipjVaultPath = $vault.DocumentService.GetInventorProjectFileLocation()
+    $localWorkspaceFolder = ($vaultConnection.WorkingFoldersManager.GetWorkingFolder("$/")).FullPath
+    $localIpjFile = (Save-VaultFile -File $ipjVaultPath -DownloadDirectory $localWorkspaceFolder)[0]
+
+    $fastOpen = $openReleasedDrawingsFast -and $drawing._ReleasedRevision
+    $downloadedFiles = Save-VaultFile -File $drawing._FullPath -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
+    $drawing = $downloadedFiles | select -First 1
+    # InventorServer does not support all target & source formats, you can find all supportet formats here: 
+    # https://doc.coolorange.com/projects/powerjobsprocessor/en/stable/jobprocessor/file_conversion/?highlight=InventorServer#supported-format-conversions"
+    $openResult = Open-Document -LocalFile $drawing.LocalPath -Options @{ "Project" = $localIpjFile.LocalPath; FastOpen = $fastOpen } -Application InventorServer
     if ($openResult) {
         if ($openResult.Application.Name -like 'Inventor*') {
             $configFile = "$($env:POWERJOBS_MODULESDIR)Export\PDF_2D.ini"
@@ -40,15 +60,23 @@ foreach ($drawing in $attachedDrawings) {
             $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
             $item = Update-VaultItem -Number $item._Number -AddAttachments @($PDFfile.'Full Path')
 
-            # Log -Message "Uploading PDF file $($PDFfile._Name) to ERP system..."
-            # $d = New-ERPObject -EntityType "Document"
-            # $d.FileName = $PDFfile._Name
-            # $d.Number = $drawing._PartNumber
-            # $d.Description = $drawing._Description
-            # $uploadPDFToErpResult = Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf" -File $localPDFfileLocation
+            Log -Message "Uploading PDF file $($PDFfile._Name) to ERP system..."
+            $d = New-ERPObject -EntityType "Document"
+            $d.FileName = $PDFfile._Name
+            $d.Number = $drawing._PartNumber
+            $d.Description = $drawing._Description
+            $uploadPDFToErpResult = Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf" -File $localPDFfileLocation
         }
         $closeResult = Close-Document
     }
+
+    Get-ChildItem -LiteralPath $workingDirectory -Recurse -File -ErrorAction SilentlyContinue `
+    | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $workingDirectory -Recurse -Force -ErrorAction SilentlyContinue
+
+    Get-ChildItem -LiteralPath $localWorkspaceFolder -Recurse -File `
+    | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $localWorkspaceFolder -Recurse -Force -ErrorAction SilentlyContinue
 
     if (-not $openResult) {
         throw("Failed to open document $($drawing.LocalPath)! Reason: $($openResult.Error.Message)")
@@ -59,8 +87,8 @@ foreach ($drawing in $attachedDrawings) {
     if (-not $closeResult) {
         throw("Failed to close document $($drawing.LocalPath)! Reason: $($closeResult.Error.Message))")
     }
-    #if (-not $uploadPDFToErpResult) {
-    #    throw("Failed to upload PDF document to ERP system! Reason: $($Error[0]) (Source: $($Error[0].Exception.Source))")
-    #}
+    if (-not $uploadPDFToErpResult) {
+        throw("Failed to upload PDF document to ERP system! Reason: $($Error[0]) (Source: $($Error[0].Exception.Source))")
+    }
 }
 Log -Message "Completed job Create PDF as attachment"

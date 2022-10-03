@@ -11,7 +11,7 @@ namespace ErpServices.ErpManager.Implementation
     {
         public Material GetMaterialyByNumber(string number)
         {
-            return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number == number)).FirstOrDefault();
+            return ExecuteOnDatabase(database => database.GetCollection<Material>().Find(material => material.Number.ToUpper() == number.ToUpper())).FirstOrDefault();
         }
 
         public IEnumerable<Material> SearchMaterials(IEnumerable<ErpMaterialSearchSettings> query)
