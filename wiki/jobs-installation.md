@@ -7,11 +7,9 @@
 + .Net Framework 4.7 or higher
 + Autodesk Client Vault Professional {YEAR} (includes JobProcessor)
 + Autodesk Inventor (has to be started after installation once to complete registration, otherwise powerJobs is not able to use Inventor)
-+ [powerGate v21](http://download.coolorange.com/)
++ [powerGate v23](http://download.coolorange.com/)
   + [Installation Guide](https://www.coolorange.com/wiki/doku.php?id=powergate:installation)
-+ [powerJobs v22](http://download.coolorange.com/)
-  + [Installation Guide](https://www.coolorange.com/wiki/doku.php?id=powergate:installation)
-+ [powerVault v22 for Vault 2021 ](http://download.coolorange.com/) _(automatically installed with powerJobs)_
++ [powerJobs v23](http://download.coolorange.com/)
   + [Installation Guide](https://www.coolorange.com/wiki/doku.php?id=powergate:installation)
 
 ## Installing the customization
