@@ -42,9 +42,9 @@ function Download-Setups()
             "2022" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerJobsProcessor22.0_Vault2022.exe"
             };
         "powerGate" = @{
-            "2020" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGate21.0.exe";
-            "2021" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGate21.0.exe";
-            "2022" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGate21.0.exe"
+            "2020" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGate23.0_Vault2020.exe";
+            "2021" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGate23.0_Vault2021.exe";
+            "2022" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGate23.0_Vault2022.exe"
             };
         "powerGateServer" = @{
             "2020" = "https://coolorangedownloads.blob.core.windows.net/downloads/cO_powerGateServer21.0_x64.msi";
