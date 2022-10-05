@@ -75,7 +75,7 @@ function InitMaterialTab {
 
 function IsEntityUnlocked {
 	$entity = GetSelectedObject
-	if ($entity._EntityTypeID -eq "ITEM") { 
+	if ($entity._EntityTypeID -eq "ITEM") {
 		$item = $vault.ItemService.GetLatestItemByItemMasterId($entity.MasterId)
 		$entityUnlocked = $item.Locked -ne $true
 	}
@@ -89,7 +89,7 @@ function IsEntityUnlocked {
 function ValidateErpMaterialTab {
 	$materialTabContext = $dsWindow.FindName("DataGrid").DataContext
 	$erpMaterial = $materialTabContext.Entity
-	
+
 	if ($erpMaterial.Number) {
 		$entityUnlocked = $true
 	}
@@ -106,7 +106,7 @@ function ValidateErpMaterialTab {
 		$description = $true
 	}
 	$enabled = $entityUnlocked -and $type -and $description
-	
+
 	$dsWindow.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
 }
 
@@ -119,7 +119,7 @@ function CreateOrUpdateErpMaterial {
 		$createErpMaterialResult = Add-ErpObject -EntitySet "Materials" -Properties $materialTabContext.Entity
 		if ($? -eq $false) {
 			return
-		} 
+		}
 
 		ShowMessageBox -Message "$($createErpMaterialResult.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
 		$vaultEntity = GetSelectedObject
@@ -154,16 +154,16 @@ function LinkErpMaterial {
 	}
 
 	$vaultEntity = GetSelectedObject
-	if ($vaultEntity._EntityTypeID -eq "ITEM") { 
+	if ($vaultEntity._EntityTypeID -eq "ITEM") {
 		$existingEntity = Get-VaultItem -Number $erpMaterial.Number
 		if ($existingEntity) {
 			if ($existingEntity.MasterId -ne $vaultEntity.MasterId) {
 				ShowMessageBox -Message "The ERP item $($erpMaterial.Number) cannot be assigned!`nAn item with an item number $($existingEntity._Number) already exists." -Button "Ok" -Icon "Warning" | Out-Null
 				return
-			}			
+			}
 		}
 	}
- elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+ elseif ($vaultEntity._EntityTypeID -eq "FILE") {
 		#TODO: Rename "Part Number" on a german system to "Teilenummer"
 		$existingEntities = Get-VaultFiles -Properties @{"Part Number" = $erpMaterial.Number }
 		if ($existingEntities) {
@@ -218,7 +218,7 @@ function RefreshView {
 	$sc = New-Object Connectivity.Explorer.Framework.ShortcutMgr+Shortcut
 	$sc.NavigationContext = $navCtx
 	$sc.ViewContext = $vwCtx
-	$sc.Select($null)    
+	$sc.Select($null)
 }
 
 function SetEntityProperties($erpMaterial, $vaultEntity) {
@@ -228,13 +228,13 @@ function SetEntityProperties($erpMaterial, $vaultEntity) {
 			Update-VaultItemWithErrorHandling -Number $vaultEntity._Number -Properties @{
 				#the item description cannot be updated, since "Description (Item,CO)" is a system property!
 				"_Description(Item,CO)" = $erpMaterial.Description
-				$vaultEntity._Number = $erpMaterial.Number
+				"_Number" = $erpMaterial.Number
 			}
 		}catch {
 			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
 		}
 	}
- elseif ($vaultEntity._EntityTypeID -eq "FILE") { 
+ elseif ($vaultEntity._EntityTypeID -eq "FILE") {
 	try {
 		Update-VaultFileWithErrorHandling -File $vaultEntity._FullPath -Properties @{
 			"_PartNumber"  = $erpMaterial.Number
@@ -248,7 +248,7 @@ function SetEntityProperties($erpMaterial, $vaultEntity) {
 
 function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
-	
+
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
 	else { $descriptionProp = '_Description' }
 
@@ -259,14 +259,14 @@ function PrepareErpMaterial($erpMaterial, $vaultEntity) {
 	return $erpMaterial
 }
 
-function CompareErpMaterial($erpMaterial, $vaultEntity) {	
+function CompareErpMaterial($erpMaterial, $vaultEntity) {
 	$number = GetEntityNumber -entity $vaultEntity
 
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
 	else { $descriptionProp = '_Description' }
-	
+
 	$differences = @()
-	
+
 	#TODO: Property mapping for material comparison
 	if ($erpMaterial.Number -or $number) {
 		if ($erpMaterial.Number -ne $number) {
