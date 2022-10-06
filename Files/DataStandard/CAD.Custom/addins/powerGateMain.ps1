@@ -185,7 +185,11 @@ function InitializeWindow
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 	Initialize-CoolOrange 
 	Disconnect-ERP
+	$Error.Clear()
 	ConnectToErpServerWithMessageBox
+	if ($Error) {
+		$dsWindow.FindName("powerGateGrid").IsEnabled =$false
+	}
 	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Inventor-powerGate.log"
 	Set-LogFilePath -Path $logPath
 	#begin rules applying commonly

@@ -292,14 +292,30 @@
                      Background="#F0F0F0" BorderThickness="1" Margin="0,0,-6,0" />
         </GroupBox>
         <!--Begin powerGate-->
-        <Border Grid.Row="3" Grid.ColumnSpan="2" BorderBrush="#FFFF9900" BorderThickness="2">
+        <Border x:Name="powerGateGrid" Grid.Row="3" Grid.ColumnSpan="2" BorderBrush="#FFFF9900" BorderThickness="2">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="1" />
                     <RowDefinition Height="60" />
                     <RowDefinition Height="1" />
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Background="#FFFDFDFD">
+                <Grid Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="lblStatusMessage" FontSize="14" Foreground="Red" HorizontalAlignment="Left" FontWeight="Medium" Grid.ColumnSpan="3" BorderThickness="0"/>                    
+                </Grid>
+                <Rectangle Grid.Row="1">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
+                    </Rectangle.Fill>
+                </Rectangle>                 
+                <Grid Grid.Row="2" Background="#FFFDFDFD">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="190" />
                         <ColumnDefinition Width="*"/>
@@ -332,12 +348,12 @@
                         </Button.Style>
                     </Button>
                 </Grid>
-                <Rectangle Grid.Row="1">
+                <Rectangle Grid.Row="3">
                     <Rectangle.Fill>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
                     </Rectangle.Fill>
                 </Rectangle>
-                <Grid Grid.Row="2" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                <Grid Grid.Row="4" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*"/>
