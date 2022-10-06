@@ -94,7 +94,7 @@
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
-            <Label Margin="14,0,0,0" FontSize="14" FontWeight="Medium" VerticalAlignment="Center">
+            <Label x:Name="lblStatusMessage" Margin="14,0,0,0" FontSize="14" FontWeight="Medium" VerticalAlignment="Center">
                 <Label.Style>
                     <Style TargetType="{x:Type Label}">
                         <Setter Property="Content" Value="ERP: Bill Of Material"/>

@@ -5,6 +5,8 @@ function OnTabContextChanged_powerGate($xamlFile) {
 	Open-VaultConnection
 	$servicesNotAvaileble= (Get-ERPServices) | Where-Object { -not $_.Available }
 	if ($servicesNotAvaileble) {
+		$dswindow.FindName("lblStatusMessage").Content = "You are not connected to an ERP system!"
+		$dswindow.FindName("lblStatusMessage").Foreground = "Red"
 		$dsWindow.IsEnabled = $false
 		return
 	}
