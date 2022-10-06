@@ -23,7 +23,7 @@ THE USAGE OF THIS SAMPLE IS AT YOUR OWN RISK AND **THERE IS NO SUPPORT** RELATED
 
 ## Description
 
-This sample demonstrates an ERP integration for Autodesk Vault Professional/Workgroup and Autodesk Inventor by using the coolOrange products powerGate, powerGate Server, powerJobs and powerEvents. It not only adds live views on ERP data to Vault and Inventor but also improves Vault workflows by resticting state changes when ERP data is incomplete and by creating and uploading PDF files to the ERP system when a Vault file or Vault item is released.
+This sample demonstrates an ERP integration for Autodesk Vault Professional and Autodesk Inventor by using the coolOrange products powerGate, powerGate Server, powerJobs and powerEvents. It not only adds live views on ERP data to Vault and Inventor but also improves Vault workflows by resticting state changes when ERP data is incomplete and by creating and uploading PDF files to the ERP system when a Vault file or Vault item is released.
 
 It is highly customizable and at the same time it works out-of-the-box with a built-in mockup-ERP system. However, this sample can be extended to work with any ERP system.
 
@@ -42,7 +42,7 @@ TBD!
 Autodesk Vault 2023 Professional, Autodesk Inventor 2023 and Autodesk Vault DataStandard for Vault and Inventor needs to be installed.
 
 ### coolOrange Software 
-coolOrange powerGate, coolOrange powerGate Server, coolOrange powerJobs and coolOrange powerEvents needs to be installed.  
+coolOrange powerGate, coolOrange powerGate Server abd coolOrange powerJobs needs to be installed.  
 coolOrange software can be obtained from the [coolOrange Download Portal](https://download.coolorange.com)
 
 ## Installation

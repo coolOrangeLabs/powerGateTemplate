@@ -9,11 +9,7 @@
 + Autodesk Datastandard for Vault {YEAR}
 + Autodesk Inventor Professional {YEAR}
 + Autodesk Datastandard for Inventor {YEAR}
-+ [powerGate Client v21](http://download.coolorange.com/)
-  + [Installation Guide](https://www.coolorange.com/wiki/doku.php?id=powergate:installation)
-+ [powerEvents v22 for Vault 2021](http://download.coolorange.com/)
-  + [Installation Guide](https://www.coolorange.com/wiki/doku.php?id=powergate:installation)
-+ [powerVault v22 for Vault 2021 ](http://download.coolorange.com/) _(automatically installed with powerEvents)_
++ [powerGate Client v23](http://download.coolorange.com/)
   + [Installation Guide](https://www.coolorange.com/wiki/doku.php?id=powergate:installation)
 
 ## Installing the customization
