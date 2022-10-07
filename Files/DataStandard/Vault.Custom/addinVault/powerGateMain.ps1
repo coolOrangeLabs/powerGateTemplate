@@ -70,6 +70,7 @@ function InitMaterialTab {
  	else {
 		$goToEnabled = $true
 	}
+	$searchWindow.FindName("Category").ItemsSource = GetCategoryList
 	$dswindow.FindName("DataGrid").DataContext = $materialTabContext
 	$dsWindow.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
 	$dswindow.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
