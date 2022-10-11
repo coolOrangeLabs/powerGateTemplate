@@ -18,14 +18,14 @@
 			$prop["Raw_Number"].Value = $number
 			$prop["Raw_Quantity"].Value = 1
 			ShowMessageBox -Message "Raw Material '$number' successfully inserted." -Title "powerGate ERP - Raw Material" -Icon "Information" | Out-Null
-		}     
+		}
 	}
 }
 
 function OpenErpMaterialWindow {
 	[xml]$windowXaml = Get-Content "C:\ProgramData\coolOrange\powerGate\UI\ContainerWindow.xaml"
 	$reader = (New-Object System.Xml.XmlNodeReader $windowXaml)
-	$global:window = [Windows.Markup.XamlReader]::Load($reader)	
+	$global:window = [Windows.Markup.XamlReader]::Load($reader)
 
 	[xml]$userControlXaml = Get-Content $PSScriptRoot.Replace('\CAD.Custom\addins', '\Vault.Custom\Configuration\File\ERP Item.xaml')
 	$reader = (New-Object System.Xml.XmlNodeReader $userControlXaml)
@@ -33,9 +33,9 @@ function OpenErpMaterialWindow {
 
 	$window.FindName("ContentControl").Children.Add($userControl)
 	$window.DataContext = $dsWindow.DataContext
-	
+
 	$userControl.DataContext = $dsWindow.DataContext
-	
+
 	InitErpMaterialTab -number $prop["Part Number"].Value
 
 	if ($window.ShowDialog() -eq "OK") {
@@ -85,7 +85,7 @@ function IsEntityUnlocked {
 	$fullFileName = $prop["_FilePath"].Value + "\" + $prop["_FileName"].Value
 	if (Test-Path -Path $fullFileName) {
 		$status = Get-ChildItem $fullFileName
-		return (-not $status.IsReadOnly)		
+		return (-not $status.IsReadOnly)
 	}
  else {
 		return $true
@@ -166,7 +166,7 @@ function LinkErpMaterial {
 }
 
 function RefreshView {
-	[System.Windows.Forms.SendKeys]::SendWait("{F5}") 
+	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
 	InitErpMaterialTab -number $prop["Part Number"].Value
 }
 
@@ -183,17 +183,21 @@ function SetEntityProperties($erpMaterial) {
 function InitializeWindow
 {
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
-	Initialize-CoolOrange 
+	Initialize-CoolOrange
 	Disconnect-ERP
-	$Error.Clear()
 	ConnectToErpServerWithMessageBox
-	if ($Error) {
-		$dsWindow.FindName("powerGateGrid").IsEnabled =$false
+
+	$erpServices = Get-ERPServices -Available
+	if (-not $erpServices -or $erpServices.Count -le 0) {
+		$dswindow.FindName("lblStatusMessage").Content = "One or more services are not available!"
+		$dswindow.FindName("lblStatusMessage").Foreground = "Red"
+		$dsWindow.FindName("powerGateGrid").IsEnabled = $false
 	}
+
 	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Inventor-powerGate.log"
 	Set-LogFilePath -Path $logPath
 	#begin rules applying commonly
-    $dsWindow.Title = SetWindowTitle		
+    $dsWindow.Title = SetWindowTitle
     InitializeCategory
     InitializeNumSchm
     InitializeBreadCrumb
@@ -238,7 +242,7 @@ function InitializeCategory()
 function InitializeNumSchm()
 {
 	#Adopted from a DocumentService call, which always pulls FILE class numbering schemes
-	$global:numSchems = @($vault.NumberingService.GetNumberingSchemes('FILE', 'Activated')) 
+	$global:numSchems = @($vault.NumberingService.GetNumberingSchemes('FILE', 'Activated'))
     if ($Prop["_CreateMode"].Value)
     {
 		if (-not $Prop["_SaveCopyAsMode"].Value)
@@ -251,7 +255,7 @@ function InitializeNumSchm()
 					{
                         $Prop["_NumSchm"].Value = $numSchm.Name
                     }
-				}	
+				}
 			})
         }
 		else
@@ -312,7 +316,7 @@ function SetWindowTitle
    			else
    			{
     			$windowTitle = "$($UIString["LBL25"]) - $($Prop["_FileName"].Value)"
-   			} 
+   			}
   		}
  	}
   	return $windowTitle
@@ -336,7 +340,7 @@ function GetNumSchms
             $noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
             $noneNumSchm.Name = $UIString["LBL77"]
             return $numSchems += $noneNumSchm
-        }    
+        }
         return $numSchems
     }
 }

@@ -3,9 +3,10 @@ Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Glo
 Initialize-CoolOrange
 function OnTabContextChanged_powerGate($xamlFile) {
 	Open-VaultConnection
-	$servicesNotAvaileble= (Get-ERPServices) | Where-Object { -not $_.Available }
-	if ($servicesNotAvaileble) {
-		$dswindow.FindName("lblStatusMessage").Content = "You are not connected to an ERP system!"
+
+	$erpServices = Get-ERPServices -Available
+	if (-not $erpServices -or $erpServices.Count -le 0) {
+		$dswindow.FindName("lblStatusMessage").Content = "One or more services are not available!"
 		$dswindow.FindName("lblStatusMessage").Foreground = "Red"
 		$dsWindow.IsEnabled = $false
 		return
@@ -70,7 +71,6 @@ function InitMaterialTab {
  	else {
 		$goToEnabled = $true
 	}
-	$searchWindow.FindName("Category").ItemsSource = GetCategoryList
 	$dswindow.FindName("DataGrid").DataContext = $materialTabContext
 	$dsWindow.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
 	$dswindow.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
