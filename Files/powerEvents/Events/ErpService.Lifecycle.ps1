@@ -117,6 +117,14 @@ function RestrictItemRelease($items) {
 	Log -End
 }
 
+function StartSynchronizeJob($file) 
+{
+	# since Synchronize Properties gets triggered already by powerEvents, disable it in the Vault configuration!
+	Write-Host "Adding job 'Synchronize Properties' for file '$($file._Name)' to queue."
+	Add-VaultJob -Name "autodesk.vault.syncproperties" -Parameters @{
+		  "FileVersionIds"=$file.Id;
+		  "QueueCreateDwfJobOnCompletion"=$true} -Description "Synchronize properties of file: '$($file._Name)'"
+}
 
 Register-VaultEvent -EventName UpdateFileStates_Post -Action 'AddPdfJob'
 function AddPdfJob($files, $successful) {
@@ -124,26 +132,29 @@ function AddPdfJob($files, $successful) {
 	if (-not $successful) { return }
 	$releasedFiles = @($files | Where-Object { $_._Extension -in $supportedPdfExtensions -and $_._ReleasedRevision -eq $true })
 	Write-Host "Found '$($releasedFiles.Count)' files which are valid to add a PDF job for!"
-	foreach ($file in $releasedFiles) {
-		# since Synchronize Properties gets triggered already by powerEvents, disable it in the Vault configuration!
-		Write-Host "Adding job 'Synchronize Properties' for file '$($file._Name)' to queue."
-		Add-VaultJob -Name "autodesk.vault.syncproperties" -Parameters @{
-              "FileVersionIds"=$file.Id;
-              "QueueCreateDwfJobOnCompletion"=$true} -Description "Synchronize properties of file: '$($file._Name)'"
+	foreach ($file in $releasedFiles) { 
+		StartSynchronizeJob($file)
 		$jobType = "ErpService.Create.PDF"
 		Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
-		Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
+		Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE"} -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
 	}
 	Log -End
 }
+
 Register-VaultEvent -EventName UpdateItemStates_Post -Action 'AddItemPdfJob'
 function AddItemPdfJob($items) {
 	Log -Begin
 	$releasedItems = @($items | Where-Object { $_._ReleasedRevision -eq $true})
 	foreach ($item in $releasedItems) {
-		$jobType = "Erp.Service.CreatePDFFromItem"
-		Write-Host "Adding job '$jobType' for item '$($item._Name)' to queue."
-		Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $item.Id; "EntityClassId" = "ITEM" } -Description "Create PDF for item '$($item._Name)' and upload to ERP system" -Priority 101
+		$attachedDrawings = Get-VaultItemAssociations -Number $item._Number
+		Write-Host "Found '$($attachedDrawings.Count)' files which are valid to add a PDF job for!"
+		foreach ($file in $attachedDrawings) { 
+			StartSynchronizeJob($file)
+			$jobType = "ErpService.Create.PDF"
+			Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
+			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE"; "ItemNumber" = $item._Number} -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
+		}
+		Log -End
 	}
 	Log -End
 }
