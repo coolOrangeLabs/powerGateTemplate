@@ -10,5 +10,5 @@
     Start-Process -FilePath C:\Windows\explorer.exe -ArgumentList "/select, ""$cfgPath"""
 }
 catch {
-    (ShowMessageBox -Message $_.Exception.Message -Button  "OK" -Icon "Error") | Out-Null
+    ($null = ShowMessageBox -Message $_.Exception.Message -Button  "OK" -Icon "Error")
 }

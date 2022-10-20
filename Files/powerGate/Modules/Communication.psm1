@@ -46,7 +46,7 @@ function ConnectToErpServerWithMessageBox {
 	Log -Begin
 	$powerGateServerErpPluginUrl = CreateUrlFromPGServerName
 	if (-not $powerGateServerErpPluginUrl){
-		ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error | Out-Null
+		$null = ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error
 	}
 	else {
 		Write-Host "Connecting with URL: $powerGateServerErpPluginUrl"

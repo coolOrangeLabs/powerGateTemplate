@@ -8,16 +8,16 @@
 				$matrix = $Application.TransientGeometry.CreateMatrix()
 				$occur = $Document.ComponentDefinition.Occurrences
 				$occur.AddVirtual($number, $matrix)
-				ShowMessageBox -Message "Virtual Component '$number' successfully inserted." -Title "powerGate ERP - Virtual Component" -Icon "Information" | Out-Null
+				$null = ShowMessageBox -Message "Virtual Component '$number' successfully inserted." -Title "powerGate ERP - Virtual Component" -Icon "Information"
 			}
 			catch {
-				ShowMessageBox -Message "'$number' already exists. Please choose another ERP item." -Title "powerGate ERP - Virtual Component" -Icon "Warning"  | Out-Null
+				$null = ShowMessageBox -Message "'$number' already exists. Please choose another ERP item." -Title "powerGate ERP - Virtual Component" -Icon "Warning"
 			}
 		}
 		if ($prop["_FileExt"].Value -eq ".IPT") {
 			$prop["Raw_Number"].Value = $number
 			$prop["Raw_Quantity"].Value = 1
-			ShowMessageBox -Message "Raw Material '$number' successfully inserted." -Title "powerGate ERP - Raw Material" -Icon "Information" | Out-Null
+			$null = ShowMessageBox -Message "Raw Material '$number' successfully inserted." -Title "powerGate ERP - Raw Material" -Icon "Information"
 		}
 	}
 }
@@ -122,7 +122,7 @@ function CreateOrUpdateErpMaterial {
 		if ($? -eq $false) {
 			return
 		}
-		ShowMessageBox -Message "$($createErpMaterialResult.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
+		$null = ShowMessageBox -Message "$($createErpMaterialResult.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"
 		SetEntityProperties -erpMaterial $createErpMaterialResult
 	}
 	else {
@@ -130,7 +130,7 @@ function CreateOrUpdateErpMaterial {
         if ($? -eq $false) {
             return
         }
-		ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
+		$null = ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"
 	}
 
 	RefreshView

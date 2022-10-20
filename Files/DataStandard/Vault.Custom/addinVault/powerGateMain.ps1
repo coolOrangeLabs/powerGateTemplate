@@ -125,7 +125,7 @@ function CreateOrUpdateErpMaterial {
 			return
 		}
 
-		ShowMessageBox -Message "$($createErpMaterialResult.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
+		$null = ShowMessageBox -Message "$($createErpMaterialResult.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"
 		$vaultEntity = GetSelectedObject
 		SetEntityProperties -erpMaterial $createErpMaterialResult -vaultEntity $vaultEntity
 
@@ -136,7 +136,7 @@ function CreateOrUpdateErpMaterial {
         if ($? -eq $false) {
             return
         }
-		ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information" | Out-Null
+		$null = ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"
 		InitMaterialTab
 	}
 
@@ -162,7 +162,7 @@ function LinkErpMaterial {
 		$existingEntity = Get-VaultItem -Number $erpMaterial.Number
 		if ($existingEntity) {
 			if ($existingEntity.MasterId -ne $vaultEntity.MasterId) {
-				ShowMessageBox -Message "The ERP item $($erpMaterial.Number) cannot be assigned!`nAn item with an item number $($existingEntity._Number) already exists." -Button "Ok" -Icon "Warning" | Out-Null
+				$null = ShowMessageBox -Message "The ERP item $($erpMaterial.Number) cannot be assigned!`nAn item with an item number $($existingEntity._Number) already exists." -Button "Ok" -Icon "Warning"
 				return
 			}
 		}
