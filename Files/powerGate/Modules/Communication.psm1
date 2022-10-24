@@ -42,19 +42,7 @@ function CreateUrlFromPGServerName {
 	return $powerGateServerErpPluginUrl;
 
 }
-function ConnectToErpServerWithMessageBox {
-	Log -Begin
-	$powerGateServerErpPluginUrl = CreateUrlFromPGServerName
-	if (-not $powerGateServerErpPluginUrl){
-		$null = ShowMessageBox -Message "The current connected VAULT $($vaultConnection.Vault) is not mapped in the configuration for any ERP.`nChange the configuration and restart vault!" -Icon Error
-	}
-	else {
-		Write-Host "Connecting with URL: $powerGateServerErpPluginUrl"
-		$connected = Connect-ERP -Service $PowerGateServerErpPluginUrl
-		Write-Host "Connected: $connected"
-	}
-	Log -End
-}
+
 # Use this function in Jobs
 function ConnectToConfiguredErpServer {
 	Log -Begin

@@ -184,8 +184,6 @@ function InitializeWindow
 {
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 	Initialize-CoolOrange
-	Disconnect-ERP
-	ConnectToErpServerWithMessageBox
 
 	$erpServices = Get-ERPServices -Available
 	if (-not $erpServices -or $erpServices.Count -le 0) {
