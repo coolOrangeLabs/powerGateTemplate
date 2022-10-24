@@ -22,7 +22,7 @@ Set-LogFilePath -Path $logPath
 
 Write-Host "Starting job 'Create PDF as attachment' for item '$($item._Name)' ..."
 
-ConnectToConfiguredErpServer
+ConnectToPowerGateServer
 
 $attachedDrawings = Get-VaultItemAssociations -Number $item._Number
 foreach ($drawing in $attachedDrawings) {
@@ -35,7 +35,7 @@ foreach ($drawing in $attachedDrawings) {
         Log -Message "Files with extension: '$($drawing._Extension)' are not supported"
         continue
     }
-    
+
     $drawing = Get-VaultFile -File $drawing._FullPath -DownloadPath $workingDirectory
 
     $ipjVaultPath = $vault.DocumentService.GetInventorProjectFileLocation()
@@ -45,7 +45,7 @@ foreach ($drawing in $attachedDrawings) {
     $fastOpen = $openReleasedDrawingsFast -and $drawing._ReleasedRevision
     $downloadedFiles = Save-VaultFile -File $drawing._FullPath -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
     $drawing = $downloadedFiles | select -First 1
-    # InventorServer does not support all target & source formats, you can find all supportet formats here: 
+    # InventorServer does not support all target & source formats, you can find all supportet formats here:
     # https://doc.coolorange.com/projects/powerjobsprocessor/en/stable/jobprocessor/file_conversion/?highlight=InventorServer#supported-format-conversions"
     $openResult = Open-Document -LocalFile $drawing.LocalPath -Options @{ "Project" = $localIpjFile.LocalPath; FastOpen = $fastOpen } -Application InventorServer
     if ($openResult) {
@@ -53,10 +53,10 @@ foreach ($drawing in $attachedDrawings) {
             $configFile = "$($env:POWERJOBS_MODULESDIR)Export\PDF_2D.ini"
         }
         else {
-            $configFile = "$($env:POWERJOBS_MODULESDIR)Export\PDF.dwg" 
-        }                  
+            $configFile = "$($env:POWERJOBS_MODULESDIR)Export\PDF.dwg"
+        }
         $exportResult = Export-Document -Format 'PDF' -To $localPDFfileLocation -Options $configFile
-        if ($exportResult) {       
+        if ($exportResult) {
             $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
             $item = Update-VaultItem -Number $item._Number -AddAttachments @($PDFfile.'Full Path')
 

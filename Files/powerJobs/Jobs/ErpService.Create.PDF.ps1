@@ -31,7 +31,7 @@ if ( @("idw", "dwg") -notcontains $file._Extension ) {
     return
 }
 
-ConnectToConfiguredErpServer
+ConnectToPowerGateServer
 
 $ipjVaultPath = $vault.DocumentService.GetInventorProjectFileLocation()
 $localWorkspaceFolder = ($vaultConnection.WorkingFoldersManager.GetWorkingFolder("$/")).FullPath
@@ -40,7 +40,7 @@ $localIpjFile = (Save-VaultFile -File $ipjVaultPath -DownloadDirectory $localWor
 $fastOpen = $openReleasedDrawingsFast -and $file._ReleasedRevision
 $downloadedFiles = Save-VaultFile -File $file._FullPath -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
 $file = $downloadedFiles | select -First 1
-# InventorServer does not support all target & source formats, you can find all supportet formats here: 
+# InventorServer does not support all target & source formats, you can find all supportet formats here:
 # https://doc.coolorange.com/projects/powerjobsprocessor/en/stable/jobprocessor/file_conversion/?highlight=InventorServer#supported-format-conversions"
 $openResult = Open-Document -LocalFile $file.LocalPath -Options @{ "Project" = $localIpjFile.LocalPath; FastOpen = $fastOpen } -Application InventorServer
 
@@ -49,10 +49,10 @@ if ($openResult) {
         $configFile = "$($env:POWERJOBS_MODULESDIR)Export\PDF_2D.ini"
     }
     else {
-        $configFile = "$($env:POWERJOBS_MODULESDIR)Export\PDF.dwg" 
-    }                  
+        $configFile = "$($env:POWERJOBS_MODULESDIR)Export\PDF.dwg"
+    }
     $exportResult = Export-Document -Format 'PDF' -To $localPDFfileLocation -Options $configFile
-    if ($exportResult) {       
+    if ($exportResult) {
         $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
         $file = Update-VaultFile -File $file._FullPath -AddAttachments @($PDFfile._FullPath)
 
