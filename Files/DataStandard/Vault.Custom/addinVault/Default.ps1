@@ -1,7 +1,7 @@
 ﻿function OnTabContextChanged {
 	$global:ErrorActionPreference = "Stop"
 	$xamlFile = [System.IO.Path]::GetFileName($VaultContext.UserControl.XamlFile)
-	OnTabContextChanged_powerGate -xamlFile $xamlFile	
+	OnTabContextChanged_powerGate -xamlFile $xamlFile
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "CAD BOM.xaml") {
 		$fileMasterId = $vaultContext.SelectedObject.Id
 		$file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
@@ -23,9 +23,7 @@ function OnLogOn {
 
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 	Initialize-CoolOrange
-	Disconnect-ERP
 	Open-VaultConnection
-	ConnectToErpServerWithMessageBox 
 	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.log"
 	Set-LogFilePath -Path $logPath
 }

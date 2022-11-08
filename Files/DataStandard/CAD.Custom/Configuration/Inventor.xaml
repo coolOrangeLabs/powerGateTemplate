@@ -242,7 +242,7 @@
                      IsReadOnly="{Binding Prop[_EditMode].Value}"
                      Visibility="{Binding NumSchmFieldsEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=DSNumSchmsCtrl}" />
             <Label x:Name="lblComments" Content="{Binding UIString[LBL7], FallbackValue=Comments}" Grid.Row="4" BorderThickness="1" Height="Auto"/>
-            <TextBox x:Name="txtComments" Grid.Column="1" Grid.Row="4" TextWrapping="Wrap" Text="{Binding Prop[Comments].Value}" BorderThickness="0,1,1,1" 
+            <TextBox x:Name="txtComments" Grid.Column="1" Grid.Row="4" TextWrapping="Wrap" Text="{Binding Prop[Comments].Value}" BorderThickness="0,1,1,1"
                      VerticalContentAlignment="Top" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="50" MaxWidth="180"/>
             <Border
                 BorderBrush="White"
@@ -305,13 +305,13 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Label x:Name="lblStatusMessage" FontSize="14" Foreground="Red" HorizontalAlignment="Left" FontWeight="Medium" Grid.ColumnSpan="3" BorderThickness="0"/>                    
+                    <Label x:Name="lblStatusMessage" FontSize="14" Foreground="Red" HorizontalAlignment="Left" FontWeight="Medium" Grid.ColumnSpan="3" BorderThickness="0"/>
                 </Grid>
                 <Rectangle Grid.Row="1">
                     <Rectangle.Fill>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
                     </Rectangle.Fill>
-                </Rectangle>                 
+                </Rectangle>
                 <Grid Grid.Row="2" Background="#FFFDFDFD">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>

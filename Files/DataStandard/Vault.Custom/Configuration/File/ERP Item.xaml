@@ -226,7 +226,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Content="Item Category Code" Grid.Column="0" Grid.Row="0" />
-                        <ComboBox Name="Category" SelectedValue="{Binding Entity.Category}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding DataContext.PsList[GetCategoryList], ElementName=MainWindow}" />
+                        <ComboBox Name="Category" SelectedValue="{Binding Entity.Category}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="1" Grid.Row="0"  />
 
                         <Label Content="Search Description" Grid.Column="0" Grid.Row="1" />
                         <TextBox Text="{Binding Entity.SearchDescription}" Grid.Column="1" Grid.Row="1" />

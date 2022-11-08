@@ -28,7 +28,7 @@ if ( @("idw", "dwg") -notcontains $file._Extension ) {
     return
 }
 
-ConnectToConfiguredErpServer
+ConnectToPowerGateServer
 
 $ipjVaultPath = $vault.DocumentService.GetInventorProjectFileLocation()
 $workingDirectory = ($vaultConnection.WorkingFoldersManager.GetWorkingFolder("$/")).FullPath
