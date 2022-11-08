@@ -19,19 +19,19 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
 	#Attention!!! When changing inside this function please check if you have to change somthing in "Check-Boms" function, beacause the functions are similare
 	Log -Begin
 	$number = GetEntityNumber -Entity $Entity
-	if(-not $number) {
+	if (-not $number) {
 		Add-VaultRestriction -EntityName $number -Message "There is no erp material linked to this entity!"
 	}
 
 	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 	if ($? -eq $false) {
 		return
-    }
+	}
 
 	if (-not $erpMaterial) {
-        Add-VaultRestriction -EntityName $number -Message "An item with the number '$($number)' does not exist in the ERP system."
+		Add-VaultRestriction -EntityName $number -Message "An item with the number '$($number)' does not exist in the ERP system."
 		return
-    }
+	}
 	if ($Entity._Extension -eq "ipt") {
 		return
 	}
@@ -44,15 +44,15 @@ function Test-ErpItemAndBOMForVaultFileOrVaultItem {
 	#>
 
 	$erpBomHeader = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $number } -Expand "BomRows"
-    if ($? -eq $false) {
-        return
-    }
+	if ($? -eq $false) {
+		return
+	}
 
 	if (-not $erpBomHeader) {
-        Log -Message "Bomheader doesn't exist yet and is new!"
+		Log -Message "Bomheader doesn't exist yet and is new!"
 		Add-VaultRestriction -EntityName $number -Message "Open the BOM Window, because the ERP BOM is different then in Vault: BOM does not exist in ERP!"
 		return
-    }
+	}
 
 	Log -Message "Bom head exists! Check if rows need to be added/updated"
 	$vaultBomRows = GetVaultBomRows -Entity $Entity
@@ -117,13 +117,13 @@ function RestrictItemRelease($items) {
 	Log -End
 }
 
-function StartSynchronizeJob($file) 
-{
+function StartSynchronizeJob($file) {
 	# since Synchronize Properties gets triggered already by powerEvents, disable it in the Vault configuration!
 	Write-Host "Adding job 'Synchronize Properties' for file '$($file._Name)' to queue."
 	Add-VaultJob -Name "autodesk.vault.syncproperties" -Parameters @{
-		  "FileVersionIds"=$file.Id;
-		  "QueueCreateDwfJobOnCompletion"=$true} -Description "Synchronize properties of file: '$($file._Name)'"
+		"FileVersionIds"                = $file.Id;
+		"QueueCreateDwfJobOnCompletion" = $true
+	} -Description "Synchronize properties of file: '$($file._Name)'"
 }
 
 Register-VaultEvent -EventName UpdateFileStates_Post -Action 'AddPdfJob'
@@ -136,7 +136,7 @@ function AddPdfJob($files, $successful) {
 		StartSynchronizeJob($file)
 		$jobType = "ErpService.Create.PDF"
 		Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
-		Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE"} -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
+		Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE" } -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
 	}
 	Log -End
 }
@@ -144,7 +144,7 @@ function AddPdfJob($files, $successful) {
 Register-VaultEvent -EventName UpdateItemStates_Post -Action 'AddItemPdfJob'
 function AddItemPdfJob($items) {
 	Log -Begin
-	$releasedItems = @($items | Where-Object { $_._ReleasedRevision -eq $true})
+	$releasedItems = @($items | Where-Object { $_._ReleasedRevision -eq $true })
 	foreach ($item in $releasedItems) {
 		$attachedDrawings = Get-VaultItemAssociations -Number $item._Number
 		Write-Host "Found '$($attachedDrawings.Count)' files which are valid to add a PDF job for!"
@@ -152,7 +152,7 @@ function AddItemPdfJob($items) {
 			StartSynchronizeJob($file)
 			$jobType = "ErpService.Create.PDF"
 			Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
-			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE"; "ItemNumber" = $item._Number} -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
+			Add-VaultJob -Name $jobType -Parameters @{ "EntityId" = $file.Id; "EntityClassId" = "FILE"; "ItemNumber" = $item._Number } -Description "Create PDF for file '$($file._Name)' and upload to ERP system" -Priority 110
 		}
 		Log -End
 	}

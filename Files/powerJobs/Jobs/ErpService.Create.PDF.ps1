@@ -54,8 +54,7 @@ if ($openResult) {
         $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
         $file = Update-VaultFile -File $file._FullPath -AddAttachments @($PDFfile._FullPath)
         
-        if($Job.ItemNumber)
-        {
+        if ($Job.ItemNumber) {
             # Make sure you have permissions to modify released items before you use this Job for items with lifecycle change
             Update-VaultItem -Number $Job.ItemNumber -AddAttachments @($PDFfile._FullPath)
         }
