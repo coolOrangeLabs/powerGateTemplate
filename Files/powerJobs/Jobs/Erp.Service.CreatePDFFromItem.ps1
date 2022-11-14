@@ -15,6 +15,9 @@ $hidePDF = $false
 
 # To enable faster opening of released Inventor drawings without downloading and opening their model files set Yes, otherwise No
 $openReleasedDrawingsFast = $true
+
+# Define for test and production Vaults, on which host the powergateServer runs
+$vaultToPgsMapping = @{ 'Vault' = $vaultConnection.Server; 'TestVault' = 'localhost'}
 #endregion
 
 $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.log"
@@ -22,7 +25,15 @@ Set-LogFilePath -Path $logPath
 
 Write-Host "Starting job 'Create PDF as attachment' for item '$($item._Name)' ..."
 
-ConnectToPowerGateServer
+if ($vaultConnection.Vault -notin $vaultToPgsMapping.Keys) {
+	throw "The currently connected Vault '$($vaultConnection.Vault)' is not mapped to any powerGateServer URL. Please extend the configuration and re-submit the job!"
+}
+
+Write-Host "Connecting to powerGateServer on: $($vaultToPgsMapping[$vaultConnection.Vault])"
+$connected = Connect-ERP -Service "http://$($vaultToPgsMapping[$vaultConnection.Vault]):8080/PGS/ErpServices"
+if(-not $connected) {
+	throw("Connection to ERP could not be established! Reason: $($Error[0]) (Source: $($Error[0].Exception.Source))")
+}
 
 $attachedDrawings = Get-VaultItemAssociations -Number $item._Number
 foreach ($drawing in $attachedDrawings) {
