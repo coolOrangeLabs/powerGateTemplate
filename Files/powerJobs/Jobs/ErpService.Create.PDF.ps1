@@ -18,9 +18,6 @@ $hidePDF = $false
 $openReleasedDrawingsFast = $true
 #endregion
 
-$localPDFfileLocation = "$workingDirectory\$($file._Name).pdf"
-$vaultPDFfileLocation = $file._EntityPath + "/" + (Split-Path -Leaf $localPDFfileLocation)
-
 $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\ErpService.Create.Pdf-Job.log"
 Set-LogFilePath -Path $logPath
 
@@ -34,15 +31,16 @@ if ( @("idw", "dwg") -notcontains $file._Extension ) {
 ConnectToPowerGateServer
 
 $ipjVaultPath = $vault.DocumentService.GetInventorProjectFileLocation()
-$localWorkspaceFolder = ($vaultConnection.WorkingFoldersManager.GetWorkingFolder("$/")).FullPath
-$localIpjFile = (Save-VaultFile -File $ipjVaultPath -DownloadDirectory $localWorkspaceFolder)[0]
+$workingDirectory = ($vaultConnection.WorkingFoldersManager.GetWorkingFolder("$/")).FullPath
+$localIpjFile = (Save-VaultFile -File $ipjVaultPath -DownloadDirectory $workingDirectory)[0]
 
 $fastOpen = $openReleasedDrawingsFast -and $file._ReleasedRevision
 $downloadedFiles = Save-VaultFile -File $file._FullPath -ExcludeChildren:$fastOpen -ExcludeLibraryContents:$fastOpen
 $file = $downloadedFiles | select -First 1
-# InventorServer does not support all target & source formats, you can find all supportet formats here:
-# https://doc.coolorange.com/projects/powerjobsprocessor/en/stable/jobprocessor/file_conversion/?highlight=InventorServer#supported-format-conversions"
-$openResult = Open-Document -LocalFile $file.LocalPath -Options @{ "Project" = $localIpjFile.LocalPath; FastOpen = $fastOpen } -Application InventorServer
+$openResult = Open-Document -LocalFile $file.LocalPath -Options @{ "Project" = $localIpjFile.LocalPath; FastOpen = $fastOpen } #-Application InventorServer
+
+$localPDFfileLocation = "$workingDirectory\$($file._Name).pdf"
+$vaultPDFfileLocation = $file._EntityPath + "/" + (Split-Path -Leaf $localPDFfileLocation)
 
 if ($openResult) {
     if ($openResult.Application.Name -like 'Inventor*') {
@@ -55,24 +53,21 @@ if ($openResult) {
     if ($exportResult) {
         $PDFfile = Add-VaultFile -From $localPDFfileLocation -To $vaultPDFfileLocation -FileClassification DesignVisualization -Hidden $hidePDF
         $file = Update-VaultFile -File $file._FullPath -AddAttachments @($PDFfile._FullPath)
+        
+        if ($Job.ItemNumber) {
+            # Make sure you have permissions to modify released items before you use this Job for items with lifecycle change
+            Update-VaultItem -Number $Job.ItemNumber -AddAttachments @($PDFfile._FullPath)
+        }
 
         Log -Message "Uploading PDF file $($PDFfile._Name) to ERP system..."
         $d = New-ERPObject -EntityType "Document"
         $d.FileName = $PDFfile._Name
         $d.Number = $file._PartNumber
-        $d.Description = $file._Description
+        $d.Description = $file._Description 
         $uploadPDFToErpResult = Add-ERPMedia -EntitySet "Documents" -Properties $d -ContentType "application/pdf" -File $localPDFfileLocation
     }
     $closeResult = Close-Document
 }
-
-Get-ChildItem -LiteralPath $workingDirectory -Recurse -File -ErrorAction SilentlyContinue `
-| Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -LiteralPath $workingDirectory -Recurse -Force -ErrorAction SilentlyContinue
-
-Get-ChildItem -LiteralPath $localWorkspaceFolder -Recurse -File `
-| Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -LiteralPath $localWorkspaceFolder -Recurse -Force -ErrorAction SilentlyContinue
 
 if (-not $openResult) {
     throw("Failed to open document $($file.LocalPath)! Reason: $($openResult.Error.Message)")
