@@ -253,7 +253,7 @@ function Transfer-Boms($VaultBoms) {
 
                 $childNumber = GetEntityNumber -entity $vaultBomRow
                 if ($vaultBomRow._Status -eq "Different") {
-                    $getErpBomRowResult = Get-ERPObject -EntitySet "BomRows" -Keys @{ParentNumber = $parentNumber; ChildNumber = $childNumber; Position = $vaultBomRow.Bom_PositionNumber } #warum wird Rückgabewert nicht verwendet? Patrick fragen.
+                    $erpBomRow = Get-ERPObject -EntitySet "BomRows" -Keys @{ParentNumber = $parentNumber; ChildNumber = $childNumber; Position = $vaultBomRow.Bom_PositionNumber } #warum wird Rückgabewert nicht verwendet? Patrick fragen.
                     if ($? -eq $false) {
                         Update-BomWindowEntity -InputObject $vaultBom -Status 'Error' -StatusDetails $vaultBomRow._StatusDetails
                         continue
