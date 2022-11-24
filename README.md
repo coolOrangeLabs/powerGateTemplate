@@ -52,7 +52,7 @@ Install the latest version from the repository [Releases](https://github.com/coo
 This setup contains a powerGate Server plugin. It needs to be installed on the machine that hosts coolOrange powerGate Server.
 
 ### Vault DataStandard customizations & powerEvents
-This setup contains Autodesk Vault DataStandard customizations and coolOrange powerEvents workflow enhancements. It needs to be installed on all Vault client machines. Autodesk Vault DataStandard and coolOrange powerEvents are required on these machines, too.
+This setup contains Autodesk Vault DataStandard customizations and coolOrange powerEvents workflow & UI enhancements. It needs to be installed on all Vault client machines. Autodesk Vault DataStandard and coolOrange powerEvents are required on these machines, too.
 
 ### powerJobs
 This setup contains powerJobs jobs. It needs to be installed on the machine that hosts a Autodesk Vault JobProcessor and coolOrange powerJobs.

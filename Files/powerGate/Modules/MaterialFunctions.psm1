@@ -1,5 +1,4 @@
-﻿$materialEntitySet = "Materials"
-$materialEntityType = "Material"
+﻿$materialEntityType = "Material"
 
 function GetEntityNumber($entity) {
 	if ($entity._EntityTypeID -eq "FILE") {
