@@ -1,4 +1,3 @@
-# return
 #region TO BE REMOVED
 if((Get-Process -Id $PID).ProcessName -eq 'powershell' -and $host.Name.StartsWith('powerEvents')){
 	return
@@ -10,7 +9,7 @@ if([System.Threading.Thread]::CurrentThread.GetApartmentState() -eq 'MTA' -and (
 
 Import-Module powerEvents
 Open-VaultConnection -Server $env:Computername -Vault Vault -User Administrator -Password ""
-$selectedFile = Get-VaultFile -File '$/Designs/MultipageInv.idw'
+$selectedItem = Get-VaultItem -Number 'co-00000'
 
 Import-Module powergate
 Connect-ERP -Service 'http://thomas-rossi:8080/PGS/ErpServices'
@@ -19,6 +18,9 @@ Connect-ERP -Service 'http://thomas-rossi:8080/PGS/ErpServices'
 $global:addinPath = $PSScriptRoot
 Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 Initialize-CoolOrange
+$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.log"
+Set-LogFilePath -Path $logPath
+
 
 
 # if ($vaultConnection.Vault -notin $vaultToPgsMapping.Keys) {
@@ -42,7 +44,7 @@ $erpMaterialTab = [Windows.Markup.XamlReader]::Load($xamlReader)
 #region Initialize viewmodel
 $materialTabContext = New-Object -Type PsObject -Property @{
 	ErpEntity = $null
-	VaultEntity = $selectedFile
+	VaultEntity = $selectedItem
 	IsCreate = $false
 
 	Lists = @{
@@ -72,7 +74,7 @@ $erpMaterialTab_MaterialTypeList.Add_SelectionChanged({
 #endregion Register Validate tab events
 
 $erpMaterialTab_LinkMaterialButton = $erpMaterialTab.FindName("LinkMaterialButton")
-$erpMaterialTab_LinkMaterialButton.IsEnabled = (IsEntityUnlocked -Entity $selectedFile)
+$erpMaterialTab_LinkMaterialButton.IsEnabled = (IsEntityUnlocked -Entity $selectedItem)
 $erpMaterialTab_LinkMaterialButton.Add_Click({
 	param($Sender)
 
@@ -105,7 +107,7 @@ if (-not $erpServices) {
 	return
 }
 
-$number = GetEntityNumber -entity $selectedFile
+$number = GetEntityNumber -entity $selectedItem
 $erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 if(-not $?) {
 	$erpMaterialTab.FindName("lblStatusMessage").Content = $Error[0]
@@ -117,7 +119,7 @@ if(-not $?) {
 
 if (-not $erpMaterial) {
 	$erpMaterial = NewErpMaterial
-	$erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $selectedFile
+	$erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $selectedItem
 	$materialTabContext.IsCreate = $true
 	$materialTabContext.ErpEntity = $erpMaterial
 	$erpMaterialTab.FindName("GoToMaterialButton").IsEnabled = $false
