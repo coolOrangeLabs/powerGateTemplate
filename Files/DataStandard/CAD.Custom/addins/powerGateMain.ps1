@@ -8,16 +8,16 @@
 				$matrix = $Application.TransientGeometry.CreateMatrix()
 				$occur = $Document.ComponentDefinition.Occurrences
 				$occur.AddVirtual($number, $matrix)
-				$null = ShowMessageBox -Message "Virtual Component '$number' successfully inserted." -Title "powerGate ERP - Virtual Component" -Icon "Information"
+				ShowMessageBox -Message "Virtual Component '$number' successfully inserted." -Title "powerGate ERP - Virtual Component" -Icon "Information" | Out-Null
 			}
 			catch {
-				$null = ShowMessageBox -Message "'$number' already exists. Please choose another ERP item." -Title "powerGate ERP - Virtual Component" -Icon "Warning"
+				ShowMessageBox -Message "'$number' already exists. Please choose another ERP item." -Title "powerGate ERP - Virtual Component" -Icon "Warning"  | Out-Null
 			}
 		}
 		if ($prop["_FileExt"].Value -eq ".IPT") {
 			$prop["Raw_Number"].Value = $number
 			$prop["Raw_Quantity"].Value = 1
-			$null = ShowMessageBox -Message "Raw Material '$number' successfully inserted." -Title "powerGate ERP - Raw Material" -Icon "Information"
+			ShowMessageBox -Message "Raw Material '$number' successfully inserted." -Title "powerGate ERP - Raw Material" -Icon "Information" | Out-Null
 		}
 	}
 }
@@ -27,7 +27,7 @@ function OpenErpMaterialWindow {
 	$reader = (New-Object System.Xml.XmlNodeReader $windowXaml)
 	$global:window = [Windows.Markup.XamlReader]::Load($reader)
 
-	[xml]$userControlXaml = Get-Content $PSScriptRoot.Replace('\CAD.Custom\addins', '\Vault.Custom\Configuration\File\ERP Item.xaml')
+	[xml]$userControlXaml = Get-Content $PSScriptRoot.Replace('\addins', '\Configuration\ERP Item.xaml')
 	$reader = (New-Object System.Xml.XmlNodeReader $userControlXaml)
 	$global:userControl = [Windows.Markup.XamlReader]::Load($reader)
 
@@ -36,7 +36,7 @@ function OpenErpMaterialWindow {
 
 	$userControl.DataContext = $dsWindow.DataContext
 
-	InitErpMaterialTab -number $prop["Part Number"].Value
+	InitErpMaterialTab_Ds4Inv -number $prop["Part Number"].Value
 
 	if ($window.ShowDialog() -eq "OK") {
 		$materialTabContext = $userControl.FindName("DataGrid").DataContext
@@ -50,7 +50,7 @@ function CloseErpMaterialWindow {
 	$window.Close()
 }
 
-function InitErpMaterialTab($number) {
+function InitErpMaterialTab_Ds4Inv($number) {
 	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 
 	$materialTabContext = New-Object -Type PsObject -Property @{
@@ -69,7 +69,7 @@ function InitErpMaterialTab($number) {
 		$goToEnabled = $true
 	}
 	$userControl.FindName("DataGrid").DataContext = $materialTabContext
-	$userControl.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked
+	$userControl.FindName("LinkMaterialButton").IsEnabled = IsEntityUnlocked_Ds4Inv
 	$userControl.FindName("GoToMaterialButton").IsEnabled = $goToEnabled
 }
 
@@ -81,7 +81,7 @@ function PrepareErpMaterial($erpMaterial) {
 	return $erpMaterial
 }
 
-function IsEntityUnlocked {
+function IsEntityUnlocked_Ds4Inv {
 	$fullFileName = $prop["_FilePath"].Value + "\" + $prop["_FileName"].Value
 	if (Test-Path -Path $fullFileName) {
 		$status = Get-ChildItem $fullFileName
@@ -92,14 +92,14 @@ function IsEntityUnlocked {
 	}
 }
 
-function ValidateErpMaterialTab {
+function ValidateErpMaterialTab_Ds4Inv {
 	$materialTabContext = $userControl.FindName("DataGrid").DataContext
 	$erpMaterial = $materialTabContext.Entity
 	if ($erpMaterial.Number) {
 		$entityUnlocked = $true
 	}
 	else {
-		$entityUnlocked = IsEntityUnlocked
+		$entityUnlocked = IsEntityUnlocked_Ds4Inv
 	}
 
 	#TODO: Setup obligatory fields that need to be filled out to activate the 'Create' button
@@ -114,7 +114,7 @@ function ValidateErpMaterialTab {
 	$userControl.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
 }
 
-function CreateOrUpdateErpMaterial {
+function CreateOrUpdateErpMaterial_Ds4Inv {
 	$materialTabContext = $userControl.FindName("DataGrid").DataContext
 
 	if($materialTabContext.IsCreate) {
@@ -122,21 +122,21 @@ function CreateOrUpdateErpMaterial {
 		if ($? -eq $false) {
 			return
 		}
-		$null = ShowMessageBox -Message "$($createErpMaterialResult.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"
-		SetEntityProperties -erpMaterial $createErpMaterialResult
+		ShowMessageBox -Message "$($createErpMaterialResult.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information" | Out-Null
+		SetEntityProperties_Ds4Inv -erpMaterial $createErpMaterialResult
 	}
 	else {
 		$updateErpMaterialResult = Update-ERPObject -EntitySet "Materials" -Key $materialTabContext.Entity._Keys -Properties $materialTabContext.Entity._Properties
         if ($? -eq $false) {
             return
         }
-		$null = ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"
+		ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
 	}
 
-	RefreshView
+	RefreshView_Ds4Inv
 }
 
-function GoToErpMaterial {
+function GoToErpMaterial_Ds4Inv {
 	$materialTabContext = $userControl.FindName("DataGrid").DataContext
 	$erpMaterial = $materialTabContext.Entity
 	if ($erpMaterial.Link) {
@@ -144,7 +144,7 @@ function GoToErpMaterial {
 	}
 }
 
-function LinkErpMaterial {
+function LinkErpMaterial_Ds4Inv {
 	$erpMaterial = OpenErpSearchWindow
 
 	#TODO: Rename "Part Number" on a german system to "Teilenummer"
@@ -159,18 +159,19 @@ function LinkErpMaterial {
 	}
 
 	$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($erpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
+
 	if ($answer -eq "Yes") {
-		SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
-		RefreshView
+		SetEntityProperties_Ds4Inv -erpMaterial $erpMaterial -vaultEntity $vaultEntity
+		RefreshView_Ds4Inv
 	}
 }
 
-function RefreshView {
+function RefreshView_Ds4Inv {
 	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
-	InitErpMaterialTab -number $prop["Part Number"].Value
+	InitErpMaterialTab_Ds4Inv -number $prop["Part Number"].Value
 }
 
-function SetEntityProperties($erpMaterial) {
+function SetEntityProperties_Ds4Inv($erpMaterial) {
 	#TODO: Update Inventor iProperties with values from ERP
 	$prop["Part Number"].Value = $erpMaterial.Number
 	$prop["Description"].Value = $erpMaterial.Description
@@ -184,6 +185,19 @@ function InitializeWindow
 {
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 	Initialize-CoolOrange
+
+	#todo: remove
+	Connect-ERP -Service 'http://thomas-rossi:8080/PGS/ErpServices'
+
+	# if ($vaultConnection.Vault -notin $vaultToPgsMapping.Keys) {
+	# 	throw "The currently connected Vault '$($vaultConnection.Vault)' is not mapped to any powerGateServer URL. Please extend the configuration and re-submit the job!"
+	# }
+
+	# Write-Host "Connecting to powerGateServer on: $($vaultToPgsMapping[$vaultConnection.Vault])"
+	# $connected = Connect-ERP -Service "http://$($vaultToPgsMapping[$vaultConnection.Vault]):8080/PGS/ErpServices"
+	# if(-not $connected) {
+	# 	throw("Connection to ERP could not be established! Reason: $($Error[0]) (Source: $($Error[0].Exception.Source))")
+	# }
 
 	$erpServices = Get-ERPServices -Available
 	if (-not $erpServices -or $erpServices.Count -le 0) {
