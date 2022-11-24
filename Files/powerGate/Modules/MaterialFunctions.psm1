@@ -25,7 +25,7 @@ function NewErpMaterial {
 function PrepareErpMaterialForCreate($erpMaterial, $vaultEntity) {
 	Log -Begin
 	$number = GetEntityNumber -entity $vaultEntity
-	
+
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
 	else { $descriptionProp = '_Description' }
 
@@ -37,7 +37,7 @@ function PrepareErpMaterialForCreate($erpMaterial, $vaultEntity) {
 		$erpMaterial.Number = "*"
 	}
 
-	
+
 	Log -End
 	return $erpMaterial
 }
@@ -46,7 +46,7 @@ function PrepareErpMaterialForUpdate($erpMaterial, $vaultEntity) {
 	Log -Begin
 
 	$number = GetEntityNumber -entity $vaultEntity
-	
+
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
 	else { $descriptionProp = '_Description' }
 	#TODO: Properties that need to be set on update
@@ -92,4 +92,53 @@ function Update-VaultItemWithErrorHandling {
 	{
 		throw("Vault-File couldn't be updated!")
 	}
+}
+
+function SetEntityProperties($erpMaterial, $vaultEntity) {
+	#TODO: Update Entity UDPs with values from ERP
+	if ($vaultEntity._EntityTypeID -eq "ITEM") {
+		try {
+			Update-VaultItemWithErrorHandling -Number $vaultEntity._Number -Properties @{
+				#the item description cannot be updated, since "Description (Item,CO)" is a system property!
+				"_Description(Item,CO)" = $erpMaterial.Description
+				"_Number" = $erpMaterial.Number
+			}
+		}catch {
+			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
+		}
+	}
+	elseif ($vaultEntity._EntityTypeID -eq "FILE") {
+	try {
+		Update-VaultFileWithErrorHandling -File $vaultEntity._FullPath -Properties @{
+			"_PartNumber"  = $erpMaterial.Number
+			"_Description" = $erpMaterial.Description
+		}
+		} catch {
+			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
+		}
+	}
+}
+
+function CompareErpMaterial($erpMaterial, $vaultEntity) {
+	$number = GetEntityNumber -entity $vaultEntity
+
+	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
+	else { $descriptionProp = '_Description' }
+
+	$differences = @()
+
+	#TODO: Property mapping for material comparison
+	if ($erpMaterial.Number -or $number) {
+		if ($erpMaterial.Number -ne $number) {
+			$differences += "Number - ERP: $($erpMaterial.Number) <> Vault: $number"
+		}
+	}
+
+	if ($erpMaterial.Description -or $vaultEntity.$descriptionProp) {
+		if ($erpMaterial.Description -ne $vaultEntity.$descriptionProp) {
+			$differences += "Description - ERP: $($erpMaterial.Description) <> Vault: $($vaultEntity.$descriptionProp)"
+		}
+	}
+
+	return $differences -join '`n'
 }

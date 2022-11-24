@@ -79,13 +79,13 @@
         </Style>
 
         <ContextMenu x:Key="CellMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-            <MenuItem x:Name="AddFilterMenuItem" Header="Add Column Filter" 
+            <MenuItem x:Name="AddFilterMenuItem" Header="Add Column Filter"
                       CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget}">
                 <MenuItem.Icon>
                     <Image Source="C:\ProgramData\coolOrange\powerGate\UI\Filter.png"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem x:Name="RemoveFilterMenuItem" Header="Remove Column Filter" 
+            <MenuItem x:Name="RemoveFilterMenuItem" Header="Remove Column Filter"
                       CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget}" >
                 <MenuItem.Icon>
                     <Image Source="C:\ProgramData\coolOrange\powerGate\UI\DeleteFilter.png"/>
@@ -232,7 +232,7 @@
                 <ColumnDefinition Width="115"/>
                 <ColumnDefinition Width="115"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Margin="0,0,15,0" Content="OK" Command="{Binding PsCmd[CloseErpSearchWindow]}" Width="100" Height="27"/>
+            <Button x:Name="Ok" Grid.Column="1" Margin="0,0,15,0" Content="OK" Width="100" Height="27"/>
             <Button Grid.Column="2" Margin="0,0,15,0" Content="Cancel" IsCancel="True" Width="100" Height="27" />
         </Grid>
     </Grid>
