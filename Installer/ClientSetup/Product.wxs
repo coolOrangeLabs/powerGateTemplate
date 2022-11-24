@@ -22,15 +22,16 @@
 			   Cabinet="media1.cab"
 			   EmbedCab="yes" />
 
-		<Feature Id="DataStandardCustomization" Title="Vault DataStandard UI Customization">
+		<Feature Id="DataStandardCustomization" Title="Vault DataStandard Customization">
       <ComponentGroupRef Id="SETUP_UI" />
       <ComponentGroupRef Id="HeatGenerated_DataStandardFiles" />
       <ComponentRef Id="CMP_VDS_README" />
     </Feature>
 
-    <Feature Id="PowerEventsFiles" Title="powerEvents Workflow Enhancements">
+    <Feature Id="PowerEventsFiles" Title="powerEvents Workflow and UI Enhancements">
       <ComponentGroupRef Id="HeatGenerated_PowerEventsFiles" />
       <ComponentRef Id="CMP_PE_README" />
+      <ComponentRef Id="CMP_PE_DISABLE_SAMPLE_TAB_SCRIPTS" />
     </Feature>
 
     <Feature Id="PowerGateFiles" Title="powerGate Shared Files">

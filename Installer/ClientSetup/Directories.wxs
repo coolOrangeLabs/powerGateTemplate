@@ -21,6 +21,13 @@
             <Component Id="CMP_PE_README" Guid="*">
               <File Id="FILE_PE_README" KeyPath="yes" Source="..\Resources\README.txt" />
             </Component>
+            <Directory Id="POWEREVENTS_SCRIPTS_DIR" Name="Events">
+              <Directory Id="POWEREVENTS_DISABLEDSCRIPTS_DIR" Name="Disabled"/>
+              <Component Id="CMP_PE_DISABLE_SAMPLE_TAB_SCRIPTS" Guid="7C5FABF5-A487-4521-9E95-61EBA3E51EB5">
+                <CreateFolder/>
+                <CopyFile Id="MoveSampleERPTabsToDisabledFolderBecauseCustomOnceBecomeInstalled" SourceDirectory="POWEREVENTS_SCRIPTS_DIR" SourceName="Sample.*ERP*Tab.ps1*" DestinationDirectory="POWEREVENTS_DISABLEDSCRIPTS_DIR" Delete="yes"/>
+              </Component>
+            </Directory>
           </Directory>
           <Directory Id='POWERGATE_INSTALL' Name='powerGate' >
             <Component Id="CMP_PG_README" Guid="*">
