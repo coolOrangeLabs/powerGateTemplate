@@ -23,7 +23,6 @@ function OnLogOn {
 
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 	Initialize-CoolOrange
-	Open-VaultConnection
 	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.log"
 	Set-LogFilePath -Path $logPath
 }
