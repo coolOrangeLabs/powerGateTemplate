@@ -39,6 +39,8 @@ Connect-ERP -Service 'http://thomas-rossi:8080/PGS/ErpServices'
 $global:addinPath = $PSScriptRoot
 Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 Initialize-CoolOrange
+
+Remove-CoolOrangeLogging
 $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.log"
 Set-LogFilePath -Path $logPath
 
