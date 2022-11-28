@@ -27,7 +27,7 @@ function Add-VaultTab($name, $EntityType, $Action){
 '@)
 	$debugERPTab_window = [Windows.Markup.XamlReader]::Load($xamlReader)
 	$debugERPTab_window.Title = "powerGate Debug Window for Tab: $name"
-    $debugERPTab_window.AddChild($action.InvokeReturnAsIs($selectedFile))
+	$debugERPTab_window.AddChild($action.InvokeReturnAsIs($selectedFile))
 	$debugERPTab_window.ShowDialog()
 }
 
@@ -48,7 +48,7 @@ Set-LogFilePath -Path $logPath
 Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	param($selectedFile)
 
-	$erpItemTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\ERPItem_Tab.xaml")))
+	$Script:erpItemTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\ERPItem_Tab.xaml")))
 
 	#region Initialize viewmodel
 	$materialTabContext = New-Object -Type PsObject -Property @{
@@ -71,33 +71,33 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	$erpItemTab_Description.Add_TextChanged({
 		param($Sender)
 
-		ValidateErpMaterialTab -MaterialTabContext $Sender.DataContext
+		ValidateErpMaterialTab -ErpItemTab $Script:erpItemTab_control
 	})
 
-	$erpItemTab_MaterialTypeList = $erpItemTab_control.FindName('MaterialTypeList')
+	$erpItemTab_MaterialTypeList = $Script:erpItemTab_control.FindName('MaterialTypeList')
 	$erpItemTab_MaterialTypeList.Add_SelectionChanged({
 		param($Sender)
 
-		ValidateErpMaterialTab -MaterialTabContext $Sender.DataContext
+		ValidateErpMaterialTab -ErpItemTab $Script:erpItemTab_control
 	})
 	#endregion Register Validate tab events
 
-	$erpItemTab_LinkMaterialButton = $erpItemTab_control.FindName("LinkMaterialButton")
+	$erpItemTab_LinkMaterialButton = $Script:erpItemTab_control.FindName("LinkMaterialButton")
 	$erpItemTab_LinkMaterialButton.IsEnabled = (IsEntityUnlocked -Entity $selectedFile)
 	$erpItemTab_LinkMaterialButton.Add_Click({
-		param($Sender)
+		param($Sender, $EventArgs)
 
-		LinkErpMaterial -MaterialTabContext $Sender.DataContext
+		LinkErpMaterial -ErpItemTab $Script:erpItemTab_control
 	})
 
-	$erpItemTab_CreateOrUpdateMaterialButton = $erpItemTab_control.FindName("CreateOrUpdateMaterialButton")
+	$erpItemTab_CreateOrUpdateMaterialButton = $Script:erpItemTab_control.FindName("CreateOrUpdateMaterialButton")
 	$erpItemTab_CreateOrUpdateMaterialButton.Add_Click({
 		param($Sender)
 
 		CreateOrUpdateErpMaterial -MaterialTabContext $Sender.DataContext
 	})
 
-	$erpItemTab_GoToMaterialButton = $erpItemTab_control.FindName("GoToMaterialButton")
+	$erpItemTab_GoToMaterialButton = $Script:erpItemTab_control.FindName("GoToMaterialButton")
 	$erpItemTab_GoToMaterialButton.IsEnabled = $true
 	$erpItemTab_GoToMaterialButton.Add_Click({
 		param($Sender)
@@ -109,19 +109,19 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 
 	$erpServices = Get-ERPServices -Available
 	if (-not $erpServices) {
-		$erpItemTab_control.FindName("lblStatusMessage").Content = "One or more services are not available!"
-		$erpItemTab_control.FindName("lblStatusMessage").Foreground = "Red"
-		$erpItemTab_control.IsEnabled = $false
-		return $erpItemTab
+		$Script:erpItemTab_control.FindName("lblStatusMessage").Content = "One or more services are not available!"
+		$Script:erpItemTab_control.FindName("lblStatusMessage").Foreground = "Red"
+		$Script:erpItemTab_control.IsEnabled = $false
+		return $Script:erpItemTab_control
 	}
 
 	$number = GetEntityNumber -entity $selectedFile
 	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 	if(-not $?) {
-		$erpItemTab_control.FindName("lblStatusMessage").Content = $Error[0]
-		$erpItemTab_control.FindName("lblStatusMessage").Foreground = "Red"
-		$erpItemTab_control.IsEnabled = $false
-		return $erpItemTab
+		$Script:erpItemTab_control.FindName("lblStatusMessage").Content = $Error[0]
+		$Script:erpItemTab_control.FindName("lblStatusMessage").Foreground = "Red"
+		$Script:erpItemTab_control.IsEnabled = $false
+		return $Script:erpItemTab_control
 	}
 
 	if (-not $erpMaterial) {
@@ -129,13 +129,16 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 		$erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $selectedFile
 		$materialTabContext.IsCreate = $true
 		$materialTabContext.ErpEntity = $erpMaterial
-		$erpItemTab_control.FindName("GoToMaterialButton").IsEnabled = $false
+		$Script:erpItemTab_control.FindName("GoToMaterialButton").IsEnabled = $false
 	}
 	else {
 		$materialTabContext.ErpEntity = $erpMaterial
-		$erpItemTab_control.FindName("GoToMaterialButton").IsEnabled = $true
+		$Script:erpItemTab_control.FindName("GoToMaterialButton").IsEnabled = $true
 	}
 
-	$erpItemTab_control.DataContext = $materialTabContext
-	ValidateErpMaterialTab
+	$Script:erpItemTab_control.DataContext = $materialTabContext
+	ValidateErpMaterialTab -ErpItemTab $Script:erpItemTab_control
+	#$materialTabContext.IsCreate = $true
+	return $Script:erpItemTab_control
+
 }

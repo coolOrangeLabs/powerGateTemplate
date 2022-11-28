@@ -11,15 +11,17 @@ function IsEntityUnlocked($Entity) {
 }
 
 function ValidateErpMaterialTab {
-	param($MaterialTabContext)
+	param(
+		$ErpItemTab
+	)
 
-	$erpMaterial = $MaterialTabContext.ErpEntity
+	$erpMaterial = $ErpItemTab.DataContext.ErpEntity
 
 	if ($erpMaterial.Number) {
 		$entityUnlocked = $true
 	}
 	else {
-		$entityUnlocked = (IsEntityUnlocked -Entity $MaterialTabContext.VaultEntity)
+		$entityUnlocked = (IsEntityUnlocked -Entity $ErpItemTab.DataContext.VaultEntity)
 	}
 
 	#TODO: Setup obligatory fields that need to be filled out to activate the 'Create' button
@@ -32,7 +34,7 @@ function ValidateErpMaterialTab {
 	}
 	$enabled = $entityUnlocked -and $type -and $description
 
-	$erpMaterialTab.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
+	$ErpItemTab.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
 }
 
 function CreateOrUpdateErpMaterial {
@@ -68,14 +70,16 @@ function GoToErpMaterial {
 }
 
 function LinkErpMaterial {
-	param($MaterialTabContext)
+	param(
+		$ErpItemTab
+	)
 
 	$erpMaterial = OpenErpSearchWindow
 	if (-not $erpMaterial) {
 		return
 	}
 
-	$vaultEntity = $MaterialTabContext.VaultEntity
+	$vaultEntity = $ErpItemTab.DataContext.VaultEntity
 	if ($vaultEntity._EntityTypeID -eq "ITEM") {
 		$existingEntity = Get-VaultItem -Number $erpMaterial.Number
 		if ($existingEntity) {
@@ -101,7 +105,7 @@ function LinkErpMaterial {
 	$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($erpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
 	if ($answer -eq [System.Windows.Forms.DialogResult]::Yes) {
 		SetEntityProperties -erpMaterial $erpMaterial -vaultEntity $vaultEntity
-		$erpMaterialTab.DataContext.ErpEntity = $erpMaterial
+		$ErpItemTab.DataContext.ErpEntity = $erpMaterial
 		[System.Windows.Forms.SendKeys]::SendWait("{F5}")
 	}
 }

@@ -11,6 +11,27 @@ Import-Module powerEvents
 Open-VaultConnection -Server $env:Computername -Vault Vault -User Administrator -Password ""
 $selectedItem = Get-VaultItem -Number 'co-00000'
 
+function Add-VaultTab($name, $EntityType, $Action){
+	Add-Type -AssemblyName PresentationFramework
+
+	$xamlReader = New-Object System.Xml.XmlNodeReader ([xml]@'
+	<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+		<Window.Resources>
+			<Style TargetType="{x:Type Window}">
+				<Setter Property="FontFamily" Value="Segoe UI" />
+				<Setter Property="Background" Value="#FFFDFDFD" />
+			</Style>
+		</Window.Resources>
+	</Window>
+'@)
+	$debugERPTab_window = [Windows.Markup.XamlReader]::Load($xamlReader)
+	$debugERPTab_window.Title = "powerGate Debug Window for Tab: $name"
+	$debugERPTab_window.AddChild($action.InvokeReturnAsIs($selectedItem))
+	$debugERPTab_window.ShowDialog()
+}
+
+
 Import-Module powergate
 Connect-ERP -Service 'http://thomas-rossi:8080/PGS/ErpServices'
 #endregion
@@ -24,113 +45,100 @@ $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.
 Set-LogFilePath -Path $logPath
 
 
+Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
+	param($selectedItem)
 
-# if ($vaultConnection.Vault -notin $vaultToPgsMapping.Keys) {
-# 	throw "The currently connected Vault '$($vaultConnection.Vault)' is not mapped to any powerGateServer URL. Please extend the configuration and re-submit the job!"
-# }
+	$Script:erpItemTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\ERPItem_Tab.xaml")))
 
-# Write-Host "Connecting to powerGateServer on: $($vaultToPgsMapping[$vaultConnection.Vault])"
-# $connected = Connect-ERP -Service "http://$($vaultToPgsMapping[$vaultConnection.Vault]):8080/PGS/ErpServices"
-# if(-not $connected) {
-# 	throw("Connection to ERP could not be established! Reason: $($Error[0]) (Source: $($Error[0].Exception.Source))")
-# }
+	#region Initialize viewmodel
+	$materialTabContext = New-Object -Type PsObject -Property @{
+		ErpEntity = $null
+		VaultEntity = $selectedItem
+		IsCreate = $false
 
-#region Initialize material tab
-Add-Type -AssemblyName PresentationFramework
-[xml]$erpMaterialTabXaml = Get-Content -LiteralPath "C:\ProgramData\coolOrange\powerEvents\Events\ErpTab.Item.xaml"
-$xamlReader = [System.Xml.XmlNodeReader]::new($erpMaterialTabXaml)
-$erpMaterialTab = [Windows.Markup.XamlReader]::Load($xamlReader)
-#endregion Initialize material tab
-
-
-#region Initialize viewmodel
-$materialTabContext = New-Object -Type PsObject -Property @{
-	ErpEntity = $null
-	VaultEntity = $selectedItem
-	IsCreate = $false
-
-	Lists = @{
-		UomList = @(GetUnitOfMeasuresList)
-		MaterialTypeList = @(GetMaterialTypeList)
-		CategoryList = @(GetCategoryList)
+		Lists = @{
+			UomList = @(GetUnitOfMeasuresList)
+			MaterialTypeList = @(GetMaterialTypeList)
+			CategoryList = @(GetCategoryList)
+		}
 	}
+	#endregion Initialize viewmodel
+
+
+	#region Initialize UI Components
+	#region Register Validate tab events
+	$erpItemTab_Description = $erpItemTab_control.FindName('Description')
+	$erpItemTab_Description.Add_TextChanged({
+		param($Sender)
+
+		ValidateErpMaterialTab -ErpItemTab $Script:erpItemTab_control
+	})
+
+	$erpItemTab_MaterialTypeList = $Script:erpItemTab_control.FindName('MaterialTypeList')
+	$erpItemTab_MaterialTypeList.Add_SelectionChanged({
+		param($Sender)
+
+		ValidateErpMaterialTab -ErpItemTab $Script:erpItemTab_control
+	})
+	#endregion Register Validate tab events
+
+	$erpItemTab_LinkMaterialButton = $Script:erpItemTab_control.FindName("LinkMaterialButton")
+	$erpItemTab_LinkMaterialButton.IsEnabled = (IsEntityUnlocked -Entity $selectedItem)
+	$erpItemTab_LinkMaterialButton.Add_Click({
+		param($Sender, $EventArgs)
+
+		LinkErpMaterial -ErpItemTab $Script:erpItemTab_control
+	})
+
+	$erpItemTab_CreateOrUpdateMaterialButton = $Script:erpItemTab_control.FindName("CreateOrUpdateMaterialButton")
+	$erpItemTab_CreateOrUpdateMaterialButton.Add_Click({
+		param($Sender)
+
+		CreateOrUpdateErpMaterial -MaterialTabContext $Sender.DataContext
+	})
+
+	$erpItemTab_GoToMaterialButton = $Script:erpItemTab_control.FindName("GoToMaterialButton")
+	$erpItemTab_GoToMaterialButton.IsEnabled = $true
+	$erpItemTab_GoToMaterialButton.Add_Click({
+		param($Sender)
+
+		GoToErpMaterial -MaterialTabContext $Sender.DataContext
+	})
+	#endregion Initialize UI Components
+
+
+	$erpServices = Get-ERPServices -Available
+	if (-not $erpServices) {
+		$Script:erpItemTab_control.FindName("lblStatusMessage").Content = "One or more services are not available!"
+		$Script:erpItemTab_control.FindName("lblStatusMessage").Foreground = "Red"
+		$Script:erpItemTab_control.IsEnabled = $false
+		return $Script:erpItemTab_control
+	}
+
+	$number = GetEntityNumber -entity $selectedItem
+	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
+	if(-not $?) {
+		$Script:erpItemTab_control.FindName("lblStatusMessage").Content = $Error[0]
+		$Script:erpItemTab_control.FindName("lblStatusMessage").Foreground = "Red"
+		$Script:erpItemTab_control.IsEnabled = $false
+		return $Script:erpItemTab_control
+	}
+
+	if (-not $erpMaterial) {
+		$erpMaterial = NewErpMaterial
+		$erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $selectedItem
+		$materialTabContext.IsCreate = $true
+		$materialTabContext.ErpEntity = $erpMaterial
+		$Script:erpItemTab_control.FindName("GoToMaterialButton").IsEnabled = $false
+	}
+	else {
+		$materialTabContext.ErpEntity = $erpMaterial
+		$Script:erpItemTab_control.FindName("GoToMaterialButton").IsEnabled = $true
+	}
+
+	$Script:erpItemTab_control.DataContext = $materialTabContext
+	ValidateErpMaterialTab -ErpItemTab $Script:erpItemTab_control
+	#$materialTabContext.IsCreate = $true
+	return $Script:erpItemTab_control
+
 }
-#endregion Initialize viewmodel
-
-
-#region Initialize UI Components
-#region Register Validate tab events
-$erpMaterialTab_Description = $erpMaterialTab.FindName('Description')
-$erpMaterialTab_Description.Add_TextChanged({
-	param($Sender)
-
-	ValidateErpMaterialTab -MaterialTabContext $Sender.DataContext
-})
-
-$erpMaterialTab_MaterialTypeList = $erpMaterialTab.FindName('MaterialTypeList')
-$erpMaterialTab_MaterialTypeList.Add_SelectionChanged({
-	param($Sender)
-
-	ValidateErpMaterialTab -MaterialTabContext $Sender.DataContext
-})
-#endregion Register Validate tab events
-
-$erpMaterialTab_LinkMaterialButton = $erpMaterialTab.FindName("LinkMaterialButton")
-$erpMaterialTab_LinkMaterialButton.IsEnabled = (IsEntityUnlocked -Entity $selectedItem)
-$erpMaterialTab_LinkMaterialButton.Add_Click({
-	param($Sender)
-
-	LinkErpMaterial -MaterialTabContext $Sender.DataContext
-})
-
-$erpMaterialTab_CreateOrUpdateMaterialButton = $erpMaterialTab.FindName("CreateOrUpdateMaterialButton")
-$erpMaterialTab_CreateOrUpdateMaterialButton.Add_Click({
-	param($Sender)
-
-	CreateOrUpdateErpMaterial -MaterialTabContext $Sender.DataContext
-})
-
-$erpMaterialTab_GoToMaterialButton = $erpMaterialTab.FindName("GoToMaterialButton")
-$erpMaterialTab_GoToMaterialButton.IsEnabled = $true
-$erpMaterialTab_GoToMaterialButton.Add_Click({
-	param($Sender)
-
-	GoToErpMaterial -MaterialTabContext $Sender.DataContext
-})
-#endregion Initialize UI Components
-
-
-$erpServices = Get-ERPServices -Available
-if (-not $erpServices) {
-	$erpMaterialTab.FindName("lblStatusMessage").Content = "One or more services are not available!"
-	$erpMaterialTab.FindName("lblStatusMessage").Foreground = "Red"
-	$erpMaterialTab.IsEnabled = $false
-	$erpMaterialTab.ShowDialog()
-	return
-}
-
-$number = GetEntityNumber -entity $selectedItem
-$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
-if(-not $?) {
-	$erpMaterialTab.FindName("lblStatusMessage").Content = $Error[0]
-	$erpMaterialTab.FindName("lblStatusMessage").Foreground = "Red"
-	$erpMaterialTab.IsEnabled = $false
-	$tab_control.ShowDialog()
-	return
-}
-
-if (-not $erpMaterial) {
-	$erpMaterial = NewErpMaterial
-	$erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $selectedItem
-	$materialTabContext.IsCreate = $true
-	$materialTabContext.ErpEntity = $erpMaterial
-	$erpMaterialTab.FindName("GoToMaterialButton").IsEnabled = $false
-}
-else {
-	$materialTabContext.ErpEntity = $erpMaterial
-	$erpMaterialTab.FindName("GoToMaterialButton").IsEnabled = $true
-}
-
-$erpMaterialTab.DataContext = $materialTabContext
-ValidateErpMaterialTab
-$erpMaterialTab.ShowDialog()
