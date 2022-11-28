@@ -1,10 +1,9 @@
-<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:behaviours="clr-namespace:Common.Wpf;assembly=Common" behaviours:TabTitleBehavior.TabTitle="ERP BOM" x:Name="MainWindow">
-	<UserControl.Resources>
+<ScrollViewer xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<ScrollViewer.Resources>
 		<BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
 
-		<Style TargetType="{x:Type UserControl}">
+		<Style TargetType="{x:Type ScrollViewer}">
 			<Setter Property="FontFamily" Value="Segoe UI" />
 			<Setter Property="Background" Value="#FFFDFDFD" />
 		</Style>
@@ -77,7 +76,7 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-	</UserControl.Resources>
+	</ScrollViewer.Resources>
 
 	<Grid Height="auto">
 		<Grid.RowDefinitions>
@@ -101,8 +100,8 @@
 					</Style>
 				</Label.Style>
 			</Label>
-			<Button Grid.Row="0" Grid.Column="1" x:Name="CreateOrUpdateMaterialButton" Content="BOM Transfer..." Command="{Binding PsCmd[ShowBomWindow]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
-			<Button Grid.Row="0" Grid.Column="2" x:Name="GoToBomButton" Content="Open BOM in ERP..." Command="{Binding PsCmd[GoToErpBom]}" DataContext="{Binding DataContext, ElementName=MainWindow}" Width="136" Margin="0,0,14,0" />
+			<Button Grid.Row="0" Grid.Column="1" x:Name="ShowBomWindowButton" Content="BOM Transfer..." Width="136" Margin="0,0,14,0" />
+			<Button Grid.Row="0" Grid.Column="2" x:Name="GoToBomButton" Content="Open BOM in ERP..." Width="136" Margin="0,0,14,0" />
 		</Grid>
 
 		<Rectangle Grid.Row="1">
@@ -132,17 +131,17 @@
 						<ColumnDefinition MinWidth="100" Width="*"/>
 					</Grid.ColumnDefinitions>
 					<Label Content="Number" Grid.Row="0" Grid.Column="0" />
-					<TextBox Text="{Binding Number}" Grid.Row="0" Grid.Column="1" IsReadOnly="True" />
+					<TextBox Text="{Binding ErpEntity.Number}" Grid.Row="0" Grid.Column="1" IsReadOnly="True" />
 					<Label Content="Description" Grid.Column="0" Grid.Row="1" />
-					<TextBox Text="{Binding Description}" Grid.Column="1" Grid.Row="1" IsReadOnly="True"/>
+					<TextBox Text="{Binding ErpEntity.Description}" Grid.Column="1" Grid.Row="1" IsReadOnly="True"/>
 					<Label Content="State" Grid.Row="0" Grid.Column="3" />
-					<ComboBox Grid.Row="0" Grid.Column="4" SelectedValue="{Binding State}" DisplayMemberPath="Value" SelectedValuePath="Key" IsEnabled="False" ItemsSource="{Binding DataContext.PsList[GetBOMStateList], ElementName=MainWindow}" />
+					<ComboBox Grid.Row="0" Grid.Column="4" SelectedValue="{Binding ErpEntity.State}" DisplayMemberPath="Value" SelectedValuePath="Key" IsEnabled="False" ItemsSource="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=DataContext.Lists[BomStatesList]}" />
 					<Label Content="Last Modified Date" Grid.Column="3" Grid.Row="1" />
-					<TextBox Text="{Binding ModifiedDate}" Grid.Column="4" Grid.Row="1" IsReadOnly="True" />
+					<TextBox Text="{Binding ErpEntity.ModifiedDate}" Grid.Column="4" Grid.Row="1" IsReadOnly="True" />
 				</Grid>
 			</GroupBox>
 
-			<DataGrid Grid.Row="1" ItemsSource="{Binding BomRows}" AutoGenerateColumns="False" ScrollViewer.CanContentScroll="False" HorizontalGridLinesBrush="WhiteSmoke" VerticalGridLinesBrush="WhiteSmoke" Background="White" Margin="6" Focusable="False" SelectionMode="Single" IsReadOnly="True">
+			<DataGrid Grid.Row="1" ItemsSource="{Binding ErpEntity.BomRows}" AutoGenerateColumns="False" ScrollViewer.CanContentScroll="False" HorizontalGridLinesBrush="WhiteSmoke" VerticalGridLinesBrush="WhiteSmoke" Background="White" Margin="6" Focusable="False" SelectionMode="Single" IsReadOnly="True">
 				<DataGrid.Columns>
 					<DataGridTextColumn Binding="{Binding Position}" Header="Position" Width="60" IsReadOnly="True" SortDirection="Ascending">
 						<DataGridTextColumn.HeaderStyle>
@@ -176,7 +175,7 @@
 					<DataGridComboBoxColumn SelectedValueBinding="{Binding Path=UnitOfMeasure}" Header="Base UOM" Width="80" IsReadOnly="True" DisplayMemberPath="Value" SelectedValuePath="Key">
 						<DataGridComboBoxColumn.ElementStyle>
 							<Style TargetType="ComboBox">
-								<Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PsList[GetUnitOfMeasuresList]}"/>
+								<Setter Property="ItemsSource" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=DataContext.Lists[UomList]}"/>
 							</Style>
 						</DataGridComboBoxColumn.ElementStyle>
 					</DataGridComboBoxColumn>
@@ -202,4 +201,4 @@
 			<Image Grid.Column="2" Source="C:\ProgramData\coolOrange\powerGate\UI\powerGate.ico" Width="16" Height="16" Margin="0,0,16,0" Opacity="0.5" />
 		</Grid>
 	</Grid>
-</UserControl>
+</ScrollViewer>

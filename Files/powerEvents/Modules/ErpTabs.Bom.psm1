@@ -1,21 +1,18 @@
-function InitBomTab {
-	$entity = GetSelectedObject
-	$number = GetEntityNumber -entity $entity
-	$getErpBomHeaderResult = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $number } -Expand "BomRows"
+function ShowBomWindow {
+	param(
+		$VaultEntity
+	)
 
-	if(-not $getErpBomHeaderResult) {
-		$goToEnabled = $false
-	}
-	else {
-		$goToEnabled = $true
-	}
-	$dswindow.FindName("DataGrid").DataContext = $getErpBomHeaderResult
-	$dswindow.FindName("GoToBomButton").IsEnabled = $goToEnabled
+	Show-BomWindow -Entity $VaultEntity
+	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
 }
 
 function GoToErpBom {
-	$bom = $dswindow.FindName("DataGrid").DataContext
-	if ($bom.Link) {
-		Start-Process -FilePath $bom.Link
+	param(
+		$ErpEntity
+	)
+
+	if ($ErpEntity.Link) {
+		Start-Process -FilePath $ErpEntity.Link
 	}
 }
