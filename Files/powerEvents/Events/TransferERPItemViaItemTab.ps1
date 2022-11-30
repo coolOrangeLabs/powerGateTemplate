@@ -57,7 +57,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	param($selectedItem)
 	$erpItemTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\TransferERPItemTab.xaml")))
 
-	$statusMessage_label = $erpItemTab_control.FindName("lblStatusMessage")
+	$statusMessage_label = $erpItemTab_control.FindName('lblStatusMessage')
 	$erpServices = Get-ERPServices -Available
 	if (-not $erpServices) {
 		$statusMessage_label.Content = "One or more services are not available!"
@@ -78,7 +78,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	$Script:erpItemTab_CreateOrUpdateMaterialButton = $erpItemTab_control.FindName('CreateOrUpdateMaterialButton')
 	$erpItemTab_GoToMaterialButton = $erpItemTab_control.FindName('GoToMaterialButton')
 
-	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $selectedItem._Number  }
+	$Script:erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $selectedItem._Number  }
 	if(-not $?) {
 		$statusMessage_label.Content = $Error[0]
 		$statusMessage_label.Foreground = "Red"
@@ -89,7 +89,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	if (-not $erpMaterial) {
 		$statusMessage_label.Content = 'ERP: Create Material'
 
-		$erpMaterial = NewErpMaterial
+		$Script:erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $selectedItem
 
 		$erpItemTab_CreateOrUpdateMaterialButton.Content = 'Create ERP Item'
@@ -139,11 +139,9 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	}
 	$erpItemTab_control.DataContext = $erpMaterial
 
-	$item = $vault.ItemService.GetLatestItemByItemMasterId($selectedItem.MasterId)
-	$entityUnlocked =$item.Locked -ne $true
-
+	$Script:entityUnlocked = $vault.ItemService.GetLatestItemByItemMasterId($selectedItem.MasterId).Locked -ne $true
 	$erpItemTab_LinkMaterialButton = $erpItemTab_control.FindName('LinkMaterialButton')
-	$erpItemTab_LinkMaterialButton.IsEnabled = $item.Locked -ne $true
+	$erpItemTab_LinkMaterialButton.IsEnabled = $entityUnlocked
 	$erpItemTab_LinkMaterialButton.Add_Click({
 		param($Sender, $EventArgs)
 

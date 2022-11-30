@@ -38,7 +38,6 @@ Remove-CoolOrangeLogging
 $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.log"
 Set-LogFilePath -Path $logPath
 
-
 function CanCreateOrUpdateErpMaterial {
 	param(
 		$erpMaterial
@@ -80,7 +79,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	$Script:erpItemTab_CreateOrUpdateMaterialButton = $erpItemTab_control.FindName('CreateOrUpdateMaterialButton')
 	$erpItemTab_GoToMaterialButton = $erpItemTab_control.FindName('GoToMaterialButton')
 
-	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $selectedFile._PartNumber }
+	$Script:erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $selectedFile._PartNumber }
 	if(-not $?) {
 		$statusMessage_label.Content = $Error[0]
 		$statusMessage_label.Foreground = "Red"
@@ -91,7 +90,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	if (-not $erpMaterial) {
 		$statusMessage_label.Content = 'ERP: Create Material'
 
-		$erpMaterial = NewErpMaterial
+		$Script:erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $selectedFile
 
 		$erpItemTab_CreateOrUpdateMaterialButton.Content = 'Create ERP Item'
@@ -141,7 +140,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	}
 	$erpItemTab_control.DataContext = $erpMaterial
 
-	$entityUnlocked = $selectedFile._VaultStatus.Status.LockState -ne "Locked" -and $selectedFile.IsCheckedOut -ne $true
+	$Script:entityUnlocked = $selectedFile._VaultStatus.Status.LockState -ne "Locked" -and $selectedFile.IsCheckedOut -ne $true
 	$erpItemTab_LinkMaterialButton = $erpItemTab_control.FindName('LinkMaterialButton')
 	$erpItemTab_LinkMaterialButton.IsEnabled = $entityUnlocked
 	$erpItemTab_LinkMaterialButton.Add_Click({
