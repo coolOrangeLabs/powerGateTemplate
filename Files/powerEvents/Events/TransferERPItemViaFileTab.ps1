@@ -1,7 +1,7 @@
 #region Debugging
 if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise')){
 	Import-Module powerEvents
-	
+
 	Open-VaultConnection -Server $env:Computername -Vault Vault -User Administrator -Password ""
 	$selectedFile = Get-VaultFile -File '$/Designs/MultipageInv.idw'
 	
@@ -45,7 +45,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 
 	$erpItemTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\ERPItem_Tab.xaml")))
 	
-	$statusMessage_label = $erpItemTab_control.FindName("lblStatusMessage")
+	$statusMessage_label = $erpItemTab_control.FindName('lblStatusMessage')
 	$erpServices = Get-ERPServices -Available
 	if (-not $erpServices) {
 		$statusMessage_label.Content = "One or more services are not available!"

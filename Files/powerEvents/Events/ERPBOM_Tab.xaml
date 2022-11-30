@@ -131,17 +131,17 @@
 						<ColumnDefinition MinWidth="100" Width="*"/>
 					</Grid.ColumnDefinitions>
 					<Label Content="Number" Grid.Row="0" Grid.Column="0" />
-					<TextBox Text="{Binding ErpEntity.Number}" Grid.Row="0" Grid.Column="1" IsReadOnly="True" />
+					<TextBox Text="{Binding Number}" Grid.Row="0" Grid.Column="1" IsReadOnly="True" />
 					<Label Content="Description" Grid.Column="0" Grid.Row="1" />
-					<TextBox Text="{Binding ErpEntity.Description}" Grid.Column="1" Grid.Row="1" IsReadOnly="True"/>
+					<TextBox Text="{Binding Description}" Grid.Column="1" Grid.Row="1" IsReadOnly="True"/>
 					<Label Content="State" Grid.Row="0" Grid.Column="3" />
-					<ComboBox Grid.Row="0" Grid.Column="4" SelectedValue="{Binding ErpEntity.State}" DisplayMemberPath="Value" SelectedValuePath="Key" IsEnabled="False" ItemsSource="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=DataContext.Lists[BomStatesList]}" />
+					<ComboBox x:Name="BomStates"  Grid.Row="0" Grid.Column="4" SelectedValue="{Binding State}" DisplayMemberPath="Value" SelectedValuePath="Key" IsEnabled="False" />
 					<Label Content="Last Modified Date" Grid.Column="3" Grid.Row="1" />
-					<TextBox Text="{Binding ErpEntity.ModifiedDate}" Grid.Column="4" Grid.Row="1" IsReadOnly="True" />
+					<TextBox Text="{Binding ModifiedDate}" Grid.Column="4" Grid.Row="1" IsReadOnly="True" />
 				</Grid>
 			</GroupBox>
 
-			<DataGrid Grid.Row="1" ItemsSource="{Binding ErpEntity.BomRows}" AutoGenerateColumns="False" ScrollViewer.CanContentScroll="False" HorizontalGridLinesBrush="WhiteSmoke" VerticalGridLinesBrush="WhiteSmoke" Background="White" Margin="6" Focusable="False" SelectionMode="Single" IsReadOnly="True">
+			<DataGrid Grid.Row="1" ItemsSource="{Binding BomRows}" AutoGenerateColumns="False" ScrollViewer.CanContentScroll="False" HorizontalGridLinesBrush="WhiteSmoke" VerticalGridLinesBrush="WhiteSmoke" Background="White" Margin="6" Focusable="False" SelectionMode="Single" IsReadOnly="True">
 				<DataGrid.Columns>
 					<DataGridTextColumn Binding="{Binding Position}" Header="Position" Width="60" IsReadOnly="True" SortDirection="Ascending">
 						<DataGridTextColumn.HeaderStyle>
@@ -172,13 +172,7 @@
 							</Style>
 						</DataGridTextColumn.ElementStyle>
 					</DataGridTextColumn>
-					<DataGridComboBoxColumn SelectedValueBinding="{Binding Path=UnitOfMeasure}" Header="Base UOM" Width="80" IsReadOnly="True" DisplayMemberPath="Value" SelectedValuePath="Key">
-						<DataGridComboBoxColumn.ElementStyle>
-							<Style TargetType="ComboBox">
-								<Setter Property="ItemsSource" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=DataContext.Lists[UomList]}"/>
-							</Style>
-						</DataGridComboBoxColumn.ElementStyle>
-					</DataGridComboBoxColumn>
+					<DataGridComboBoxColumn x:Name="UnitOfMeasureComboboxColumn" SelectedValueBinding="{Binding Path=UnitOfMeasure}" Header="Base UOM" Width="80" IsReadOnly="True" DisplayMemberPath="Value" SelectedValuePath="Key" />
 				</DataGrid.Columns>
 			</DataGrid>
 		</Grid>
