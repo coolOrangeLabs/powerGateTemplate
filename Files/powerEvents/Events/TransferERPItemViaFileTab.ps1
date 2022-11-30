@@ -132,7 +132,26 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	$erpItemTab_LinkMaterialButton.Add_Click({
 		param($Sender, $EventArgs)
 
-		LinkErpMaterial -ErpItemTab $erpItemTab_control
+		$foundErpMaterial = OpenErpSearchWindow
+		if (-not $foundErpMaterial) {
+			return
+		}
+		#TODO: Rename "Part Number" on a german system to "Teilenummer"
+		$existingEntities = Get-VaultFiles -Properties @{"Part Number" = $foundErpMaterial.Number }
+		if ($existingEntities) {
+			$existingEntities = $existingEntities | Where-Object { $_.MasterId -ne $selectedFile.MasterId }
+			$message = ""
+			if ($existingEntities) {
+				$fileNames = $existingEntities._FullPath -join '`n'
+				$message = "The ERP item $($foundErpMaterial.Number) is already assigned to `n$($fileNames).`n"
+			}
+		}
+		
+		$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($foundErpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
+		if ($answer -eq [System.Windows.Forms.DialogResult]::Yes) {
+			SetEntityProperties -erpMaterial $foundErpMaterial -vaultEntity $selectedFile
+			[System.Windows.Forms.SendKeys]::SendWait("{F5}")
+		}
 	})
 
 	$materialTypes_combobox.Add_SelectionChanged({

@@ -133,7 +133,23 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	$erpItemTab_LinkMaterialButton.Add_Click({
 		param($Sender, $EventArgs)
 
-		LinkErpMaterial -ErpItemTab $erpItemTab_control
+		$foundErpMaterial = OpenErpSearchWindow
+		if (-not $foundErpMaterial) {
+			return
+		}
+		$existingEntity = Get-VaultItem -Number $foundErpMaterial.Number
+		if ($existingEntity) {
+			if ($existingEntity.MasterId -ne $selectedItem.MasterId) {
+				$null = ShowMessageBox -Message "The ERP item $($foundErpMaterial.Number) cannot be assigned!`nAn item with an item number $($selectedItem._Number) already exists." -Button "Ok" -Icon "Warning"
+				return
+			}
+		}
+		
+		$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($foundErpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
+		if ($answer -eq [System.Windows.Forms.DialogResult]::Yes) {
+			SetEntityProperties -erpMaterial $foundErpMaterial -vaultEntity $selectedItem
+			[System.Windows.Forms.SendKeys]::SendWait("{F5}")
+		}
 	})
 
 	$materialTypes_combobox.Add_SelectionChanged({
