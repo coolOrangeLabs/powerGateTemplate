@@ -76,7 +76,7 @@ Add-VaultTab -Name 'ERP BOM' -EntityType 'Item' -Action {
 		$erpItemTab_GoToBOMButton.Add_Click({
 			param($Sender)
 	
-			GoToErpBom -ErpEntity $erpBomHeader
+			Start-Process -FilePath $erpBomHeader.Link
 		})
 	}
 	$erpBomTab_control.DataContext = $erpBomHeader
@@ -85,7 +85,8 @@ Add-VaultTab -Name 'ERP BOM' -EntityType 'Item' -Action {
 	$erpItemTab_ShowBomWindowButton.Add_Click({
 		param($Sender, $EventArgs)
 
-		ShowBomWindow -VaultEntity $selectedItem
+		Show-BomWindow -Entity $selectedItem
+		[System.Windows.Forms.SendKeys]::SendWait("{F5}")
 	})
 
 	return $erpBomTab_control

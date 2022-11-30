@@ -1,10 +1,4 @@
-﻿function ShowBomWindow {
-	$entity = GetSelectedObject
-	Show-BomWindow -Entity $entity
-	[System.Windows.Forms.SendKeys]::SendWait("{F5}")
-}
-
-#region BOm Window functions:
+﻿#region BOm Window functions:
 #https://www.coolorange.com/wiki/doku.php?id=powergate:code_reference:commandlets:show-bomwindow:required_functions
 #
 #known limitations:
