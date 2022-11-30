@@ -75,17 +75,39 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	if (-not $erpMaterial) {
 		$statusMessage_label.Content = 'ERP: Create Material'
 
-		$erpItemTab_CreateOrUpdateMaterialButton.Content = 'Create ERP Item'
-		
-		$erpItemTab_GoToMaterialButton.IsEnabled = $false
-
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterialForCreate -erpMaterial $erpMaterial -vaultEntity $selectedItem
+
+		$erpItemTab_CreateOrUpdateMaterialButton.Content = 'Create ERP Item'
+		$erpItemTab_CreateOrUpdateMaterialButton.Add_Click({
+			param($Sender)
+	
+			$createdErpMaterial = Add-ErpObject -EntitySet "Materials" -Properties $erpMaterial
+			if ($? -eq $false) {
+				return
+			}
+	
+			$null = ShowMessageBox -Message "$($createdErpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"
+			SetEntityProperties -erpMaterial $createdErpMaterial -vaultEntity $selectedItem
+	
+			[System.Windows.Forms.SendKeys]::SendWait("{F5}")
+		})
+
+		$erpItemTab_GoToMaterialButton.IsEnabled = $false
 	}
 	else {
 		$statusMessage_label.Content = 'ERP: View/Update Material'
 
 		$erpItemTab_CreateOrUpdateMaterialButton.Content = 'Update ERP Item'
+		$erpItemTab_CreateOrUpdateMaterialButton.Add_Click({
+			param($Sender)
+	
+			$updatedErpMaterial = Update-ERPObject -EntitySet "Materials" -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
+			if ($? -eq $false) {
+				return
+			}
+			$null = ShowMessageBox -Message "$($updatedErpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"
+		})
 
 		$erpItemTab_control.FindName('ModifiedDateLabel').Visibility = 'Visible'
 		$erpItemTab_control.FindName('ModifiedDateTextBox').Visibility = 'Visible'
@@ -93,7 +115,9 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 		$erpItemTab_GoToMaterialButton.Add_Click({
 			param($Sender)
 	
-			GoToErpMaterial -MaterialTabContext $erpMaterial
+			if ($erpMaterial.Link) {
+				Start-Process -FilePath $erpMaterial.Link
+			}
 		})
 
 		$unitOfMeasure_combobox.IsEnabled = $false
@@ -101,14 +125,11 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	}
 	$erpItemTab_control.DataContext = $erpMaterial
 
-	$erpItemTab_CreateOrUpdateMaterialButton.Add_Click({
-		param($Sender)
-
-		CreateOrUpdateErpMaterial -MaterialTabContext $erpMaterial
-	})
+	$item = $vault.ItemService.GetLatestItemByItemMasterId($selectedItem.MasterId)
+	$entityUnlocked =$item.Locked -ne $true
 
 	$erpItemTab_LinkMaterialButton = $erpItemTab_control.FindName('LinkMaterialButton')
-	$erpItemTab_LinkMaterialButton.IsEnabled = (IsEntityUnlocked -Entity $selectedItem)
+	$erpItemTab_LinkMaterialButton.IsEnabled = $item.Locked -ne $true
 	$erpItemTab_LinkMaterialButton.Add_Click({
 		param($Sender, $EventArgs)
 
@@ -118,16 +139,16 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	$materialTypes_combobox.Add_SelectionChanged({
 		param($Sender)
 
-		ValidateErpMaterialTab -ErpItemTab $erpItemTab_control
+		$erpItemTab_CreateOrUpdateMaterialButton.IsEnabled = $entityUnlocked -and (CanCreateOrUpdateErpMaterial $erpMaterial)
 	})
 
 	$erpItemTab_Description = $erpItemTab_control.FindName('Description')
 	$erpItemTab_Description.Add_TextChanged({
 		param($Sender)
 
-		ValidateErpMaterialTab -ErpItemTab $erpItemTab_control
+		$erpItemTab_CreateOrUpdateMaterialButton.IsEnabled = $entityUnlocked -and (CanCreateOrUpdateErpMaterial $erpMaterial)
 	})
 
-	ValidateErpMaterialTab -ErpItemTab $erpItemTab_control
+	$erpItemTab_CreateOrUpdateMaterialButton.IsEnabled = $entityUnlocked -and (CanCreateOrUpdateErpMaterial $erpMaterial)
 	return $erpItemTab_control
 }

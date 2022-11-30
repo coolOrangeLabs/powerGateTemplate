@@ -1,72 +1,16 @@
-function IsEntityUnlocked($Entity) {
-	if ($Entity._EntityTypeID -eq "ITEM") {
-		$item = $vault.ItemService.GetLatestItemByItemMasterId($Entity.MasterId)
-		$entityUnlocked = $item.Locked -ne $true
-	}
-	else {
-		$entityUnlocked = $Entity._VaultStatus.Status.LockState -ne "Locked" -and $Entity.IsCheckedOut -ne $true
-	}
-
-	return $entityUnlocked
-}
-
-function ValidateErpMaterialTab {
+function CanCreateOrUpdateErpMaterial {
 	param(
-		$ErpItemTab
+		$erpMaterial
 	)
 
-	$erpMaterial = $ErpItemTab.DataContext.ErpEntity
-
-	if ($erpMaterial.Number) {
-		$entityUnlocked = $true
-	}
-	else {
-		$entityUnlocked = (IsEntityUnlocked -Entity $ErpItemTab.DataContext.VaultEntity)
-	}
-
 	#TODO: Setup obligatory fields that need to be filled out to activate the 'Create' button
-	$enabled = $false
 	if ($null -ne $erpMaterial.Type -and $erpMaterial.Type -ne "") {
 		$type = $true
 	}
 	if ($null -ne $erpMaterial.Description -and $erpMaterial.Description -ne "") {
 		$description = $true
 	}
-	$enabled = $entityUnlocked -and $type -and $description
-
-	$ErpItemTab.FindName("CreateOrUpdateMaterialButton").IsEnabled = $enabled
-}
-
-function CreateOrUpdateErpMaterial {
-	param($MaterialTabContext)
-
-	if($MaterialTabContext.IsCreate) {
-		$createdErpMaterial = Add-ErpObject -EntitySet "Materials" -Properties $MaterialTabContext.ErpEntity
-		if ($? -eq $false) {
-			return
-		}
-
-		$null = ShowMessageBox -Message "$($createdErpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"
-		SetEntityProperties -erpMaterial $createdErpMaterial -vaultEntity $MaterialTabContext.VaultEntity
-
-		[System.Windows.Forms.SendKeys]::SendWait("{F5}")
-
-		return
-	}
-
-	$updatedErpMaterial = Update-ERPObject -EntitySet "Materials" -Key $MaterialTabContext.ErpEntity._Keys -Properties $MaterialTabContext.ErpEntity._Properties
-	if ($? -eq $false) {
-		return
-	}
-	$null = ShowMessageBox -Message "$($updatedErpMaterial.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"
-}
-
-function GoToErpMaterial {
-	param($MaterialTabContext)
-
-	if ($MaterialTabContext.ErpEntity.Link) {
-		Start-Process -FilePath $MaterialTabContext.ErpEntity.Link
-	}
+	return $type -and $description
 }
 
 function LinkErpMaterial {
