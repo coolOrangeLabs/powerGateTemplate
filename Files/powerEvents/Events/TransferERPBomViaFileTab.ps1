@@ -1,5 +1,5 @@
 #region Debugging
-if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise')){
+if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise') -and $host.Name.StartsWith('powerEvents') -eq $false){
 	Import-Module powerEvents
 	
 	Open-VaultConnection -Server $env:Computername -Vault Vault -User Administrator -Password ""
@@ -25,7 +25,6 @@ if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise')){
 		$debugERPTab_window.ShowDialog()
 	}
 
-
 	Import-Module powergate
 	Connect-ERP -Service 'http://localhost:8080/PGS/ErpServices'
 }
@@ -43,7 +42,7 @@ Set-LogFilePath -Path $logPath
 Add-VaultTab -Name 'ERP BOM' -EntityType 'File' -Action {
 	param($selectedFile)
 
-	$erpBomTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\ERPBOM_Tab.xaml")))
+	$erpBomTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\TransferERPBomTab.xaml")))
 
 	$statusMessage_label = $erpItemTab_control.FindName('lblStatusMessage')
 	$erpServices = Get-ERPServices -Available
@@ -62,8 +61,7 @@ Add-VaultTab -Name 'ERP BOM' -EntityType 'File' -Action {
 
 	$erpItemTab_GoToBOMButton = $erpItemTab_control.FindName('GoToBomButton')
 
-	$number = GetEntityNumber -entity $selectedFile
-	$erpBomHeader = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $number } -Expand "BomRows"
+	$erpBomHeader = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $selectedFile._PartNumber } -Expand "BomRows"
 	if(-not $?) {
 		$statusMessage_label.Content = $Error[0]
 		$statusMessage_label.Foreground = "Red"

@@ -1,5 +1,5 @@
 #region Debugging
-if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise')){
+if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise') -and $host.Name.StartsWith('powerEvents') -eq $false){
 	Import-Module powerEvents
 	
 	Open-VaultConnection -Server $env:Computername -Vault Vault -User Administrator -Password ""
@@ -25,7 +25,6 @@ if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise')){
 		$debugERPTab_window.ShowDialog()
 	}
 
-
 	Import-Module powergate
 	Connect-ERP -Service 'http://localhost:8080/PGS/ErpServices'
 }
@@ -42,7 +41,7 @@ Set-LogFilePath -Path $logPath
 
 Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	param($selectedItem)
-	$erpItemTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\ERPItem_Tab.xaml")))
+	$erpItemTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\TransferERPItemTab.xaml")))
 	
 	$statusMessage_label = $erpItemTab_control.FindName("lblStatusMessage")
 	$erpServices = Get-ERPServices -Available
@@ -65,8 +64,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'Item' -Action {
 	$erpItemTab_CreateOrUpdateMaterialButton = $erpItemTab_control.FindName('CreateOrUpdateMaterialButton')
 	$erpItemTab_GoToMaterialButton = $erpItemTab_control.FindName('GoToMaterialButton')
 
-	$number = GetEntityNumber -entity $selectedItem
-	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
+	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $selectedItem._Number  }
 	if(-not $?) {
 		$statusMessage_label.Content = $Error[0]
 		$statusMessage_label.Foreground = "Red"

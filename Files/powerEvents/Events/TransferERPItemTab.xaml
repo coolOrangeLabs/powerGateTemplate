@@ -109,7 +109,7 @@
 						<ComboBox x:Name="MaterialTypeList" SelectedValue="{Binding Type}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="1" />
 
 						<Label Content="Base Unit of Measure" Grid.Column="3" Grid.Row="0" />
-						<ComboBox Name="UomList" SelectedValue="{Binding UnitOfMeasure}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="0" />
+						<ComboBox Name="UomList" SelectedValue="{Binding UnitOfMeasure}" DisplayMemberPath="Value" SelectedValuePath="Key" Grid.Column="4" Grid.Row="0" />
 
 						<Label x:Name="ModifiedDateLabel" Content="Last Modified Date" Grid.Column="3" Grid.Row="2" />
 						<TextBox x:Name="ModifiedDateTextBox" Text="{Binding ModifiedDate}" Grid.Column="4" Grid.Row="2" IsEnabled="False" />
