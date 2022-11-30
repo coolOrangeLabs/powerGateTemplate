@@ -31,7 +31,7 @@
     <Feature Id="PowerEventsFiles" Title="powerEvents Workflow and UI Enhancements">
       <ComponentGroupRef Id="HeatGenerated_PowerEventsFiles" />
       <ComponentRef Id="CMP_PE_README" />
-      <ComponentRef Id="CMP_PE_DISABLE_SAMPLE_TAB_SCRIPTS" />
+      <ComponentRef Id="CMP_PE_DISABLE_SAMPLE_TABS" />
     </Feature>
 
     <Feature Id="PowerGateFiles" Title="powerGate Shared Files">
