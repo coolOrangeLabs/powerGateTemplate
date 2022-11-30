@@ -40,7 +40,7 @@ Set-LogFilePath -Path $logPath
 
 
 Add-VaultTab -Name 'ERP BOM' -EntityType 'Item' -Action {
-	param($selectedItem)
+	param($Script:SelectedItem)
 
 	$erpBomTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\TransferERPBomTab.xaml")))
 
@@ -61,7 +61,7 @@ Add-VaultTab -Name 'ERP BOM' -EntityType 'Item' -Action {
 
 	$erpItemTab_GoToBOMButton = $erpBomTab_control.FindName('GoToBomButton')
 
-	$erpBomHeader = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $selectedItem._Number } -Expand "BomRows"
+	$erpBomHeader = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $Script:SelectedItem._Number } -Expand "BomRows"
 	if(-not $?) {
 		$statusMessage_label.Content = $Error[0]
 		$statusMessage_label.Foreground = "Red"
@@ -85,7 +85,7 @@ Add-VaultTab -Name 'ERP BOM' -EntityType 'Item' -Action {
 	$erpItemTab_ShowBomWindowButton.Add_Click({
 		param($Sender, $EventArgs)
 
-		Show-BomWindow -Entity $selectedItem
+		Show-BomWindow -Entity $Script:SelectedItem
 		[System.Windows.Forms.SendKeys]::SendWait("{F5}")
 	})
 
