@@ -44,7 +44,7 @@ Add-VaultTab -Name 'ERP BOM' -EntityType 'Item' -Action {
 
 	$erpBomTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\TransferERPBomTab.xaml")))
 
-	$statusMessage_label = $erpItemTab_control.FindName('lblStatusMessage')
+	$statusMessage_label = $erpBomTab_control.FindName('lblStatusMessage')
 	$erpServices = Get-ERPServices -Available
 	if (-not $erpServices) {
 		$statusMessage_label.Content = "One or more services are not available!"
@@ -53,13 +53,13 @@ Add-VaultTab -Name 'ERP BOM' -EntityType 'Item' -Action {
 		return $erpBomTab_control
 	}
 
-	$unitOfMeasure_comboboxColumn = $tab_control.FindName('UnitOfMeasureComboboxColumn')
+	$unitOfMeasure_comboboxColumn = $erpBomTab_control.FindName('UnitOfMeasureComboboxColumn')
 	$unitOfMeasure_comboboxColumn.ItemsSource = @(GetUnitOfMeasuresList)
 
-	$bomStates_combobox = $erpItemTab_control.FindName('BomStates')
+	$bomStates_combobox = $erpBomTab_control.FindName('BomStates')
 	$bomStates_combobox.ItemsSource = @(GetBOMStateList)
 
-	$erpItemTab_GoToBOMButton = $erpItemTab_control.FindName('GoToBomButton')
+	$erpItemTab_GoToBOMButton = $erpBomTab_control.FindName('GoToBomButton')
 
 	$erpBomHeader = Get-ERPObject -EntitySet "BomHeaders" -Keys @{Number = $selectedItem._Number } -Expand "BomRows"
 	if(-not $?) {

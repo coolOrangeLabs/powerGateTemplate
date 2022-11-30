@@ -39,6 +39,21 @@ $logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Vault-powerGate.
 Set-LogFilePath -Path $logPath
 
 
+function CanCreateOrUpdateErpMaterial {
+	param(
+		$erpMaterial
+	)
+
+	#TODO: Setup obligatory fields that need to be filled out to activate the 'Create' button
+	if ($null -ne $erpMaterial.Type -and $erpMaterial.Type -ne "") {
+		$type = $true
+	}
+	if ($null -ne $erpMaterial.Description -and $erpMaterial.Description -ne "") {
+		$description = $true
+	}
+	return $type -and $description
+}
+
 Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	param($selectedFile)
 
@@ -62,7 +77,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	$categories_combobox = $erpItemTab_control.FindName('CategoryList')
 	$categories_combobox.ItemsSource = @(GetCategoryList)
 
-	$erpItemTab_CreateOrUpdateMaterialButton = $erpItemTab_control.FindName('CreateOrUpdateMaterialButton')
+	$Script:erpItemTab_CreateOrUpdateMaterialButton = $erpItemTab_control.FindName('CreateOrUpdateMaterialButton')
 	$erpItemTab_GoToMaterialButton = $erpItemTab_control.FindName('GoToMaterialButton')
 
 	$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $selectedFile._PartNumber }
