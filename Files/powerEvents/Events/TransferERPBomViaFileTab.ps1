@@ -1,10 +1,10 @@
 #region Debugging
 if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise') -and $host.Name.StartsWith('powerEvents') -eq $false){
 	Import-Module powerEvents
-	
+
 	Open-VaultConnection -Server $env:Computername -Vault Vault -User Administrator -Password ""
-	$selectedFile = Get-VaultFile -File '$/Designs/FlcRootItem.iam'
-	
+	$selectedFile = Get-VaultFile -Properties @{ Name = 'FlcRootItem.iam' }
+
 	function Add-VaultTab($name, $EntityType, $Action){
 		Add-Type -AssemblyName PresentationFramework
 
@@ -75,8 +75,8 @@ Add-VaultTab -Name 'ERP BOM' -EntityType 'File' -Action {
 	else {
 		$erpItemTab_GoToBOMButton.Add_Click({
 			param($Sender)
-	
-			Start-Process -FilePath $erpBomHeader.Link
+
+			Start-Process -FilePath $Sender.DataContext.Link
 		})
 	}
 	$erpBomTab_control.DataContext = $erpBomHeader

@@ -4,7 +4,7 @@ if((Get-Process -Id $PID).ProcessName -in @('powershell','powershell_ise') -and 
 
 	Open-VaultConnection -Server $env:Computername -Vault Vault -User Administrator -Password ""
 	$selectedFile = Get-VaultFile -File '$/Designs/MultipageInv.idw'
-	
+
 	function Add-VaultTab($name, $EntityType, $Action){
 		Add-Type -AssemblyName PresentationFramework
 
@@ -58,7 +58,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 	param($selectedFile)
 
 	$erpItemTab_control = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::new([xml](Get-Content "$PSScriptRoot\TransferERPItemTab.xaml")))
-	
+
 	$statusMessage_label = $erpItemTab_control.FindName('lblStatusMessage')
 	$erpServices = Get-ERPServices -Available
 	if (-not $erpServices) {
@@ -87,7 +87,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 		$erpItemTab_control.IsEnabled = $false
 		return $erpItemTab_control
 	}
-	
+
 	if (-not $erpMaterial) {
 		$statusMessage_label.Content = 'ERP: Create Material'
 
@@ -97,15 +97,15 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 		$erpItemTab_CreateOrUpdateMaterialButton.Content = 'Create ERP Item'
 		$erpItemTab_CreateOrUpdateMaterialButton.Add_Click({
 			param($Sender)
-	
+
 			$createdErpMaterial = Add-ErpObject -EntitySet "Materials" -Properties $erpMaterial
 			if ($? -eq $false) {
 				return
 			}
-	
+
 			$null = ShowMessageBox -Message "$($createdErpMaterial.Number) successfully created" -Title "powerGate ERP - Create Material" -Icon "Information"
 			SetEntityProperties -erpMaterial $createdErpMaterial -vaultEntity $selectedFile
-	
+
 			[System.Windows.Forms.SendKeys]::SendWait("{F5}")
 		})
 
@@ -117,7 +117,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 		$erpItemTab_CreateOrUpdateMaterialButton.Content = 'Update ERP Item'
 		$erpItemTab_CreateOrUpdateMaterialButton.Add_Click({
 			param($Sender)
-	
+
 			$updatedErpMaterial = Update-ERPObject -EntitySet "Materials" -Key $erpMaterial._Keys -Properties $erpMaterial._Properties
 			if ($? -eq $false) {
 				return
@@ -130,9 +130,9 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 
 		$erpItemTab_GoToMaterialButton.Add_Click({
 			param($Sender)
-	
-			if ($erpMaterial.Link) {
-				Start-Process -FilePath $erpMaterial.Link
+
+			if ($Sender.DataContext.Link) {
+				Start-Process -FilePath $Sender.DataContext.Link
 			}
 		})
 
@@ -161,7 +161,7 @@ Add-VaultTab -Name 'ERP Item' -EntityType 'File' -Action {
 				$message = "The ERP item $($foundErpMaterial.Number) is already assigned to `n$($fileNames).`n"
 			}
 		}
-		
+
 		$answer = ShowMessageBox -Message ($message + "Do you really want to link the item '$($foundErpMaterial.Number)'?") -Title "powerGate ERP - Link Item" -Button "YesNo" -Icon "Question"
 		if ($answer -eq [System.Windows.Forms.DialogResult]::Yes) {
 			SetEntityProperties -erpMaterial $foundErpMaterial -vaultEntity $selectedFile
