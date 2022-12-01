@@ -229,10 +229,7 @@ function SetEntityProperties($erpMaterial, $vaultEntity) {
 	#TODO: Update Entity UDPs with values from ERP
 	if ($vaultEntity._EntityTypeID -eq "ITEM") {
 		try {
-			Update-VaultItemWithErrorHandling -Number $vaultEntity._Number -Properties @{
-				#the item description cannot be updated, since "Description (Item,CO)" is a system property!
-				"_Description(Item,CO)" = $erpMaterial.Description
-				"_Number" = $erpMaterial.Number
+			Update-VaultItemWithErrorHandling -Number $vaultEntity._Number -ErpMaterial $erpMaterial -Properties @{
 			}
 		}catch {
 			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
