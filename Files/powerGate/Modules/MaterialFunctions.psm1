@@ -80,10 +80,11 @@ function Update-VaultFileWithErrorHandling {
 function Update-VaultItemWithErrorHandling {
 	param (
 		$Number,
+		$erpMaterial,
 		[Hashtable]$Properties
 	)
 	$fehler = $false
-	$updateditem = Update-VaultItem -Number $Number -Properties $Properties
+	$updateditem = Update-VaultItem -Number $Number -Description $erpMaterial.Description -NewNumber $erpMaterial.Number -Properties $Properties
 	foreach($prop in $Properties.GetEnumerator()){
 		if($updateditem.($prop.Key) -ne ($prop.Value)){
 			$fehler = $true
