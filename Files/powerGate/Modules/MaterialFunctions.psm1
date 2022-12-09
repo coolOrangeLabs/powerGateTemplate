@@ -79,10 +79,11 @@ function Update-VaultFileWithErrorHandling {
 function Update-VaultItemWithErrorHandling {
 	param (
 		$Number,
+		$erpMaterial,
 		[Hashtable]$Properties
 	)
 	$fehler = $false
-	$updateditem = Update-VaultItem -Number $Number -Properties $Properties
+	$updateditem = Update-VaultItem -Number $Number -Description $erpMaterial.Description -NewNumber $erpMaterial.Number -Properties $Properties
 	foreach($prop in $Properties.GetEnumerator()){
 		if($updateditem.($prop.Key) -ne ($prop.Value)){
 			$fehler = $true
@@ -98,23 +99,21 @@ function SetEntityProperties($erpMaterial, $vaultEntity) {
 	#TODO: Update Entity UDPs with values from ERP
 	if ($vaultEntity._EntityTypeID -eq "ITEM") {
 		try {
-			Update-VaultItemWithErrorHandling -Number $vaultEntity._Number -Properties @{
-				#the item description cannot be updated, since "Description (Item,CO)" is a system property!
-				"_Description(Item,CO)" = $erpMaterial.Description
-				"_Number" = $erpMaterial.Number
-			}
-		}catch {
+			Update-VaultItemWithErrorHandling -Number $vaultEntity._Number
+		}
+		catch {
 			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
 		}
 	}
 	elseif ($vaultEntity._EntityTypeID -eq "FILE") {
-	try {
-		Update-VaultFileWithErrorHandling -File $vaultEntity._FullPath -Properties @{
-			"_PartNumber"  = $erpMaterial.Number
-			"_Description" = $erpMaterial.Description
+		try {
+			Update-VaultFileWithErrorHandling -File $vaultEntity._FullPath -Properties @{
+				"_PartNumber"  = $erpMaterial.Number
+				"_Description" = $erpMaterial.Description
+			}
 		}
-		} catch {
-			ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
+		catch {
+				ShowMessageBox -Message $_.Exception.Message -Title "powerGate ERP - Link ERP Item" -Button "OK" -Icon "Error"
 		}
 	}
 }

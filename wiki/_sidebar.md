@@ -2,6 +2,10 @@
 <img src="https://user-images.githubusercontent.com/36075173/47220092-12a0cb80-d3b1-11e8-85e2-0f2b17470517.png" align="middle" /> 
 </p>
 
+
+ ## [Download newest Release](https://github.com/coolOrangeProjects/{REPO_NAME}/releases)
+
+
 # Legal + Github Manual
 
 - [Github Quickstart Guide.pdf](https://github.com/coolOrangeLabs/powerGateTemplate/files/5964515/Github.Quickstart.Guide.pdf)
