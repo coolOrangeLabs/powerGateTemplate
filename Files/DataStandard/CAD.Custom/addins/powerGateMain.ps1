@@ -186,9 +186,6 @@ function InitializeWindow
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 	Initialize-CoolOrange
 
-	#todo: remove
-	Connect-ERP -Service 'http://thomas-rossi:8080/PGS/ErpServices'
-
 	# if ($vaultConnection.Vault -notin $vaultToPgsMapping.Keys) {
 	# 	throw "The currently connected Vault '$($vaultConnection.Vault)' is not mapped to any powerGateServer URL. Please extend the configuration and re-submit the job!"
 	# }
