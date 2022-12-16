@@ -16,11 +16,13 @@ function Check-Items($entities) {
 		if (-not $number) {
 			if ($entity._VaultStatus.Status.LockState -eq "Locked") {
 				Update-BomWindowEntity $entity -Status "Error" -StatusDetails "Number is empty! Entity is locked"
-			}else {
+			}
+			else {
 				Update-BomWindowEntity $entity -Status "New" -StatusDetails "Item does not exist in ERP. Will be created."
 			}
 			continue
 		}
+
 
 		$erpMaterial = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 		if ($? -eq $false) {
@@ -33,21 +35,26 @@ function Check-Items($entities) {
 			if ($number.Length -gt 20) {
 				$statusDetails = "The number '$($number)' is longer than 20 characters. The ERP item cannot be created"
 				Update-BomWindowEntity $entity -Status "Error" -StatusDetails $statusDetails
+
+				continue
 			}
+
 			Update-BomWindowEntity $entity -Status "New" -StatusDetails "Item does not exist in ERP. Will be created."
+
+			continue
+		}
+
+
+		if (-not $entity._EntityTypeID) {
+			Update-BomWindowEntity $entity -Status "Identical" -StatusDetails "Virtual Component or Raw Material where no file in Vault is present"
 		}
 		else {
-			if (-not $entity._EntityTypeID) {
-				Update-BomWindowEntity $entity -Status "Identical" -StatusDetails "Virtual Component or Raw Material where no file in Vault is present"
+			$differences = CompareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
+			if ($differences) {
+				Update-BomWindowEntity $entity -Status "Different" -StatusDetails $differences
 			}
 			else {
-				$differences = CompareErpMaterial -erpMaterial $erpMaterial -vaultEntity $entity
-				if ($differences) {
-					Update-BomWindowEntity $entity -Status "Different" -StatusDetails $differences
-				}
-				else {
-					Update-BomWindowEntity $entity -Status "Identical" -StatusDetails "Item is identical between Vault and ERP"
-				}
+				Update-BomWindowEntity $entity -Status "Identical" -StatusDetails "Item is identical between Vault and ERP"
 			}
 		}
 	}
