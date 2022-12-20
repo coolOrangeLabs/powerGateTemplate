@@ -18,11 +18,11 @@ function OpenErpSearchWindow {
 	$searchWindow.FindName("CategoryListSearch").ItemsSource = GetCategoryList -withBlank $true
 
 	$searchWindow.FindName("SearchCriteria").Add_KeyUp({
-		param ($sender, $e)
-		if ($e.Key -eq "Return") {
-			ExecuteErpSearch
-		}
-	})
+			param ($sender, $e)
+			if ($e.Key -eq "Return") {
+				ExecuteErpSearch
+			}
+		})
 
 	<#
 	$searchWindow.FindName("SearchResults").Add_CopyingRowClipboardContent( {
@@ -37,56 +37,58 @@ function OpenErpSearchWindow {
 	#>
 
 	$searchWindow.FindName("Search").add_click({
-		param ($sender, $e)
+			param ($sender, $e)
 
-		ExecuteErpSearch
-	})
+			ExecuteErpSearch
+		})
 
 	$searchWindow.FindName("Clear").add_click({
-		param ($sender, $e)
+			param ($sender, $e)
 
-		$searchCriteria = New-ERPObject -EntityType $materialEntityType
-		$searchWindow.FindName("SearchCriteria").DataContext = $searchCriteria
-		$searchWindow.FindName("SearchResults").ItemsSource = $null
-		$searchWindow.FindName("RecordsFound").Content = ""
-	})
+			$searchCriteria = New-ERPObject -EntityType $materialEntityType
+			$searchWindow.FindName("SearchCriteria").DataContext = $searchCriteria
+			$searchWindow.FindName("SearchResults").ItemsSource = $null
+			$searchWindow.FindName("RecordsFound").Content = ""
+		})
 
 	$searchWindow.FindName("AddFilterMenuItem").add_Click({
-		param ($sender, $e)
+			param ($sender, $e)
 
-		$cell = $sender.CommandParameter
-		$column = $cell.Column
-		$field = $column.SortMemberPath
-		$cellContent = $cell.Content
-		$value = $cellContent.Text
+			$cell = $sender.CommandParameter
+			$column = $cell.Column
+			$field = $column.SortMemberPath
+			$cellContent = $cell.Content
+			$value = $cellContent.Text
 
-		ApplyFilter -key $field -value $value
-	})
+			ApplyFilter -key $field -value $value
+		})
 
 	$searchWindow.FindName("RemoveFilterMenuItem").add_Click({
-		param ($sender, $e)
+			param ($sender, $e)
 
-		$cell = $sender.CommandParameter
-		$column = $cell.Column
-		$field = $column.SortMemberPath
+			$cell = $sender.CommandParameter
+			$column = $cell.Column
+			$field = $column.SortMemberPath
 
-		ApplyFilter -key $field -value $null
-	})
+			ApplyFilter -key $field -value $null
+		})
 
 	$searchWindow.FindName("SearchResults").add_MouseDoubleClick({
-		param ($sender, $e)
+			param ($sender, $e)
 
-		CloseErpSearchWindow
-	})
+			CloseErpSearchWindow
+		})
 
 	$searchWindow.FindName("Ok").add_Click({
-		CloseErpSearchWindow
-	})
+			CloseErpSearchWindow
+		})
 
 	Log -End
 
 	if ($searchWindow.ShowDialog() -eq "OK") {
 		$material = $searchWindow.FindName("SearchResults").SelectedItem
+		$quantity = $searchWindow.FindName("Quantity").Text
+		Add-Member -InputObject $material -Name "Quantity" -Value $quantity -MemberType NoteProperty -Force
 		return $material
 	}
 	else {

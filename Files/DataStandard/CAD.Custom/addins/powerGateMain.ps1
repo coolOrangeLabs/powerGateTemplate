@@ -7,7 +7,33 @@
 			try {
 				$matrix = $Application.TransientGeometry.CreateMatrix()
 				$occur = $Document.ComponentDefinition.Occurrences
-				$occur.AddVirtual($number, $matrix)
+				$virtualComponent = $occur.AddVirtual($number, $matrix)
+
+				# This section allows to automatically define UDPs in Inventor for VirtualComponents
+
+				#$customPropSet = $virtualComponent.Definition.PropertySets.Item('Inventor User Defined Properties')
+				#$customPropSet.Add($erpMaterial.number, "ERP_Number")
+
+				# Section ends #
+
+				# This section allows to add quantity to a VirtualComponent directly through our dialog
+
+				$oAsm = $Application.ActiveDocument
+				$oBOM = $oAsm.ComponentDefinition.BOM
+
+				$bomTapNames = $oBOM.BOMViews | Select -ExpandProperty "Name"
+				$oBomView = ""
+				$allowedView = @("strukturiert", "Structured")
+				foreach ($language in $allowedView) {
+					if ($language -in $bomTapNames) {
+						$oBomView = $oBOM.BOMViews($language)
+					}
+				}
+				$oRow = $oBomView.BOMRows($oBomView.BOMRows.Count)
+				$oRow.TotalQuantity = $erpMaterial.Quantity
+
+				# Section ends #
+
 				ShowMessageBox -Message "Virtual Component '$number' successfully inserted." -Title "powerGate ERP - Virtual Component" -Icon "Information" | Out-Null
 			}
 			catch {
@@ -54,11 +80,11 @@ function InitErpMaterialTab_Ds4Inv($number) {
 	$getErpMaterialResult = Get-ERPObject -EntitySet "Materials" -Keys @{ Number = $number }
 
 	$materialTabContext = New-Object -Type PsObject -Property @{
-		Entity = $getErpMaterialResult
+		Entity   = $getErpMaterialResult
 		IsCreate = $false
 	}
 
-	if(-not $getErpMaterialResult) {
+	if (-not $getErpMaterialResult) {
 		$erpMaterial = NewErpMaterial
 		$erpMaterial = PrepareErpMaterial -erpMaterial $erpMaterial
 		$materialTabContext.IsCreate = $true
@@ -117,7 +143,7 @@ function ValidateErpMaterialTab_Ds4Inv {
 function CreateOrUpdateErpMaterial_Ds4Inv {
 	$materialTabContext = $userControl.FindName("DataGrid").DataContext
 
-	if($materialTabContext.IsCreate) {
+	if ($materialTabContext.IsCreate) {
 		$createErpMaterialResult = Add-ErpObject -EntitySet "Materials" -Properties $materialTabContext.Entity
 		if ($? -eq $false) {
 			return
@@ -127,9 +153,9 @@ function CreateOrUpdateErpMaterial_Ds4Inv {
 	}
 	else {
 		$updateErpMaterialResult = Update-ERPObject -EntitySet "Materials" -Key $materialTabContext.Entity._Keys -Properties $materialTabContext.Entity._Properties
-        if ($? -eq $false) {
-            return
-        }
+		if ($? -eq $false) {
+			return
+		}
 		ShowMessageBox -Message "$($updateErpMaterialResult.Number) successfully updated" -Title "powerGate ERP - Update Material" -Icon "Information"  | Out-Null
 	}
 
@@ -181,8 +207,7 @@ function SetEntityProperties_Ds4Inv($erpMaterial) {
 
 
 
-function InitializeWindow
-{
+function InitializeWindow {
 	Import-Module "C:\ProgramData\coolOrange\powerGate\Modules\Initialize.psm1" -Global
 	Initialize-CoolOrange
 
@@ -206,174 +231,137 @@ function InitializeWindow
 	$logPath = Join-Path $env:LOCALAPPDATA "coolOrange\Projects\VDS_Inventor-powerGate.log"
 	Set-LogFilePath -Path $logPath
 	#begin rules applying commonly
-    $dsWindow.Title = SetWindowTitle
-    InitializeCategory
-    InitializeNumSchm
-    InitializeBreadCrumb
-    InitializeFileNameValidation
+	$dsWindow.Title = SetWindowTitle
+	InitializeCategory
+	InitializeNumSchm
+	InitializeBreadCrumb
+	InitializeFileNameValidation
 	#end rules applying commonly
 	$mWindowName = $dsWindow.Name
-	switch($mWindowName)
-	{
-		"InventorWindow"
-		{
+	switch ($mWindowName) {
+		"InventorWindow" {
 			#rules applying for Inventor
 		}
-		"AutoCADWindow"
-		{
+		"AutoCADWindow" {
 			#rules applying for AutoCAD
 		}
 	}
 	$global:expandBreadCrumb = $true
 }
 
-function AddinLoaded
-{
+function AddinLoaded {
 	#Executed when DataStandard is loaded in Inventor/AutoCAD
 }
 
-function AddinUnloaded
-{
+function AddinUnloaded {
 	#Executed when DataStandard is unloaded in Inventor/AutoCAD
 }
 
-function InitializeCategory()
-{
-    if ($Prop["_CreateMode"].Value)
-    {
-		if (-not $Prop["_SaveCopyAsMode"].Value)
-		{
-            $Prop["_Category"].Value = $UIString["CAT1"]
-        }
-    }
+function InitializeCategory() {
+	if ($Prop["_CreateMode"].Value) {
+		if (-not $Prop["_SaveCopyAsMode"].Value) {
+			$Prop["_Category"].Value = $UIString["CAT1"]
+		}
+	}
 }
 
-function InitializeNumSchm()
-{
+function InitializeNumSchm() {
 	#Adopted from a DocumentService call, which always pulls FILE class numbering schemes
 	$global:numSchems = @($vault.NumberingService.GetNumberingSchemes('FILE', 'Activated'))
-    if ($Prop["_CreateMode"].Value)
-    {
-		if (-not $Prop["_SaveCopyAsMode"].Value)
-		{
+	if ($Prop["_CreateMode"].Value) {
+		if (-not $Prop["_SaveCopyAsMode"].Value) {
 			$Prop["_Category"].add_PropertyChanged({
-				if ($_.PropertyName -eq "Value")
-				{
-					$numSchm = $numSchems | where {$_.Name -eq $Prop["_Category"].Value}
-                    if($numSchm)
-					{
-                        $Prop["_NumSchm"].Value = $numSchm.Name
-                    }
-				}
-			})
-        }
-		else
-        {
-            $Prop["_NumSchm"].Value = "None"
-        }
-    }
+					if ($_.PropertyName -eq "Value") {
+						$numSchm = $numSchems | where { $_.Name -eq $Prop["_Category"].Value }
+						if ($numSchm) {
+							$Prop["_NumSchm"].Value = $numSchm.Name
+						}
+					}
+				})
+		}
+		else {
+			$Prop["_NumSchm"].Value = "None"
+		}
+	}
 }
 
-function GetVaultRootFolder()
-{
-    $mappedRootPath = $Prop["_VaultVirtualPath"].Value + $Prop["_WorkspacePath"].Value
-    $mappedRootPath = $mappedRootPath -replace "\\", "/" -replace "//", "/"
-    if ($mappedRootPath -eq '')
-    {
-        $mappedRootPath = '$'
-    }
-    return $vault.DocumentService.GetFolderByPath($mappedRootPath)
+function GetVaultRootFolder() {
+	$mappedRootPath = $Prop["_VaultVirtualPath"].Value + $Prop["_WorkspacePath"].Value
+	$mappedRootPath = $mappedRootPath -replace "\\", "/" -replace "//", "/"
+	if ($mappedRootPath -eq '') {
+		$mappedRootPath = '$'
+	}
+	return $vault.DocumentService.GetFolderByPath($mappedRootPath)
 }
 
-function SetWindowTitle
-{
+function SetWindowTitle {
 	$mWindowName = $dsWindow.Name
-    switch($mWindowName)
- 	{
-  		"InventorFrameWindow"
-  		{
-   			$windowTitle = $UIString["LBL54"]
-  		}
-  		"InventorDesignAcceleratorWindow"
-  		{
-   			$windowTitle = $UIString["LBL50"]
-  		}
-  		"InventorPipingWindow"
-  		{
-   			$windowTitle = $UIString["LBL39"]
-  		}
-  		"InventorHarnessWindow"
-  		{
-   			$windowTitle = $UIString["LBL44"]
-  		}
-  		default #applies to InventorWindow and AutoCADWindow
-  		{
-   			if ($Prop["_CreateMode"].Value)
-   			{
-    			if ($Prop["_CopyMode"].Value)
-    			{
-     				$windowTitle = "$($UIString["LBL60"]) - $($Prop["_OriginalFileName"].Value)"
-    			}
-    			elseif ($Prop["_SaveCopyAsMode"].Value)
-    			{
-     				$windowTitle = "$($UIString["LBL72"]) - $($Prop["_OriginalFileName"].Value)"
-    			}else
-    			{
-     				$windowTitle = "$($UIString["LBL24"]) - $($Prop["_OriginalFileName"].Value)"
-    			}
-   			}
-   			else
-   			{
-    			$windowTitle = "$($UIString["LBL25"]) - $($Prop["_FileName"].Value)"
-   			}
-  		}
- 	}
-  	return $windowTitle
+	switch ($mWindowName) {
+		"InventorFrameWindow" {
+			$windowTitle = $UIString["LBL54"]
+		}
+		"InventorDesignAcceleratorWindow" {
+			$windowTitle = $UIString["LBL50"]
+		}
+		"InventorPipingWindow" {
+			$windowTitle = $UIString["LBL39"]
+		}
+		"InventorHarnessWindow" {
+			$windowTitle = $UIString["LBL44"]
+		}
+		default {
+			#applies to InventorWindow and AutoCADWindow
+			if ($Prop["_CreateMode"].Value) {
+				if ($Prop["_CopyMode"].Value) {
+					$windowTitle = "$($UIString["LBL60"]) - $($Prop["_OriginalFileName"].Value)"
+				}
+				elseif ($Prop["_SaveCopyAsMode"].Value) {
+					$windowTitle = "$($UIString["LBL72"]) - $($Prop["_OriginalFileName"].Value)"
+				}
+				else {
+					$windowTitle = "$($UIString["LBL24"]) - $($Prop["_OriginalFileName"].Value)"
+				}
+			}
+			else {
+				$windowTitle = "$($UIString["LBL25"]) - $($Prop["_FileName"].Value)"
+			}
+		}
+	}
+	return $windowTitle
 }
 
-function GetNumSchms
-{
-	$specialFiles = @(".DWG",".IDW",".IPN")
-    if ($specialFiles -contains $Prop["_FileExt"].Value -and !$Prop["_GenerateFileNumber4SpecialFiles"].Value)
-    {
-        return $null
-    }
-	if (-Not $Prop["_EditMode"].Value)
-    {
-        if ($numSchems.Count -gt 1)
-		{
+function GetNumSchms {
+	$specialFiles = @(".DWG", ".IDW", ".IPN")
+	if ($specialFiles -contains $Prop["_FileExt"].Value -and !$Prop["_GenerateFileNumber4SpecialFiles"].Value) {
+		return $null
+	}
+	if (-Not $Prop["_EditMode"].Value) {
+		if ($numSchems.Count -gt 1) {
 			$numSchems = $numSchems | Sort-Object -Property IsDflt -Descending
 		}
-        if ($Prop["_SaveCopyAsMode"].Value)
-        {
-            $noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
-            $noneNumSchm.Name = $UIString["LBL77"]
-            return $numSchems += $noneNumSchm
-        }
-        return $numSchems
-    }
+		if ($Prop["_SaveCopyAsMode"].Value) {
+			$noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
+			$noneNumSchm.Name = $UIString["LBL77"]
+			return $numSchems += $noneNumSchm
+		}
+		return $numSchems
+	}
 }
 
-function GetCategories
-{
+function GetCategories {
 	return $Prop["_Category"].ListValues
 }
 
-function OnPostCloseDialog
-{
+function OnPostCloseDialog {
 	$mWindowName = $dsWindow.Name
-	switch($mWindowName)
-	{
-		"InventorWindow"
-		{
+	switch ($mWindowName) {
+		"InventorWindow" {
 			#rules applying for Inventor
 		}
-		"AutoCADWindow"
-		{
+		"AutoCADWindow" {
 			#rules applying for AutoCAD
 		}
-		default
-		{
+		default {
 			#rules applying commonly
 		}
 	}
