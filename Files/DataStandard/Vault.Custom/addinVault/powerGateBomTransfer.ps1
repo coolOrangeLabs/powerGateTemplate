@@ -92,7 +92,13 @@ function Check-Boms($VaultBoms) {
     #Attention!!! When changing inside this function please check if you have to change somthing in "Test-ErpItemAndBOMForVaultFileOrVaultItem" function, beacause the functions are similare
     [array]::Reverse($VaultBoms)
     foreach ($vaultBom in $VaultBoms) {
-  
+
+        # if 'check' hit twice, prevously added 'Remove' lines must be removed 
+        foreach ($bomWindowEntity in $vaultBom.Children) {
+            if ($bomWindowEntity._Status -eq "Remove") {
+                $bomWindowEntity | Remove-BomWindowEntity
+            }
+                }
         $number = GetEntityNumber -entity $VaultBom
         if (-not $number) {
 		
