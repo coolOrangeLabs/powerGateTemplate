@@ -202,7 +202,7 @@ function ConvertValueToFilter($WildcardValue, $Property, $Type, $CaseSensitive =
         }
     }
     else {
-        $odataFilter += ConvertValueToODataFilter -Operator eq -Value $value -Property $Property -CaseSensitive $CaseSensitive -Type $Type
+        $odataFilter += ConvertValueToODataFilter -Operator eq -Value $WildcardValue -Property $Property -CaseSensitive $CaseSensitive -Type $Type
     }
     return $odataFilter
 }
