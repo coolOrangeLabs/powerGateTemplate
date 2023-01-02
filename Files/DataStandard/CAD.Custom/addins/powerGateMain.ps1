@@ -21,6 +21,10 @@
 				$oAsm = $Application.ActiveDocument
 				$oBOM = $oAsm.ComponentDefinition.BOM
 
+				if (-not $oBOM.StructuredViewEnabled) {
+					$oBOM.StructuredViewEnabled = $True
+				}
+
 				$bomTapNames = $oBOM.BOMViews | Select -ExpandProperty "Name"
 				$oBomView = ""
 				$allowedView = @("strukturiert", "Structured")
