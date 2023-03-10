@@ -24,10 +24,10 @@ function PrepareBomHeaderForCreate($erpBomHeader, $vaultEntity) {
 
 	if ($vaultEntity._EntityTypeID -eq "ITEM") { $descriptionProp = '_Description(Item,CO)' }
 	else { $descriptionProp = '_Description' }
-	
+
 	#TODO: Property mapping and assignment for bom header creation
 	$erpBomHeader.Number = $number
-	$erpBomHeader.Description = $vaultEntity.$descriptionProp   
+	$erpBomHeader.Description = $vaultEntity.$descriptionProp
 	$erpBomHeader.State = "New"
 
     Log -End
@@ -100,7 +100,7 @@ function GetVaultBomRows {
 
     if ($null -eq $entity._EntityTypeID) { return @() }
     if ($entity._EntityTypeID -eq "File") {
-        if ($entity._Extension -eq 'ipt') { 
+        if ($entity._Extension -eq 'ipt') {
             if ($entity.$rawMaterialQuantityProperty -gt 0 -and $entity.$rawMaterialNumberProperty -ne "") {
                 # Raw Material
                 $rawMaterial = New-Object PsObject -Property @{
@@ -126,10 +126,11 @@ function GetVaultBomRows {
         #if ($entity._Category -eq 'Part') { return @() }
         $bomRows = Get-VaultItemBom -Number $entity._Number
     }
-    
+
     foreach ($vaultBomRow in $bomRows) {
-        if ($vaultBomRow.Bom_XrefTyp -eq "Internal") {
+        if ($null -eq $vaultBomRow._EntityTypeID) {
             # Virtual Component
+			Add-Member -InputObject $vaultBomRow -Name "BomType" -Value "Virtual" -MemberType NoteProperty -Force
             Add-Member -InputObject $vaultBomRow -Name "_Name" -Value $vaultBomRow.'Bom_Part Number' -MemberType NoteProperty -Force
             Add-Member -InputObject $vaultBomRow -Name "Part Number" -Value $vaultBomRow.'Bom_Part Number' -MemberType NoteProperty -Force
             Add-Member -InputObject $vaultBomRow -Name "_PartNumber" -Value $vaultBomRow.'Bom_Part Number' -MemberType NoteProperty -Force
