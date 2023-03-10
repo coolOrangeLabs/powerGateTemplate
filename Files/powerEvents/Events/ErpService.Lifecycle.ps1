@@ -88,7 +88,7 @@ function RestrictFileRelease($files) {
 	Log -Begin
 	$defs = $vault.LifeCycleService.GetAllLifeCycleDefinitions()
 	$filesToCheck = $files | Where-Object { $_._Extension -in $requiresErpItemExtensions }
-	foreach ($file in $filesToCheck) {	
+	foreach ($file in $filesToCheck) {
 		$def = $defs | Where-Object { $_.DispName -eq $file._NewLifeCycleDefinition }
 		$state = $def.StateArray | Where-Object { $_.DispName -eq $file._NewState }
 		if ($state.ReleasedState) {
@@ -110,8 +110,9 @@ function RestrictItemRelease($items) {
 		$itemIncludesFilesToCheck = $allItemAssociations | Where-Object { $_._Extension -in $script:requiresErpItemExtensions }
 		$def = $defs | Where-Object { $_.DispName -eq $item._NewLifeCycleDefinition }
 		$state = $def.StateArray | Where-Object { $_.DispName -eq $item._NewState }
+		#todo: If items without associations should be transferred to erp the condition must be updated to not check for $itemIncludesFilesToCheck
 		if ($itemIncludesFilesToCheck -and $state.ReleasedState) {
-			Test-ErpItemAndBOMForVaultFileOrVaultItem -Entity $item		
+			Test-ErpItemAndBOMForVaultFileOrVaultItem -Entity $item
 		}
 	}
 	Log -End
@@ -132,7 +133,7 @@ function AddPdfJob($files, $successful) {
 	if (-not $successful) { return }
 	$releasedFiles = @($files | Where-Object { $_._Extension -in $supportedPdfExtensions -and $_._ReleasedRevision -eq $true })
 	Write-Host "Found '$($releasedFiles.Count)' files which are valid to add a PDF job for!"
-	foreach ($file in $releasedFiles) { 
+	foreach ($file in $releasedFiles) {
 		StartSynchronizeJob($file)
 		$jobType = "ErpService.Create.PDF"
 		Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
@@ -148,7 +149,7 @@ function AddItemPdfJob($items) {
 	foreach ($item in $releasedItems) {
 		$attachedDrawings = Get-VaultItemAssociations -Number $item._Number
 		Write-Host "Found '$($attachedDrawings.Count)' files which are valid to add a PDF job for!"
-		foreach ($file in $attachedDrawings) { 
+		foreach ($file in $attachedDrawings) {
 			StartSynchronizeJob($file)
 			$jobType = "ErpService.Create.PDF"
 			Write-Host "Adding job '$jobType' for file '$($file._Name)' to queue."
