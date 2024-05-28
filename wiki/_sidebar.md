@@ -4,7 +4,7 @@
 
 ## [Github Quickstart Guide.pdf](https://github.com/coolOrangeLabs/{REPO_NAME}/files/5964515/Github.Quickstart.Guide.pdf)
 
-## [Download newest Release](https://github.com/coolOrangeLabs/{REPO_NAME}/releases) ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) Update Project name here!
+## [Download newest Release](https://github.com/coolOrangeLabs/{REPO_NAME}/releases/latest) ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) Update Project name here!
 
 # Legal
 
