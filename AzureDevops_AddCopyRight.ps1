@@ -17,7 +17,7 @@ function Add-CopyRight($fileConent, $version, $buildTime) {
 #=============================================================================#
 "@ -f @($version, $buildTime)
 
-    $fileConentWithCopyRight = "$($copyRight)`n`n" + $($fileConent)
+    $fileConentWithCopyRight = "$($fileConent)`n`n" + $($copyRight)
     return $fileConentWithCopyRight
 }
 
