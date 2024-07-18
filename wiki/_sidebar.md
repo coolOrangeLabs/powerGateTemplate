@@ -2,7 +2,7 @@
 <img src="https://user-images.githubusercontent.com/36075173/47220092-12a0cb80-d3b1-11e8-85e2-0f2b17470517.png" align="middle" /> 
 </p>
 
-## [Github Quickstart Guide.pdf](https://github.com/coolOrangeLabs/{REPO_NAME}/files/5964515/Github.Quickstart.Guide.pdf)
+## [Github Quickstart Guide.pdf](https://eu1.hubs.ly/H0bgN5L0)
 
 ## [Download newest Release](https://github.com/coolOrangeLabs/{REPO_NAME}/releases/latest) ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) Update Project name here!
 
