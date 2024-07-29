@@ -7,21 +7,11 @@
       <Directory Id="CommonAppDataFolder" Name="ProgramData">
         <Directory Id='coolOrange' Name='coolOrange'>
 
-          <Directory Id='POWERJOBS_INSTALL' Name='powerJobs' >
-            <Component Id="CMP_PJ_README" Guid="*">
-              <File Id="FILE_PJ_README" KeyPath="yes" Source="..\Resources\README.txt" />
-            </Component>
-          </Directory>
-
-          <Directory Id='POWERGATE_INSTALL' Name='powerGate' >
-            <Directory Id='MODULES_INSTALL' Name='Modules' />
-            <Directory Id='PSFRAMEWORK_INSTALL' Name='PSFramework' />
-            <Component Id="CMP_PG_README" Guid="*">
-              <File Id="FILE_PG_README" KeyPath="yes" Source="..\Resources\README.txt" />
-            </Component>
-          </Directory>
-
-
+			<Directory Id='POWERJOBS_INSTALL' Name='powerJobs' >
+				<Component Id="CMP_PJ_README" Guid="*">
+					<File Id="FILE_PJ_README" KeyPath="yes" Source="..\Resources\README.txt" />
+				</Component>
+			</Directory>
         </Directory>
       </Directory>
     </Directory>

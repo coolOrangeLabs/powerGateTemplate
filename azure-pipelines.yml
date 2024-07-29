@@ -58,25 +58,11 @@ steps:
     artifactName: 'Setups_$(Build.DefinitionName)_v$(buildMajor).$(buildMinor).$(buildRevision).$(Build.BuildNumber)'
 
 - task: CopyFiles@2
-  displayName: Copy raw datastandard files to ArtifactStagingDirectory
-  inputs:
-    sourceFolder: '$(Build.SourcesDirectory)\Files\DataStandard\'
-    contents: '**' 
-    targetFolder: '$(Build.ArtifactStagingDirectory)\Source\Datastandard'
-
-- task: CopyFiles@2
   displayName: Copy powerEvents files to ArtifactStagingDirectory
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)\Files\powerEvents\'
+    sourceFolder: '$(Build.SourcesDirectory)\Files\Client Customizations\'
     contents: '**' 
-    targetFolder: '$(Build.ArtifactStagingDirectory)\Source\powerEvents'
-
-- task: CopyFiles@2
-  displayName: Copy powerGate files to ArtifactStagingDirectory
-  inputs:
-    sourceFolder: '$(Build.SourcesDirectory)\Files\powerGate\'
-    contents: '**' 
-    targetFolder: '$(Build.ArtifactStagingDirectory)\Source\powerGate'
+    targetFolder: '$(Build.ArtifactStagingDirectory)\Source\Client Customizations'
 
 - task: CopyFiles@2
   displayName: Copy powerJobs files to ArtifactStagingDirectory

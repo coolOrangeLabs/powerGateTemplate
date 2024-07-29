@@ -20,7 +20,7 @@
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug;HarvestPowerGateServer=..\..\Files\powerGatePlugin\bin\Release;</DefineConstants>
+    <DefineConstants>Debug;HarvestPowerGateServer=..\..\Files\powerGateServerPlugin\bin\Release;</DefineConstants>
     <CompilerAdditionalOptions>
 			-dMajor=$(Major)
 			-dMinor=$(Minor)
@@ -37,7 +37,7 @@
 			-dMinor=$(Minor)
 			-dBuild=$(Build)
 			-dRevision=$(Revision)</CompilerAdditionalOptions>
-    <DefineConstants>HarvestPowerGateServer=..\..\Files\powerGatePlugin\bin\Release;</DefineConstants>
+    <DefineConstants>HarvestPowerGateServer=..\..\Files\powerGateServerPlugin\bin\Release;</DefineConstants>
     <WixVariables>
     </WixVariables>
     <SuppressIces>ICE30</SuppressIces>
@@ -77,6 +77,6 @@
     <PreBuildEvent>cd  "$(ProjectDir)"
 
 ::  Heat for poweGateServer plugin files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGatePlugin\bin\Release -cg HeatGenerated_PowerGateServerPlugins -dr ERP_SERVICES -sreg -scom -srd -var var.HarvestPowerGateServer -gg -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerGateServerPlugins.wxs</PreBuildEvent>
+"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGateServerPlugin\bin\Release -cg HeatGenerated_PowerGateServerPlugins -dr ERP_SERVICES -sreg -scom -srd -var var.HarvestPowerGateServer -gg -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerGateServerPlugins.wxs</PreBuildEvent>
   </PropertyGroup>
 </Project>

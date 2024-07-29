@@ -5,37 +5,19 @@
     <?include Includes\ProductVariables.wxi ?>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="CommonAppDataFolder" Name="ProgramData">
-        <Directory Id='AutoDesk' Name='Autodesk'>
-          <Directory Id='Vault' Name='$(var.VaultYear)'>
-            <Directory Id='Extensions' Name='Extensions'>
-              <Directory Id='DATASTANDARD_INSTALL' Name='DataStandard'>
-                <Component Id="CMP_VDS_README" Guid="*">
-                  <File Id="FILE_VDS_README" KeyPath="yes" Source="..\Resources\README.txt" />
-                </Component>
-              </Directory>
-            </Directory>
-          </Directory>
-        </Directory>
         <Directory Id='coolOrange' Name='coolOrange'>
-          <Directory Id='POWEREVENTS_INSTALL' Name='powerEvents' >
-            <Component Id="CMP_PE_README" Guid="*">
-              <File Id="FILE_PE_README" KeyPath="yes" Source="..\Resources\README.txt" />
-            </Component>
-            <Directory Id="POWEREVENTS_SCRIPTS_DIR" Name="Events">
-              <Directory Id="POWEREVENTS_DISABLEDSCRIPTS_DIR" Name="Disabled"/>
+		    <Component Id="CMP_PE_README" Guid="*">
+			    <File Id="FILE_PE_README" KeyPath="yes" Source="..\Resources\README.txt" />
+		    </Component>
+            <Directory Id='CLIENTCUST_SCRIPTS_DIR' Name='Client Customizations' >
+              <Directory Id="CLIENTCUST_DISABLEDSCRIPTS_DIR" Name="Disabled"/>
               <Component Id="CMP_PE_DISABLE_SAMPLE_TABS" Guid="7C5FABF5-A487-4521-9E95-61EBA3E51EB5">
                 <CreateFolder/>
-                <CopyFile Id="MoveSampleERPTabsToDisabledFolderBecauseCustomOnceBecomeInstalled" SourceDirectory="POWEREVENTS_SCRIPTS_DIR" SourceName="Sample.*ERP*Tab.*" DestinationDirectory="POWEREVENTS_DISABLEDSCRIPTS_DIR" Delete="yes"/>
+                <CopyFile Id="MoveSampleERPTabsToDisabledFolderBecauseCustomOnceBecomeInstalled" SourceDirectory="CLIENTCUST_SCRIPTS_DIR" SourceName="Sample.*" DestinationDirectory="CLIENTCUST_DISABLEDSCRIPTS_DIR" Delete="yes"/>
               </Component>
             </Directory>
           </Directory>
-          <Directory Id='POWERGATE_INSTALL' Name='powerGate' >
-            <Component Id="CMP_PG_README" Guid="*">
-              <File Id="FILE_PG_README" KeyPath="yes" Source="..\Resources\README.txt" />
-            </Component>
-          </Directory>
         </Directory>
       </Directory>
-    </Directory>
   </Fragment>
 </Wix>

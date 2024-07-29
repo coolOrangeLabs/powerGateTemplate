@@ -22,22 +22,11 @@
 			   Cabinet="media1.cab"
 			   EmbedCab="yes" />
 
-		<Feature Id="DataStandardCustomization" Title="Vault DataStandard Customization">
-      <ComponentGroupRef Id="SETUP_UI" />
-      <ComponentGroupRef Id="HeatGenerated_DataStandardFiles" />
-      <ComponentRef Id="CMP_VDS_README" />
-    </Feature>
-
-    <Feature Id="PowerEventsFiles" Title="powerEvents Workflow and UI Enhancements">
-      <ComponentGroupRef Id="HeatGenerated_PowerEventsFiles" />
-      <ComponentRef Id="CMP_PE_README" />
-      <ComponentRef Id="CMP_PE_DISABLE_SAMPLE_TABS" />
-    </Feature>
-
-    <Feature Id="PowerGateFiles" Title="powerGate Shared Files">
-      <ComponentGroupRef Id="HeatGenerated_PowerGateFiles" />
-      <ComponentRef Id="CMP_PG_README" />
-    </Feature>
+		<Feature Id="CLientCustomizationFiles" Title="powerGate Client Workflow and UI Enhancements">
+			<ComponentGroupRef Id="HeatGenerated_ClientCustomizationFiles" />
+			<ComponentRef Id="CMP_PE_README" />
+			<ComponentRef Id="CMP_PE_DISABLE_SAMPLE_TABS" />
+		</Feature>
 
     <Property Id="SAMEVERSIONINSTALLED" Admin="yes" />
 		<Upgrade Id="$(var.UpgradeCode)">
