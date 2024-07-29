@@ -4,7 +4,7 @@
   <Property Id="ARPHELPLINK" Value="$(var.WikiLink)" />  
   <Property Id="ARPCONTACT" Value="support@coolorange.com" />
   <Property Id="ARPPRODUCTICON" Value="coolOrange.ico" />
-  <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[DATASTANDARD_INSTALL]" />  
+  <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[CLIENTCUST_INSTALL]" />  
   <InstallExecuteSequence>
     <Custom Action="SetARPINSTALLLOCATION" After="InstallValidate"></Custom>
   </InstallExecuteSequence>

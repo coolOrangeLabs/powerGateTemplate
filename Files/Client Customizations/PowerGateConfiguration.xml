@@ -1,0 +1,12 @@
+﻿<Root>
+  <UnitOfMeasures>
+    <Entry Key="Box" Value="Box" />
+    <Entry Key="Each" Value="Each" />
+    <Entry Key="Centimeter" Value="Centimeter" />
+    <Entry Key="Inch" Value="Inch" />
+    <Entry Key="Gram" Value="Gram" />
+    <Entry Key="Liter" Value="Liter" />
+    <Entry Key="Gallon" Value="Gallon" />
+    <Entry Key="Pound" Value="Pound" />
+  </UnitOfMeasures>
+</Root>

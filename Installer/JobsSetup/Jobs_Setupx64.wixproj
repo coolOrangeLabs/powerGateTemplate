@@ -6,7 +6,7 @@
     <Minor>0</Minor>
     <Build>0</Build>
     <Revision>0</Revision>
-    <Name>Client_Setupx64</Name>
+    <Name>Jobs_Setupx64</Name>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -20,7 +20,7 @@
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug;HarvestPowerJobs=..\..\Files\powerJobs;HarvestModules=..\..\Files\powerGate\Modules;HarvestPSFramework=..\..\Files\powerGate\PSFramework;</DefineConstants>
+    <DefineConstants>Debug;HarvestPowerJobs=..\..\Files\powerJobs;</DefineConstants>
     <CompilerAdditionalOptions>
 			-dMajor=$(Major)
 			-dMinor=$(Minor)
@@ -37,7 +37,7 @@
 			-dMinor=$(Minor)
 			-dBuild=$(Build)
 			-dRevision=$(Revision)</CompilerAdditionalOptions>
-    <DefineConstants>Debug;HarvestPowerJobs=..\..\Files\powerJobs;HarvestModules=..\..\Files\powerGate\Modules;HarvestPSFramework=..\..\Files\powerGate\PSFramework;</DefineConstants>
+    <DefineConstants>Debug;HarvestPowerJobs=..\..\Files\powerJobs;</DefineConstants>
     <WixVariables>
     </WixVariables>
     <SuppressIces>ICE30</SuppressIces>
@@ -45,9 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Directories.wxs" />
-    <Compile Include="HeatGenerated\HeatGeneratedFileList_Modules.wxs" />
     <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerJobs.wxs" />
-    <Compile Include="HeatGenerated\HeatGeneratedFileList_PSFramework.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UserInterface.wxs" />
   </ItemGroup>
@@ -85,11 +83,6 @@
 ::  Heat for powerJobs files
 "%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerJobs -cg HeatGenerated_PowerJobsFiles -dr POWERJOBS_INSTALL -sreg -srd -var var.HarvestPowerJobs -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerJobs.wxs
 
-
-::  Heat for powerGate files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGate\Modules -cg HeatGenerated_Modules -dr MODULES_INSTALL -sreg -srd -var var.HarvestModules -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_Modules.wxs
-
-::  Heat for PSframwork files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGate\PSFramework -cg HeatGenerated_PSFramework -dr PSFRAMEWORK_INSTALL -sreg -srd -var var.HarvestPSFramework -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PSFramework.wxs</PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

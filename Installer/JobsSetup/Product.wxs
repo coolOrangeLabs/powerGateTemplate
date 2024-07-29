@@ -25,9 +25,6 @@
     <Feature Id="PowerJobsFiles" Title="powerJobs Custom Jobs">
 	<ComponentGroupRef Id="SETUP_UI" />
       <ComponentGroupRef Id="HeatGenerated_PowerJobsFiles" />
-      <ComponentGroupRef Id="HeatGenerated_Modules" />
-      <ComponentGroupRef Id="HeatGenerated_PSFramework" />
-      <ComponentRef Id="CMP_PG_README" />
       <ComponentRef Id="CMP_PJ_README" />
     </Feature>
 
@@ -56,15 +53,6 @@
 	    <![CDATA[Installed OR POWERSHELLVERSION_NEW << "5."]]>
 	  </Condition>
 
-	  <!-- powerGate -->
-	  <Property Id="POWERGATEINSTALLEDVERSION">
-	    <RegistrySearch Id="PowerGateInstalledVersion"
-	                    Root="HKLM"
-	                    Key="SOFTWARE\coolOrange s.r.l.\powerGate"
-	                    Name="Version"
-	                    Type="raw" />
-	  </Property>
-
 	  <!-- powerJobs -->
 	  <Property Id="POWERJOBSINSTALLEDVERSION">
 		<RegistrySearch Id="PowerJobsInstalledVersion"
@@ -73,11 +61,6 @@
 						Name="Version"
 						Type="raw" />
 	  </Property>
-
-	  <Condition
-	    Message="This application requires powerGate v23 or later. Please install the latest version of powerGate and then run again this installer.">
-	    <![CDATA[Installed OR POWERGATEINSTALLEDVERSION > "23"]]>
-	  </Condition>
 
 	  <Condition
 	    Message="This application requires powerJobs v23 or later. Please install the latest version of powerJobs and then run again this installer.">

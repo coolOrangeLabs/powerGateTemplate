@@ -4,7 +4,7 @@
 	<?define WikiLink="https://github.com/coolOrangeLabs/powerGateTemplate/wiki"?>
 	<?define IconName="..\Resources\coolOrange.ico"?>
 	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
-  <?define VaultYear="Vault 2020"?>
+  <?define VaultYear="Vault 2024"?>
   <?define PName="ErpService powerJobs Jobs"?>
   <?define PShortVersion="$(var.Major).$(var.Minor)"?>
   <?define CompanyDirectory="coolOrange"?>

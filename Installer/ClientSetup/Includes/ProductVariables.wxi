@@ -4,7 +4,7 @@
 	<?define WikiLink="https://github.com/coolOrangeLabs/powerGateTemplate/wiki"?>
 	<?define IconName="..\Resources\coolOrange.ico"?>
 	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
-	<?define VaultYear="Vault 2023"?>
+	<?define VaultYear="Vault 2024"?>
 	<?define PName="powerGate Standard - Client integration for $(var.VaultYear)"?>
 	<?define PShortVersion="$(var.Major).$(var.Minor)"?>
 	<?define CompanyDirectory="coolOrange"?>

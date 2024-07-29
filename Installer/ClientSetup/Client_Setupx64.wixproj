@@ -20,7 +20,7 @@
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug;HarvestDataStandard=..\..\Files\DataStandard;HarvestPowerEvents=..\..\Files\powerEvents;HarvestPowerGate=..\..\Files\powerGate;</DefineConstants>
+    <DefineConstants>Debug;HarvestClientCustomizations=..\..\Files\Client Customizations;</DefineConstants>
     <CompilerAdditionalOptions>
 			-dMajor=$(Major)
 			-dMinor=$(Minor)
@@ -37,17 +37,15 @@
 			-dMinor=$(Minor)
 			-dBuild=$(Build)
 			-dRevision=$(Revision)</CompilerAdditionalOptions>
-    <DefineConstants>Debug;HarvestDataStandard=..\..\Files\DataStandard;HarvestPowerEvents=..\..\Files\powerEvents;HarvestPowerGate=..\..\Files\powerGate;</DefineConstants>
-    <WixVariables>
+	  <DefineConstants>Debug;HarvestClientCustomizations=..\..\Files\Client Customizations;</DefineConstants>
+	  <WixVariables>
     </WixVariables>
     <SuppressIces>ICE30</SuppressIces>
     <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Directories.wxs" />
-    <Compile Include="HeatGenerated\HeatGeneratedFileList_Datastandard.wxs" />
-    <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerEvents.wxs" />
-    <Compile Include="HeatGenerated\HeatGeneratedFileList_PowerGate.wxs" />
+    <Compile Include="HeatGenerated\HeatGeneratedFileList_ClientCustomizations.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UserInterface.wxs" />
   </ItemGroup>
@@ -80,15 +78,12 @@
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <PropertyGroup>
-    <PreBuildEvent>cd  "$(ProjectDir)"
+    <PreBuildEvent>
+		cd  "$(ProjectDir)"
 
-::  Heat for DataStandard files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\DataStandard -cg HeatGenerated_DataStandardFiles -dr DATASTANDARD_INSTALL -sreg -srd -var var.HarvestDataStandard -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_DataStandard.wxs
+		::  Heat for client customizations
+		"%25WIX%25\bin\Heat.exe" dir "..\..\Files\Client Customizations" -cg HeatGenerated_ClientCustomizationFiles -dr CLIENTCUST_SCRIPTS_DIR -sreg -srd -var var.HarvestClientCustomizations -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_ClientCustomizations.wxs
 
-::  Heat for powerEvents files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerEvents -cg HeatGenerated_PowerEventsFiles -dr POWEREVENTS_INSTALL -sreg -srd -var var.HarvestPowerEvents -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerEvents.wxs
-
-::  Heat for powerGate files
-"%25WIX%25\bin\Heat.exe" dir ..\..\Files\powerGate -cg HeatGenerated_PowerGateFiles -dr POWERGATE_INSTALL -sreg -srd -var var.HarvestPowerGate -ag -sfrag -t ../Resources/Transform_HeatDir.xslt -out ./HeatGenerated/HeatGeneratedFileList_PowerGate.wxs</PreBuildEvent>
+	</PreBuildEvent>
   </PropertyGroup>
 </Project>
