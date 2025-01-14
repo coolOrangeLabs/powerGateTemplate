@@ -1,0 +1,14 @@
+Name,Description,Color
+Phase 0 - Initialisierung,Projektvorbereitung,#ff9900
+Phase 1 - Basis Implementierung,powerGate Schnittstelle Implementierung der Basisfunktionen,#ff9900
+Phase 2 - Anpassung und Go-Live,Anpassung und Erweiterung der Basisimplementierung nach Kundenanforderungen mit Go-Live als Ziel,#ff9900
+Basis & Anpassungsphase,Issue wird in beiden Porjektphasen gebraucht,#ff9900
+A,Dieses Issue ist mit maximal 2h umsetzbar,#ff9900
+B,Dieses Issue ist mit maximal 4h umsetzbar,#ff9900
+C,Dieses Issue ist mit maximal 8h umsetzbar,#ff9900
+Frage,weitere Informationen erforderlich,#d876e3
+Placeholder Feature Implementierung,Kunde bestätigt dass das Feature so implementiert werden soll,#ff9900
+Neue Anforderung,Neue Anforderung des Kunden die nicht im aktuellen Bugget enthalten ist,#ff9900
+Kunde testet,Kunde testet das implementierte Feature
+UseCase,Anforderung des Kunden,#ff9900
+X,,#ff9900

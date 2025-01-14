@@ -1,0 +1,14 @@
+Name,Description,Color
+Phase 0 - Initialisation,Project Preparation,#ff9900
+Phase 1 - Base Implemention,powerGate Interface Implementation with Base functionalities,#ff9900
+Phase 2 - Customisation & Go-Live,Adjusting Base Implementation to customer workflows with Go-Live as target,#ff9900
+Base & Customisation Phase,Mapping Issue needed in multiple project phases,#ff9900
+A,This issue can be implemented within max. 2 hours,#ff9900
+B,This issue can be implemented within max. half a day,#ff9900
+C,This issue can be implemented within max. one day,#ff9900
+Question,Unclarities - Uncertanties - Unresolved matters etc,#ff9900
+Placeholder confirms Feature Implementation,Customer confirmation of a Feature Request that shall be implemented,#ff9900
+New Feature Request,A new Feature request from the customer which is not included in the current budget,#ff9900
+Customer Testing,The customer is testing the implemented feature,#ff9900
+UseCase,customer requirements,#ff9900
+X,,#ff9900
