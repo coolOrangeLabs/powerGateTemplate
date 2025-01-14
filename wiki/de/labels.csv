@@ -9,6 +9,6 @@ C,Dieses Issue ist mit maximal 8h umsetzbar,#ff9900
 Frage,weitere Informationen erforderlich,#d876e3
 Placeholder Feature Implementierung,Kunde bestätigt dass das Feature so implementiert werden soll,#ff9900
 Neue Anforderung,Neue Anforderung des Kunden die nicht im aktuellen Bugget enthalten ist,#ff9900
-Kunde testet,Kunde testet das implementierte Feature
+Kunde testet,Kunde testet das implementierte Feature,#ff9900
 UseCase,Anforderung des Kunden,#ff9900
 X,,#ff9900
